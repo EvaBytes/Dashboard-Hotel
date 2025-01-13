@@ -1,75 +1,111 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Box, TextField, Button, Typography, Alert } from '@mui/material';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Box, TextField, Button, Typography, Alert, CircularProgress } from "@mui/material";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  
+  useEffect(() => {
+    if (localStorage.getItem("authToken")) {
+      navigate("/dashboard");
+    }
+  }, [navigate]);
+
+  
+  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleLogin = () => {
-    setError(''); 
+    const newErrors = {};
+    setErrors({}); 
 
     if (!validateEmail(email)) {
-      setError('El correo electrónico no es válido. Asegúrate de incluir "@" y un dominio.');
-      return;
+      newErrors.email = "El correo electrónico no es válido.";
     }
-
     if (password.length < 6) {
-      setError('La contraseña debe tener al menos 6 caracteres.');
+      newErrors.password = "La contraseña debe tener al menos 6 caracteres.";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    if (email === 'admin@example.com' && password === 'password') {
-      localStorage.setItem('authToken', 'fakeToken');
-      navigate('/dashboard');
-    } else {
-      setError('Credenciales inválidas. Inténtalo nuevamente.');
-    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      if (email === "admin@example.com" && password === "123456") {
+        localStorage.setItem("authToken", "fakeToken");
+        navigate("/dashboard");
+      } else {
+        setErrors({ password: "Credenciales inválidas. Inténtalo nuevamente." });
+      }
+    }, 1500);
+  };
+
+  const formStyles = {
+    mb: 2,
+    width: "300px",
   };
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        mt: 8,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "80vh", 
+        backgroundColor: "background.default",
+        padding: 2,
       }}
     >
-      <Typography variant="h4" mb={3}>
+      <Typography variant="h4" component="h1" mb={3}>
         Login
       </Typography>
-      {error && (
-        <Alert severity="error" sx={{ mb: 2, width: '300px' }}>
-          {error}
+
+      {errors.email && (
+        <Alert severity="error" sx={formStyles}>
+          {errors.email}
         </Alert>
       )}
+      {errors.password && (
+        <Alert severity="error" sx={formStyles}>
+          {errors.password}
+        </Alert>
+      )}
+
       <TextField
         label="Email"
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        sx={{ mb: 2, width: '300px' }}
+        error={!!errors.email}
+        sx={formStyles}
       />
       <TextField
         label="Password"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        sx={{ mb: 2, width: '300px' }}
+        error={!!errors.password}
+        sx={formStyles}
       />
-      <Button variant="contained" onClick={handleLogin}>
-        Login
+
+      <Button
+        variant="contained"
+        onClick={handleLogin}
+        disabled={loading}
+        sx={{ width: "125px", padding: "10px" }}
+      >
+        {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
       </Button>
     </Box>
   );
 };
 
-export default Login;
+export { Login };

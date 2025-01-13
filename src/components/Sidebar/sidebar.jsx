@@ -1,27 +1,43 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { SidebarContainer, SidebarTitle, SidebarList, SidebarListItem, SidebarLink, SidebarFooter } from "./SidebarStyles";
+import { UserContainer } from "./UserContainer";
 
 const Sidebar = () => {
+  const user = {
+    name: "Eva Sevillano Plata",
+    email: "evasevillanop@gmail.com",
+    image: "https://via.placeholder.com/100",
+  };
+
   const links = [
     { label: "Dashboard", path: "/" },
     { label: "Bookings", path: "/bookings" },
     { label: "Rooms", path: "/rooms" },
+    { label: "Contact", path: "/contact" },
     { label: "Users", path: "/users" },
-    { label: "Settings", path: "/settings" },
   ];
 
   return (
-    <aside className="sidebar">
-      <h2>Hotel Dashboard</h2>
-      <ul>
+    <SidebarContainer>
+      <SidebarTitle>Hotel Dashboard</SidebarTitle>
+
+      <SidebarList>
         {links.map((link) => (
-          <li key={link.path}>
-            <Link to={link.path}>{link.label}</Link>
-          </li>
+          <SidebarListItem key={link.path}>
+            <SidebarLink to={link.path}>{link.label}</SidebarLink>
+          </SidebarListItem>
         ))}
-      </ul>
-    </aside>
+      </SidebarList>
+
+      <UserContainer user={user} />
+
+      <SidebarFooter>
+        <p>Travel Hotel Admin Dashboard</p>
+        <p>© 2025 All Rights Reserved</p>
+        <p>Made with ♥ by Peterdraw</p>
+      </SidebarFooter>
+    </SidebarContainer>
   );
 };
 
-export {Sidebar};
+export { Sidebar };
