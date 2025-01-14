@@ -14,16 +14,21 @@ export const SidebarContainer = styled("aside")(({ theme }) => ({
 }));
 
 export const SidebarTitleIcon = styled("span")({
-  display: "flex",
-  alignItems: "center",
+  display: "flex", 
+  alignItems: "center", 
   justifyContent: "center",
+  fontSize: "38px",
+  marginRight: ".7rem",
+  marginLeft: "2rem", 
 });
 
 export const SidebarTitle = styled("h2")(({ theme }) => ({
   color: "#212121",
   marginBottom: "1.2rem",
-
+  display: "flex",
+  alignItems: "center",
 }));
+
 
 export const SidebarList = styled("ul")({
   listStyle: "none",

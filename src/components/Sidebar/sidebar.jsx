@@ -1,6 +1,6 @@
 import React from "react";
-import { LuLayoutDashboard, LuBedSingle } from "react-icons/lu";
-import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts } from "react-icons/ai";
+import { LuLayoutDashboard, LuBedSingle, } from "react-icons/lu";
+import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts, } from "react-icons/ai";
 import { FaHotel } from "react-icons/fa"; 
 import {SidebarContainer,SidebarTitle,SidebarTitleIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon,} from "./SidebarStyles";
 import { UserContainer } from "./UserContainer";

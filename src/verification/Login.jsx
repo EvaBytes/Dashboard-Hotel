@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {Typography,Alert,CircularProgress,ThemeProvider,} from "@mui/material";
-import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledTextField,StyledSubtitle,} from "../assets/authStyles";
+import { Typography, Alert, CircularProgress, ThemeProvider } from "@mui/material";
 import { theme } from "../assets/theme";
+import { BackgroundContainer, StyledAuthContainer, StyledAuthButton, EmailField, PasswordField, StyledSubtitle } from "../assets/loginStyles";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -69,23 +69,15 @@ const Login = () => {
             </Alert>
           )}
 
-          <StyledTextField
-            label="Email"
-            type="email"
+          <EmailField
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             error={!!errors.email}
-            fullWidth
-            margin="normal"
           />
-          <StyledTextField
-            label="Password"
-            type="password"
+          <PasswordField
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             error={!!errors.password}
-            fullWidth
-            margin="normal"
           />
 
           <StyledAuthButton
