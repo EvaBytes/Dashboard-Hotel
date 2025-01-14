@@ -1,90 +1,78 @@
 import { createTheme } from "@mui/material/styles";
 
-const theme = createTheme({
+export const theme = createTheme({
   palette: {
     primary: {
-      main: "#FFFFFF", 
+      main: "#FFFFFF",
     },
     secondary: {
-      main: "#A10035",
+      main: "#135846",
     },
     background: {
-      default: "#F9F9F9", 
-      paper: "#FFFFFF", 
+      default: "#f9f9f9", 
+      paper: "#ffffff", 
     },
     text: {
-      primary: "#333333", 
-      secondary: "#666666", 
+      primary: "##262626", 
+      secondary: "#799283", 
     },
-
-    button: {
-      main: "#EBF1EF", // Agregar el color aquí
-    },
-    
-    success: {
-      main: "#4CAF50", 
-    },
-    error: {
-      main: "#F44336", 
-    },
-    
   },
   typography: {
-    fontFamily: "Roboto, Arial, sans-serif",
+    fontFamily: "Roboto, Arial, sans-serif", 
     h1: {
-      fontSize: "2rem",
+      fontSize: "32px",
       fontWeight: 700,
     },
     h2: {
-      fontSize: "1.5rem",
+      fontSize: "24px",
       fontWeight: 600,
     },
     body1: {
-      fontSize: "1rem",
-      color: "#333333",
+      fontSize: "16px",
+      color: "#333333", 
     },
     body2: {
-      fontSize: "0.875rem",
-      color: "#666666",
+      fontSize: "8px",
+      color: "#666666", 
     },
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        
+        body: {
+          margin: 0,
+          padding: 0,
+          boxSizing: "border-box",
+          backgroundColor: "#f9f9f9", 
+          fontFamily: "Roboto, Arial, sans-serif", 
+          color: "#333333", 
+        },
+        "*": {
+          margin: 0,
+          padding: 0,
+          boxSizing: "border-box",
+        },
+        a: {
+          textDecoration: "none",
+          color: "inherit",
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
-          textTransform: "none",
-          borderRadius: "8px",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-          padding: "10px 20px",
+          borderRadius: "8px", 
+          padding: ".6rem 1.5rem", 
         },
       },
     },
-    MuiCard: {
+    MuiTypography: {
       styleOverrides: {
         root: {
-          borderRadius: "12px",
-          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          padding: "16px",
-        },
-      },
-    },
-    MuiTable: {
-      styleOverrides: {
-        root: {
-          borderRadius: "8px",
-          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-          backgroundColor: "#FFFFFF",
-        },
-      },
-    },
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#1E5631", 
+          color: "#333333", 
         },
       },
     },
   },
 });
-
-export {theme};

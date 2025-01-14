@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const SidebarContainer = styled("aside")(({ theme }) => ({
   width: "250px", 
   backgroundColor: theme.palette.primary.main, 
-  color: theme.palette.common.white,
+  color: theme.palette.text.primary,
   height: "100vh",
   padding: "20px",
   display: "flex",
@@ -12,9 +12,17 @@ export const SidebarContainer = styled("aside")(({ theme }) => ({
   justifyContent: "space-between",
 }));
 
-export const SidebarTitle = styled("h2")({
-  marginBottom: "20px",
+export const SidebarTitleIcon = styled("span")({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 });
+
+export const SidebarTitle = styled("h2")(({ theme }) => ({
+  color: "#212121",
+  marginBottom: "1.2rem",
+
+}));
 
 export const SidebarList = styled("ul")({
   listStyle: "none",
@@ -22,7 +30,7 @@ export const SidebarList = styled("ul")({
 });
 
 export const SidebarListItem = styled("li")({
-  marginBottom: "15px",
+  marginBottom: "1rem",
 });
 
 export const SidebarLink = styled(Link)(({ theme }) => ({
@@ -33,8 +41,14 @@ export const SidebarLink = styled(Link)(({ theme }) => ({
   },
 }));
 
+export const SidebarIcon = styled("span")({
+  fontSize: "20px",
+  marginRight: ".5rem",
+  display: "inline-block",
+});
+
 export const SidebarFooter = styled("footer")({
   textAlign: "center",
-  marginTop: "20px",
+  marginTop: "1.2rem",
   fontSize: "12px",
 });

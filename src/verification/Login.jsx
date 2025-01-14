@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, TextField, Button, Typography, Alert, CircularProgress } from "@mui/material";
+import {Typography,Alert,CircularProgress,ThemeProvider,} from "@mui/material";
+import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledTextField,StyledSubtitle,} from "../assets/authStyles";
+import { theme } from "../assets/theme";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,19 +11,17 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  
   useEffect(() => {
     if (localStorage.getItem("authToken")) {
       navigate("/dashboard");
     }
   }, [navigate]);
 
-  
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleLogin = () => {
     const newErrors = {};
-    setErrors({}); 
+    setErrors({});
 
     if (!validateEmail(email)) {
       newErrors.email = "El correo electrónico no es válido.";
@@ -42,69 +42,61 @@ const Login = () => {
         localStorage.setItem("authToken", "fakeToken");
         navigate("/dashboard");
       } else {
-        setErrors({ password: "Credenciales inválidas. Inténtalo nuevamente." });
+        setErrors({
+          password: "Credenciales inválidas. Inténtalo nuevamente.",
+        });
       }
     }, 1500);
   };
 
-  const formStyles = {
-    mb: 2,
-    width: "300px",
-  };
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "80vh", 
-        backgroundColor: "background.default",
-        padding: 2,
-      }}
-    >
-      <Typography variant="h4" component="h1" mb={3}>
-        Login
-      </Typography>
+    <ThemeProvider theme={theme}>
+      <BackgroundContainer>
+        <StyledAuthContainer>
+          <Typography variant="h4" component="h1" mb={1}>
+            Welcome
+          </Typography>
+          <StyledSubtitle>Please, insert your Login Data</StyledSubtitle>
 
-      {errors.email && (
-        <Alert severity="error" sx={formStyles}>
-          {errors.email}
-        </Alert>
-      )}
-      {errors.password && (
-        <Alert severity="error" sx={formStyles}>
-          {errors.password}
-        </Alert>
-      )}
+          {errors.email && (
+            <Alert severity="error" style={{ marginBottom: "16px", width: "100%" }}>
+              {errors.email}
+            </Alert>
+          )}
+          {errors.password && (
+            <Alert severity="error" style={{ marginBottom: "16px", width: "100%" }}>
+              {errors.password}
+            </Alert>
+          )}
 
-      <TextField
-        label="Email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        error={!!errors.email}
-        sx={formStyles}
-      />
-      <TextField
-        label="Password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        error={!!errors.password}
-        sx={formStyles}
-      />
+          <StyledTextField
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            error={!!errors.email}
+            fullWidth
+            margin="normal"
+          />
+          <StyledTextField
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            error={!!errors.password}
+            fullWidth
+            margin="normal"
+          />
 
-      <Button
-        variant="contained"
-        onClick={handleLogin}
-        disabled={loading}
-        sx={{ width: "125px", padding: "10px" }}
-      >
-        {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
-      </Button>
-    </Box>
+          <StyledAuthButton
+            onClick={handleLogin}
+            disabled={loading || !email || !password}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
+          </StyledAuthButton>
+        </StyledAuthContainer>
+      </BackgroundContainer>
+    </ThemeProvider>
   );
 };
 

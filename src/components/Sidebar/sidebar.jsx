@@ -1,30 +1,41 @@
 import React from "react";
-import { SidebarContainer, SidebarTitle, SidebarList, SidebarListItem, SidebarLink, SidebarFooter } from "./SidebarStyles";
+import { LuLayoutDashboard, LuBedSingle } from "react-icons/lu";
+import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts } from "react-icons/ai";
+import { FaHotel } from "react-icons/fa"; 
+import {SidebarContainer,SidebarTitle,SidebarTitleIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon,} from "./SidebarStyles";
 import { UserContainer } from "./UserContainer";
 
 const Sidebar = () => {
   const user = {
     name: "Eva Sevillano Plata",
     email: "evasevillanop@gmail.com",
-    image: "https://via.placeholder.com/100",
+    image: "src/assets/img/profile.jpeg",
   };
 
   const links = [
-    { label: "Dashboard", path: "/" },
-    { label: "Bookings", path: "/bookings" },
-    { label: "Rooms", path: "/rooms" },
-    { label: "Contact", path: "/contact" },
-    { label: "Users", path: "/users" },
+    { label: "Dashboard", path: "/", icon: <LuLayoutDashboard /> },
+    { label: "Bookings", path: "/bookings", icon: <AiOutlineCalendar /> },
+    { label: "Rooms", path: "/rooms", icon: <LuBedSingle /> },
+    { label: "Contacts", path: "/contacts", icon: <AiOutlineContacts /> },
+    { label: "Users", path: "/users", icon: <AiOutlineUser /> },
   ];
 
   return (
     <SidebarContainer>
-      <SidebarTitle>Hotel Dashboard</SidebarTitle>
+      <SidebarTitle>
+        <SidebarTitleIcon>
+          <FaHotel />
+        </SidebarTitleIcon>
+        travl
+      </SidebarTitle>
 
       <SidebarList>
         {links.map((link) => (
           <SidebarListItem key={link.path}>
-            <SidebarLink to={link.path}>{link.label}</SidebarLink>
+            <SidebarLink to={link.path}>
+              <SidebarIcon>{link.icon}</SidebarIcon>
+              {link.label}
+            </SidebarLink>
           </SidebarListItem>
         ))}
       </SidebarList>

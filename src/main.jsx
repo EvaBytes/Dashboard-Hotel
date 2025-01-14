@@ -6,8 +6,7 @@ import { CssBaseline } from "@mui/material";
 import { AuthProvider, useAuth } from "./verification/AuthContext";
 import { Layout } from "./Layout";
 import { Login } from "./verification/Login";
-import { theme } from "./assets/theme"; 
-import { authTheme } from "./assets/authTheme"; 
+import { theme } from "./assets/theme";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -17,30 +16,22 @@ const PrivateRoute = ({ children }) => {
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route
-            path="/login"
-            element={
-              <ThemeProvider theme={authTheme}>
-                <CssBaseline />
-                <Login />
-              </ThemeProvider>
-            }
-          />
-          <Route
-            path="/*"
-            element={
-              <PrivateRoute>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/*"
+              element={
+                <PrivateRoute>
                   <Layout />
-                </ThemeProvider>
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </ThemeProvider>
     </AuthProvider>
   </StrictMode>
 );

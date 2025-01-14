@@ -1,17 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
+import { AiOutlineMessage, AiOutlineBell} from "react-icons/ai";
+import { FiLogOut } from "react-icons/fi";
+import { HiMenuAlt2 } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import { NavbarContainer, NavbarLeft, NavbarRight, IconButton } from "./navbarStyles";
 
-const Navbar = () => {
+const Navbar = ({ toggleSidebar }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    navigate("/login");  
+  };
+
   return (
-    <nav className="navbar">
-      <div className="navbar-left">
+    <NavbarContainer>
+      <NavbarLeft>
+        <IconButton onClick={toggleSidebar}>
+          <HiMenuAlt2 size={24} />
+        </IconButton>
         <h1>Dashboard</h1>
-      </div>
-      <div className="navbar-right">
-        <button>Notifications</button>
-        <button>Profile</button>
-      </div>
-    </nav>
+      </NavbarLeft>
+      <NavbarRight>
+        <IconButton>
+          <AiOutlineMessage size={24} />
+        </IconButton>
+        <IconButton>
+          <AiOutlineBell size={24} />
+        </IconButton>
+        <IconButton onClick={handleLogout}>
+          <FiLogOut size={24} />
+        </IconButton>
+      </NavbarRight>
+    </NavbarContainer>
   );
 };
 
-export {Navbar};
+export { Navbar };
