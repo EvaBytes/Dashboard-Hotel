@@ -23,6 +23,7 @@ const Layout = () => {
       <SidebarContainer sidebarOpen={sidebarOpen}>
         {sidebarOpen && <Sidebar />}
       </SidebarContainer>
+      
       <MainContent style={{ marginLeft: sidebarOpen ? "250px" : "0" }}>
         <Content>
           <Routes>

@@ -5,6 +5,7 @@ export const SidebarContainer = styled("aside")(({ theme }) => ({
   width: "250px", 
   backgroundColor: theme.palette.primary.main, 
   color: theme.palette.text.primary,
+  borderRadius: "3px",
   height: "100vh",
   padding: "20px",
   display: "flex",

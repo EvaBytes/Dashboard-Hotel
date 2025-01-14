@@ -1,23 +1,27 @@
-import React, { useState } from "react";
-import { AiOutlineMessage, AiOutlineBell} from "react-icons/ai";
+import React from "react";
+import { AiOutlineMessage, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
-import { HiMenuAlt2 } from "react-icons/hi";
+import { BiSolidLeftArrowSquare, BiSolidRightArrowSquare } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { NavbarContainer, NavbarLeft, NavbarRight, IconButton } from "./navbarStyles";
 
-const Navbar = ({ toggleSidebar }) => {
+const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    navigate("/login");  
+    navigate("/login");
   };
 
   return (
-    <NavbarContainer>
+    <NavbarContainer sidebarOpen={sidebarOpen}> {/* Pasamos sidebarOpen como prop */}
       <NavbarLeft>
         <IconButton onClick={toggleSidebar}>
-          <HiMenuAlt2 size={24} />
+          {sidebarOpen ? (
+            <BiSolidLeftArrowSquare size={24} />
+          ) : (
+            <BiSolidRightArrowSquare size={24} />
+          )}
         </IconButton>
         <h1>Dashboard</h1>
       </NavbarLeft>
