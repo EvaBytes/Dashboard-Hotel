@@ -1,6 +1,5 @@
-import { createTheme } from "@mui/material/styles";
-
-export const theme = createTheme({
+export const theme = {
+  mode: "light", 
   palette: {
     primary: {
       main: "#FFFFFF",
@@ -9,70 +8,51 @@ export const theme = createTheme({
       main: "#135846",
     },
     background: {
-      default: "#f9f9f9", 
-      paper: "#ffffff", 
+      default: "#f9f9f9",
+      paper: "#ffffff",
     },
     text: {
-      primary: "##262626", 
-      secondary: "#799283", 
+      primary: "#262626",
+      secondary: "#799283",
     },
   },
   typography: {
-    fontFamily: "Roboto, Arial, sans-serif", 
+    fontFamily: "Roboto, Arial, sans-serif",
     h1: {
       fontSize: "32px",
       fontWeight: 700,
+      lineHeight: "1.2",
+      letterSpacing: "0.5px",
     },
     h2: {
       fontSize: "24px",
       fontWeight: 600,
+      lineHeight: "1.3",
+      letterSpacing: "0.3px",
     },
     body1: {
       fontSize: "16px",
-      color: "#333333", 
+      lineHeight: "1.5",
+      color: "#333333",
     },
     body2: {
       fontSize: "8px",
-      color: "#666666", 
+      lineHeight: "1.4",
+      color: "#666666",
     },
   },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        
-        body: {
-          margin: 0,
-          padding: 0,
-          boxSizing: "border-box",
-          backgroundColor: "#f9f9f9", 
-          fontFamily: "Roboto, Arial, sans-serif", 
-          color: "#333333", 
-        },
-        "*": {
-          margin: 0,
-          padding: 0,
-          boxSizing: "border-box",
-        },
-        a: {
-          textDecoration: "none",
-          color: "inherit",
-        },
+  styles: {
+    button: {
+      borderRadius: "8px",
+      padding: ".6rem 1.5rem",
+      hover: {
+        backgroundColor: "#135846",
+        color: "#ffffff",
       },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: "8px", 
-          padding: ".6rem 1.5rem", 
-        },
-      },
-    },
-    MuiTypography: {
-      styleOverrides: {
-        root: {
-          color: "#333333", 
-        },
+      disabled: {
+        backgroundColor: "#E0E0E0",
+        color: "#A0A0A0",
       },
     },
   },
-});
+};

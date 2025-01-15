@@ -1,50 +1,49 @@
-import { styled } from "@mui/material/styles";
-import { Box, Button, Avatar } from "@mui/material";
+import styled from "styled-components";
 
-export const UserContainer = styled(Box)(({ theme }) => ({
-  padding: "1.5rem 2rem",
-  borderRadius: "10px",
-  textAlign: "center",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  marginTop: ".7rem",
-}));
+export const UserContainer = styled.div`
+  padding: 1.5rem 2rem;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 0.7rem;
+`;
 
-export const UserAvatar = styled(Avatar)({
-  width: "5rem",
-  height: "5rem",
-  borderRadius: "50%",
-  margin: "0 auto",
-  marginBottom: ".7rem",
-});
+export const UserAvatar = styled.img`
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  margin: 0 auto;
+  margin-bottom: 0.7rem;
+  object-fit: cover;
+`;
 
-export const UserInfo = styled(Box)({
-  marginBottom: ".7rem",
-});
+export const UserInfo = styled.div`
+  margin-bottom: 0.7rem;
+`;
 
-export const UserName = styled("p")(({ theme }) => ({
-  color: "#393939",
-  fontSize: "1rem",
-  fontWeight: "bold",
-  margin: 0,
-}));
+export const UserName = styled.p`
+  color: #393939;
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0;
+`;
 
-export const UserEmail = styled("p")(({ theme }) => ({
-  color: "#B2B2B2",
-  fontSize: ".8rem",
-  margin: 0,
-}));
+export const UserEmail = styled.p`
+  color: #b2b2b2;
+  font-size: 0.8rem;
+  margin: 0;
+`;
 
-export const EditButton = styled(Button)({
-  backgroundColor: "#EBF1EF", 
-  color: "#333333",
-  padding: ".5rem .8rem",
-  borderRadius: "5px",
-  "&:hover": {
-    backgroundColor: "#799283", 
-  },
-});
+export const EditButton = styled.button`
+  background-color: #ebf1ef;
+  color: #333333;
+  padding: 0.5rem 0.8rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
 
-
-
-
-
+  &:hover {
+    background-color: #799283;
+    color: #ffffff;
+  }
+`;

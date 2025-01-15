@@ -1,7 +1,11 @@
 import React from "react";
-import { CardContent} from "@mui/material";
 import { FaRegCalendarAlt, FaBookOpen, FaSignOutAlt } from "react-icons/fa"; 
-import { DashboardContainer, StyledCard, StyledTypographyTitle, StyledTypographyValue } from "../assets/DashboardStyles"; 
+import {
+  DashboardContainer,
+  StyledCard,
+  StyledTypographyTitle,
+  StyledTypographyValue,
+} from "../assets/dashboardStyles"; 
 
 export const Dashboard = () => {
   return (
@@ -10,59 +14,35 @@ export const Dashboard = () => {
 
       <DashboardContainer>
         <StyledCard>
-          <CardContent>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-              <FaRegCalendarAlt style={{ marginRight: "10px" }} />
-              <StyledTypographyTitle variant="h6" color="textSecondary">
-                Bookings
-              </StyledTypographyTitle>
-            </div>
-            <StyledTypographyValue variant="h4" color="primary">
-              8,461
-            </StyledTypographyValue>
-          </CardContent>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+            <FaRegCalendarAlt style={{ marginRight: "10px" }} />
+            <StyledTypographyTitle>Bookings</StyledTypographyTitle>
+          </div>
+          <StyledTypographyValue>8,461</StyledTypographyValue>
         </StyledCard>
 
         <StyledCard>
-          <CardContent>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-              <FaBookOpen style={{ marginRight: "10px" }} />
-              <StyledTypographyTitle variant="h6" color="textSecondary">
-                Scheduled Room
-              </StyledTypographyTitle>
-            </div>
-            <StyledTypographyValue variant="h4" color="primary">
-              963
-            </StyledTypographyValue>
-          </CardContent>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+            <FaBookOpen style={{ marginRight: "10px" }} />
+            <StyledTypographyTitle>Scheduled Room</StyledTypographyTitle>
+          </div>
+          <StyledTypographyValue>963</StyledTypographyValue>
         </StyledCard>
 
         <StyledCard>
-          <CardContent>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-              <FaSignOutAlt style={{ marginRight: "10px" }} />
-              <StyledTypographyTitle variant="h6" color="textSecondary">
-                Check In
-              </StyledTypographyTitle>
-            </div>
-            <StyledTypographyValue variant="h4" color="primary">
-              753
-            </StyledTypographyValue>
-          </CardContent>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+            <FaSignOutAlt style={{ marginRight: "10px" }} />
+            <StyledTypographyTitle>Check In</StyledTypographyTitle>
+          </div>
+          <StyledTypographyValue>753</StyledTypographyValue>
         </StyledCard>
 
         <StyledCard>
-          <CardContent>
-            <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
-              <FaSignOutAlt style={{ marginRight: "10px" }} />
-              <StyledTypographyTitle variant="h6" color="textSecondary">
-                Check Out
-              </StyledTypographyTitle>
-            </div>
-            <StyledTypographyValue variant="h4" color="primary">
-              516
-            </StyledTypographyValue>
-          </CardContent>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "10px" }}>
+            <FaSignOutAlt style={{ marginRight: "10px" }} />
+            <StyledTypographyTitle>Check Out</StyledTypographyTitle>
+          </div>
+          <StyledTypographyValue>516</StyledTypographyValue>
         </StyledCard>
       </DashboardContainer>
     </div>

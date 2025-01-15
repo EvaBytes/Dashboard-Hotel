@@ -1,79 +1,69 @@
-import React from "react";
-import { styled } from "@mui/material/styles";
-import { Box, TextField, Button, Typography } from "@mui/material";
+import styled from "styled-components";
 
-export const BackgroundContainer = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "100vh",
-  backgroundImage: `url("src/assets/img/Login.png")`,
-  backgroundSize: "cover",
-  backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
-  padding: theme.spacing(2),
-}));
+export const BackgroundContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-image: url("src/assets/img/Login.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 16px;
+`;
 
-export const StyledAuthContainer = styled("div")(({ theme }) => ({
-  backgroundColor: "#FFFFFF",
-  padding: "1.2rem",
-  margin: "1rem",
-  borderRadius: "10px",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-  textAlign: "center",
-}));
+export const StyledAuthContainer = styled.div`
+  background-color: #ffffff;
+  padding: 1.2rem;
+  margin: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+`;
 
-export const StyledTextField = styled(TextField)(({ theme }) => ({
-  width: "90%",
-  borderRadius: "10px",
-  backgroundColor: "#FFFFFF",
-  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "#FFFFFF",
-    },
-    "&:hover fieldset": {
-      borderColor: "#00000014",
-    },
-  },
-}));
+export const StyledTextField = styled.input`
+  width: 90%;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ffffff;
+  margin: 10px 0;
 
-export const EmailField = (props) =>
-  React.createElement(StyledTextField, {
-    label: "Email",
-    type: "email",
-    fullWidth: true,
-    margin: "normal",
-    ...props,
-  });
+  &:hover {
+    border-color: #00000014;
+  }
+`;
 
-export const PasswordField = (props) =>
-  React.createElement(StyledTextField, {
-    label: "Password",
-    type: "password",
-    fullWidth: true,
-    margin: "normal",
-    ...props,
-  });
+export const EmailField = (props) => (
+  <StyledTextField type="email" placeholder="Email" {...props} />
+);
 
-export const StyledAuthButton = styled(Button)(({ theme }) => ({
-  width: "7.8rem",
-  padding: "1rem",
-  marginTop: ".3rem",
-  fontWeight: "bold",
-  backgroundColor: "#135846",
-  color: "#FFFFFF",
-  borderRadius: "8px",
-  "&:hover": {
-    backgroundColor: "#FFFFFF",
-    color: "#135846",
-  },
-}));
+export const PasswordField = (props) => (
+  <StyledTextField type="password" placeholder="Password" {...props} />
+);
 
-export const StyledSubtitle = styled(Typography)(({ theme }) => ({
-  fontSize: "1rem",
-  color: "#A10035",
-  marginTop: ".2rem",
-  marginBottom: "1rem",
-}));
+export const StyledAuthButton = styled.button`
+  width: 7.8rem;
+  padding: 1rem;
+  margin-top: 0.3rem;
+  font-weight: bold;
+  background-color: #135846;
+  color: #ffffff;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #ffffff;
+    color: #135846;
+  }
+`;
+
+export const StyledSubtitle = styled.p`
+  font-size: 1rem;
+  color: #a10035;
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
+`;

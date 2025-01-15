@@ -1,9 +1,9 @@
 import React from "react";
 import { AiOutlineMessage, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
-import { BiSolidLeftArrowSquare, BiSolidRightArrowSquare } from "react-icons/bi";
+import {BiSolidLeftArrowSquare,BiSolidRightArrowSquare,} from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { NavbarContainer, NavbarLeft, NavbarRight, IconButton } from "./navbarStyles";
+import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,} from "./navbarStyles";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const navigate = useNavigate();
@@ -14,7 +14,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   };
 
   return (
-    <NavbarContainer sidebarOpen={sidebarOpen}> 
+    <NavbarContainer sidebarOpen={sidebarOpen}>
       <NavbarLeft>
         <IconButton onClick={toggleSidebar}>
           {sidebarOpen ? (

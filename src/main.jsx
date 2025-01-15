@@ -1,17 +1,17 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ThemeProvider } from "@mui/material/styles";
-import { CssBaseline } from "@mui/material";
+import { ThemeProvider } from "styled-components";
+import { GlobalStyles } from "./assets/globalStyles";
 import { AuthProvider, useAuth } from "./verification/AuthContext";
 import { Layout } from "./Layout";
 import { Login } from "./verification/Login";
-import { theme } from "./assets/theme";
-import {Dashboard} from "./pages/Dashboard";
-import {Bookings} from "./pages/Bookings";
-import {Rooms} from "./pages/Rooms";
-import {Contacts} from "./pages/Contacts";
-import {Users} from "./pages/Users";
+import { theme } from "./assets/theme"; 
+import { Dashboard } from "./pages/Dashboard";
+import { Bookings } from "./pages/Bookings";
+import { Rooms } from "./pages/Rooms";
+import { Contacts } from "./pages/Contacts";
+import { Users } from "./pages/Users";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -22,10 +22,10 @@ createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
       <ThemeProvider theme={theme}>
-        <CssBaseline />
+        <GlobalStyles /> 
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />  
+            <Route path="/login" element={<Login />} />
             <Route
               path="/*"
               element={
