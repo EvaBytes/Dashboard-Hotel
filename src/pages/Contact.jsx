@@ -1,9 +1,11 @@
 import React from "react";
 
-export const Contacts = () => {
+export const Contact = () => {
   return (
     <div>
-      <h1>Contacts</h1>
+      <h1>Contact</h1>
+
+      
     </div>
   );
 };

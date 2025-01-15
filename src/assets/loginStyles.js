@@ -15,7 +15,7 @@ export const BackgroundContainer = styled.div`
 
 export const StyledAuthContainer = styled.div`
   background-color: #ffffff;
-  padding: 1.2rem;
+  padding: 2rem .5rem;
   margin: 1rem;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -23,8 +23,8 @@ export const StyledAuthContainer = styled.div`
 `;
 
 export const StyledTextField = styled.input`
-  width: 90%;
-  padding: 10px;
+  width: 85%;
+  padding: 1rem;
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -38,24 +38,25 @@ export const StyledTextField = styled.input`
 
 export const StyledAuthButton = styled.button`
   width: 7.8rem;
-  padding: 1rem;
+  padding: 1.2rem;
   margin-top: 0.3rem;
+  font-size: 16px;
   font-weight: bold;
-  background-color: #135846;
+  background-color: #799283;
   color: #ffffff;
   border-radius: 8px;
   border: none;
   cursor: pointer;
 
   &:hover {
-    background-color: #ffffff;
-    color: #135846;
+    background-color: #135846;
+    color: #ffffff;
   }
 `;
 
 export const StyledSubtitle = styled.p`
   font-size: 1rem;
-  color: #a10035;
+  color: #5D5449;
   margin-top: 0.2rem;
   margin-bottom: 1rem;
 `;

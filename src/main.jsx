@@ -10,7 +10,7 @@ import { theme } from "./assets/theme";
 import { Dashboard } from "./pages/Dashboard";
 import { Bookings } from "./pages/Bookings";
 import { Rooms } from "./pages/Rooms";
-import { Contacts } from "./pages/Contacts";
+import { Contact } from "./pages/Contact";
 import { Users } from "./pages/Users";
 
 const PrivateRoute = ({ children }) => {
@@ -37,7 +37,7 @@ createRoot(document.getElementById("root")).render(
               <Route index element={<Dashboard />} />
               <Route path="bookings" element={<Bookings />} />
               <Route path="rooms" element={<Rooms />} />
-              <Route path="contacts" element={<Contacts />} />
+              <Route path="contact" element={<Contact />} />
               <Route path="users" element={<Users />} />
             </Route>
           </Routes>
