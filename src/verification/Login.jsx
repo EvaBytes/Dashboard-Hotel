@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { theme } from "../assets/theme";
-import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,EmailField,PasswordField,StyledSubtitle,Alert,CircularProgress,Typography,} from "../assets/loginStyles";
+import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField,} from "../assets/loginStyles";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -62,19 +62,19 @@ const Login = () => {
           {errors.email && <Alert type="error">{errors.email}</Alert>}
           {errors.password && <Alert type="error">{errors.password}</Alert>}
 
-          <EmailField
+          <StyledTextField
+            type="email"
             aria-label="Correo electrónico"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            error={!!errors.email}
           />
-          <PasswordField
+          <StyledTextField
+            type="password"
             aria-label="Contraseña"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            error={!!errors.password}
           />
 
           <StyledAuthButton

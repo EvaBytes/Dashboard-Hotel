@@ -28,21 +28,13 @@ export const StyledTextField = styled.input`
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ffffff;
+  border: 1px solid #ddd;
   margin: 10px 0;
 
   &:hover {
-    border-color: #00000014;
+    border-color: #aaa;
   }
 `;
-
-export const EmailField = (props) => (
-  <StyledTextField type="email" placeholder="Email" {...props} />
-);
-
-export const PasswordField = (props) => (
-  <StyledTextField type="password" placeholder="Password" {...props} />
-);
 
 export const StyledAuthButton = styled.button`
   width: 7.8rem;
@@ -66,4 +58,39 @@ export const StyledSubtitle = styled.p`
   color: #a10035;
   margin-top: 0.2rem;
   margin-bottom: 1rem;
+`;
+
+export const Typography = styled.h1`
+  font-size: ${(props) => props.size || "1.5rem"};
+  color: ${(props) => props.color || "#333"};
+  margin: ${(props) => props.margin || "0 0 1rem 0"};
+`;
+
+export const Alert = styled.div`
+  background-color: ${(props) => (props.type === "error" ? "#ffcccc" : "#ccffcc")};
+  color: ${(props) => (props.type === "error" ? "#a10035" : "#006400")};
+  border: 1px solid ${(props) => (props.type === "error" ? "#a10035" : "#006400")};
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 16px;
+  width: 100%;
+  text-align: center;
+`;
+
+export const CircularProgress = styled.div`
+  border: 4px solid #f3f3f3; /* Gris claro */
+  border-top: 4px solid ${(props) => props.theme.palette.primary.main}; /* Color primario */
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 `;
