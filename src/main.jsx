@@ -7,6 +7,11 @@ import { AuthProvider, useAuth } from "./verification/AuthContext";
 import { Layout } from "./Layout";
 import { Login } from "./verification/Login";
 import { theme } from "./assets/theme";
+import {Dashboard} from "./pages/Dashboard";
+import {Bookings} from "./pages/Bookings";
+import {Rooms} from "./pages/Rooms";
+import {Contacts} from "./pages/Contacts";
+import {Users} from "./pages/Users";
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -20,7 +25,7 @@ createRoot(document.getElementById("root")).render(
         <CssBaseline />
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<Login />} />  
             <Route
               path="/*"
               element={
@@ -28,7 +33,13 @@ createRoot(document.getElementById("root")).render(
                   <Layout />
                 </PrivateRoute>
               }
-            />
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="bookings" element={<Bookings />} />
+              <Route path="rooms" element={<Rooms />} />
+              <Route path="contacts" element={<Contacts />} />
+              <Route path="users" element={<Users />} />
+            </Route>
           </Routes>
         </BrowserRouter>
       </ThemeProvider>

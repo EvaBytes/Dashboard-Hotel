@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Typography, Alert, CircularProgress, ThemeProvider } from "@mui/material";
 import { theme } from "../assets/theme";
-import { BackgroundContainer, StyledAuthContainer, StyledAuthButton, EmailField, PasswordField, StyledSubtitle } from "../assets/loginStyles";
+import {
+  BackgroundContainer,
+  StyledAuthContainer,
+  StyledAuthButton,
+  EmailField,
+  PasswordField,
+  StyledSubtitle,
+} from "../assets/loginStyles";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -13,7 +20,7 @@ const Login = () => {
 
   useEffect(() => {
     if (localStorage.getItem("authToken")) {
-      navigate("/dashboard");
+      navigate("/");
     }
   }, [navigate]);
 
@@ -38,9 +45,10 @@ const Login = () => {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
+
       if (email === "admin@example.com" && password === "123456") {
         localStorage.setItem("authToken", "fakeToken");
-        navigate("/dashboard");
+        navigate("/"); 
       } else {
         setErrors({
           password: "Credenciales inválidas. Inténtalo nuevamente.",

@@ -5,7 +5,7 @@ export const DashboardContainer = styled("div")`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 1.4rem; 
+  gap: .4rem; 
 `;
 
 export const StyledCard = styled(Card)`

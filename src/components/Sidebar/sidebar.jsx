@@ -45,7 +45,7 @@ const Sidebar = () => {
       <SidebarFooter>
         <p>Travel Hotel Admin Dashboard</p>
         <p>© 2025 All Rights Reserved</p>
-        <p>Made with ♥ by Peterdraw</p>
+        <p>Made with ♥ by Eva</p>
       </SidebarFooter>
     </SidebarContainer>
   );

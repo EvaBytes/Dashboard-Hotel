@@ -14,7 +14,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   };
 
   return (
-    <NavbarContainer sidebarOpen={sidebarOpen}> {/* Pasamos sidebarOpen como prop */}
+    <NavbarContainer sidebarOpen={sidebarOpen}> 
       <NavbarLeft>
         <IconButton onClick={toggleSidebar}>
           {sidebarOpen ? (
