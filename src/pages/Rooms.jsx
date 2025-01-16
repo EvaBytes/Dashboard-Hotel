@@ -1,7 +1,9 @@
 import React from "react";
 import roomsData from "../data/Rooms.json"; 
 import { GenericTable } from "../components/common/GenericTable.jsx";
-import {TableData,GuestContainer,GuestImage,StatusBadge} from "../assets/TableStyles.js";
+import {TableData,GuestContainer,GuestImage} from "../assets/TableStyles.js";
+import {Button} from "../assets/ButtonStyles.js"
+import {GenericButton} from "../components/common/GenericButton.jsx";
 
 export const Rooms = () => {
   const headers = [
@@ -29,9 +31,9 @@ export const Rooms = () => {
       <TableData>{room.rate}</TableData>
       <TableData>{room.offerPrice}</TableData>
       <TableData>
-        <StatusBadge status={room.status}>
+        <GenericButton variant={room.status.toLowerCase()}>
           {room.status === "Available" ? "Available" : "Booked"}
-        </StatusBadge>
+        </GenericButton>
       </TableData>
     </>
   );

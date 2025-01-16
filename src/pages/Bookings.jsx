@@ -1,12 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
 import bookingsData from "../data/Bookings.json";
 import { GenericTable } from "../components/common/GenericTable.jsx";
-import {TableData,GuestContainer,GuestImage,GuestInfo,ViewNotesButton,StatusBadge} from "../assets/TableStyles.js";
+import {GenericButton} from "../components/common/GenericButton.jsx";
+import {TableData,GuestContainer,GuestImage,GuestInfo,ViewNotesButton,StatusBadge,} from "../assets/TableStyles.js";
+import { Overlay, Popup, CloseButton } from "../assets/PopupStyles.js";
+
+
+const NotesPopup = ({ isOpen, onClose, specialRequest }) => {
+  if (!isOpen) return null;
+
+  return (
+    <Overlay>
+      <Popup>
+        <h3>Special Request</h3>
+        <p>{specialRequest}</p>
+        <CloseButton onClick={onClose}>Close</CloseButton>
+      </Popup>
+    </Overlay>
+  );
+};
 
 export const Bookings = () => {
-  const navigate = useNavigate();
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [currentSpecialRequest, setCurrentSpecialRequest] = useState("");
+
+  const openPopup = (specialRequest) => {
+    setCurrentSpecialRequest(specialRequest);
+    setIsPopupOpen(true);
+  };
+
+  const closePopup = () => {
+    setIsPopupOpen(false);
+    setCurrentSpecialRequest("");
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -39,13 +66,9 @@ export const Bookings = () => {
       <TableData>{formatDate(booking.checkIn)}</TableData>
       <TableData>{formatDate(booking.checkOut)}</TableData>
       <TableData>
-        <ViewNotesButton
-          onClick={() =>
-            navigate(`/guest-details/${booking.guest.reservationNumber}`)
-          }
-        >
+        <GenericButton variant="default" onClick={() => openPopup(booking.specialRequest)}>
           View Notes
-        </ViewNotesButton>
+        </GenericButton>
       </TableData>
       <TableData>{booking.roomType}</TableData>
       <TableData>
@@ -60,7 +83,12 @@ export const Bookings = () => {
         headers={headers}
         data={bookingsData}
         renderRow={renderRow}
-        itemsPerPage={10} 
+        itemsPerPage={10}
+      />
+      <NotesPopup
+        isOpen={isPopupOpen}
+        onClose={closePopup}
+        specialRequest={currentSpecialRequest}
       />
     </div>
   );
