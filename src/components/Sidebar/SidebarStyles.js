@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export const SidebarContainer = styled.aside`
   width: 250px;
@@ -23,7 +23,7 @@ export const SidebarTitleIcon = styled.span`
   margin-left: 2rem;
 `;
 
-export const SidebarTitle = styled.h2`
+export const SidebarTitle = styled.h4`
   color: #212121;
   margin-bottom: 1.2rem;
   display: flex;
@@ -39,12 +39,25 @@ export const SidebarListItem = styled.li`
   margin-bottom: 1rem;
 `;
 
-export const SidebarLink = styled(Link)`
+export const SidebarLink = styled(NavLink)`
   text-decoration: none;
-  color: inherit;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: #135846;
+  font-weight: normal;
+  border-left: 4px solid transparent;
+  transition: all 0.3s ease;
+
+  &.active {
+    color: #e23428;
+    font-weight: bold;
+    border-left: 3px solid #e23428;
+  }
 
   &:hover {
-    text-decoration: underline;
+    color: #e23428;
+    text-decoration: none;
   }
 `;
 

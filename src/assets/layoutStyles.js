@@ -14,7 +14,7 @@ export const SidebarContainer = styled.div`
   height: 100vh;
   background-color: #fff;
   transition: 0.3s;
-  z-index: 1000;
+  z-index: 100;
 `;
 
 export const MainContent = styled.div`

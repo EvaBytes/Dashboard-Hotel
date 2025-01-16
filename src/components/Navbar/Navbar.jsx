@@ -1,17 +1,29 @@
 import React from "react";
 import { AiOutlineMessage, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
-import {BiSolidLeftArrowSquare,BiSolidRightArrowSquare,} from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
-import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,} from "./navbarStyles";
+import { BiSolidLeftArrowSquare, BiSolidRightArrowSquare } from "react-icons/bi";
+import { useNavigate, useLocation } from "react-router-dom";
+import { NavbarContainer, NavbarLeft, NavbarRight, IconButton } from "./navbarStyles";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const navigate = useNavigate();
+  const location = useLocation(); 
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     navigate("/login");
   };
+
+  const pageTitles = {
+    "/": "Dashboard",
+    "/bookings": "Bookings",
+    "/rooms": "Rooms",
+    "/contacts": "Contacts",
+    "/users": "Users",
+    "/guest-details": "Guest Details",
+  };
+
+  const currentPageTitle = pageTitles[location.pathname] || "Dashboard";
 
   return (
     <NavbarContainer sidebarOpen={sidebarOpen}>
@@ -23,7 +35,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
             <BiSolidRightArrowSquare size={24} />
           )}
         </IconButton>
-        <h1>Dashboard</h1>
+        <h1>{currentPageTitle}</h1>
       </NavbarLeft>
       <NavbarRight>
         <IconButton>

@@ -1,8 +1,9 @@
 import React from "react";
 import { LuLayoutDashboard, LuBedSingle } from "react-icons/lu";
-import {AiOutlineUser,AiOutlineCalendar,AiOutlineContacts,} from "react-icons/ai";
+import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts } from "react-icons/ai";
 import { FaHotel } from "react-icons/fa";
-import {SidebarContainer,SidebarTitle,SidebarTitleIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon,} from "./SidebarStyles";
+import { useLocation } from "react-router-dom";
+import {SidebarContainer,SidebarTitle,SidebarTitleIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon} from "./SidebarStyles";
 import { UserContainer } from "./UserContainer";
 
 const Sidebar = () => {
@@ -26,13 +27,13 @@ const Sidebar = () => {
         <SidebarTitleIcon>
           <FaHotel />
         </SidebarTitleIcon>
-        travl
+        HOTEL MIRANDA
       </SidebarTitle>
 
       <SidebarList>
         {links.map((link) => (
           <SidebarListItem key={link.path}>
-            <SidebarLink to={link.path}>
+            <SidebarLink to={link.path} activeClassName="active">
               <SidebarIcon>{link.icon}</SidebarIcon>
               {link.label}
             </SidebarLink>

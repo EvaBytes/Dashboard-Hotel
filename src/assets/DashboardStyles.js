@@ -5,7 +5,7 @@ export const DashboardContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 0.4rem;
-  padding: 1rem;
+  padding: 2rem 1rem;
 `;
 
 export const StyledCard = styled.div`
@@ -83,11 +83,73 @@ export const StyledTypographyValue = styled.h4`
 `;
 
 export const StyledLargeCard = styled(StyledCard)`
-  max-width: 50%; 
-  padding: 2rem; 
-  height: auto; 
-  display: flex-end;
-  flex-direction: column;
+  max-width: 60%; 
+  padding: 2rem;
+  height: auto;
   justify-content: center;
 `;
 
+export const StyledEmptyContainer = styled(StyledCard)`
+  max-width: 39%; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+`;
+
+export const StyledBookingList = styled.div`
+  margin-top: 2rem;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+`;
+
+export const StyledBookingItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e0e0e0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+  }
+`;
+
+export const StyledBookingInfo = styled.div`
+  h4 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 12px;
+    color: #888;
+  }
+`;
+
+export const StyledBookingButton = styled.button`
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #135846;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0e4439;
+  }
+`;

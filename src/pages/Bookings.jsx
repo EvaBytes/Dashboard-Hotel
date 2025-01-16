@@ -1,9 +1,10 @@
 import React, { useState } from "react";
+import { format } from "date-fns";
 import bookingsData from "../data/Bookings.json";
-import {Table,TableHeader,TableRow,TableData,StatusBadge,PaginationContainer,PageButton,GuestContainer,GuestImage,GuestInfo,} from "../assets/BookingStyles";
+import {Table,TableHeader,TableRow,TableData,StatusBadge,PaginationContainer,PageButton,GuestContainer,GuestImage,GuestInfo,ViewNotesButton} from "../assets/BookingStyles";
 
 export const Bookings = () => {
-  const itemsPerPage = 7;
+  const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const totalItems = bookingsData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -20,11 +21,18 @@ export const Bookings = () => {
   const visiblePages = 3;
   const startPage = Math.max(1, currentPage - visiblePages);
   const endPage = Math.min(totalPages, currentPage + visiblePages);
-  const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
+  const pageNumbers = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i
+  );
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return format(date, "MMM do, yyyy hh:mm a"); 
+  };
 
   return (
     <div>
-      <h1>Bookings Page</h1>
       <Table>
         <thead>
           <TableRow>
@@ -50,13 +58,23 @@ export const Bookings = () => {
                   </GuestInfo>
                 </GuestContainer>
               </TableData>
-              <TableData>{booking.orderDate}</TableData>
-              <TableData>{booking.checkIn}</TableData>
-              <TableData>{booking.checkOut}</TableData>
-              <TableData>{booking.specialRequest}</TableData>
+              <TableData>{formatDate(booking.orderDate)}</TableData>
+              <TableData>{formatDate(booking.checkIn)}</TableData>
+              <TableData>{formatDate(booking.checkOut)}</TableData>
+              <TableData>
+                <ViewNotesButton
+                  onClick={() =>
+                    window.location.href = `/guest-details/${booking.guest.reservationNumber}`
+                  }
+                >
+                  View Notes
+                </ViewNotesButton>
+              </TableData>
               <TableData>{booking.roomType}</TableData>
               <TableData>
-                <StatusBadge status={booking.status}>{booking.status}</StatusBadge>
+                <StatusBadge status={booking.status}>
+                  {booking.status}
+                </StatusBadge>
               </TableData>
             </TableRow>
           ))}
@@ -64,7 +82,10 @@ export const Bookings = () => {
       </Table>
 
       <PaginationContainer>
-        <PageButton onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+        <PageButton
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
           Prev
         </PageButton>
         {startPage > 1 && <span>...</span>}
@@ -78,7 +99,10 @@ export const Bookings = () => {
           </PageButton>
         ))}
         {endPage < totalPages && <span>...</span>}
-        <PageButton onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+        <PageButton
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
           Next
         </PageButton>
       </PaginationContainer>

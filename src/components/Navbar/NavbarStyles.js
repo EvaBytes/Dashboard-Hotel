@@ -8,6 +8,7 @@ export const NavbarContainer = styled.nav`
   background-color: #fff;
   border-radius: 3px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
   top: 0;
   position: fixed;
   width: ${(props) => (props.sidebarOpen ? "calc(100% - 240px)" : "100%")};

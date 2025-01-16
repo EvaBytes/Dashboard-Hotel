@@ -12,6 +12,7 @@ import { Bookings } from "./pages/Bookings";
 import { Rooms } from "./pages/Rooms";
 import { Contact } from "./pages/Contact";
 import { Users } from "./pages/Users";
+import GuestDetails from "./pages/GuestDetails"; 
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -39,6 +40,7 @@ createRoot(document.getElementById("root")).render(
               <Route path="rooms" element={<Rooms />} />
               <Route path="contact" element={<Contact />} />
               <Route path="users" element={<Users />} />
+              <Route path="guest-details" element={<GuestDetails />} /> 
             </Route>
           </Routes>
         </BrowserRouter>
