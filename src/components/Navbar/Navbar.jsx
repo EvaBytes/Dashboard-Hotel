@@ -20,10 +20,12 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     "/rooms": "Rooms",
     "/contacts": "Contacts",
     "/users": "Users",
-    "/guest-details": "Guest Details",
   };
 
-  const currentPageTitle = pageTitles[location.pathname] || "Dashboard";
+  let currentPageTitle = pageTitles[location.pathname] || "Dashboard";
+  if (location.pathname.includes("/guest-details")) {
+    currentPageTitle = "Guest Details";
+  }
 
   return (
     <NavbarContainer sidebarOpen={sidebarOpen}>
@@ -35,7 +37,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
             <BiSolidRightArrowSquare size={24} />
           )}
         </IconButton>
-        <h1>{currentPageTitle}</h1>
+        <h1>{currentPageTitle}</h1> 
       </NavbarLeft>
       <NavbarRight>
         <IconButton>

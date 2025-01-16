@@ -4,7 +4,7 @@ import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts } from "react-icons
 import { FaHotel } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import {SidebarContainer,SidebarTitle,SidebarTitleIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon} from "./SidebarStyles";
-import { UserContainer } from "./UserContainer";
+import { UserContainer } from "./UserContainer.jsx";
 
 const Sidebar = () => {
   const user = {
@@ -44,7 +44,7 @@ const Sidebar = () => {
       <UserContainer user={user} />
 
       <SidebarFooter>
-        <p>Travel Hotel Admin Dashboard</p>
+        <h3>Travel Hotel Admin Dashboard</h3>
         <p>© 2025 All Rights Reserved</p>
         <p>Made with ♥ by Eva</p>
       </SidebarFooter>
