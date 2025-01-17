@@ -3,7 +3,7 @@ import { format } from "date-fns";
 import bookingsData from "../data/Bookings.json";
 import { GenericTable } from "../components/common/GenericTable.jsx";
 import {GenericButton} from "../components/common/GenericButton.jsx";
-import {TableData,GuestContainer,GuestImage,GuestInfo,ViewNotesButton,StatusBadge,} from "../assets/TableStyles.js";
+import {TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge,} from "../assets/TableStyles.js";
 import { Overlay, Popup, CloseButton } from "../assets/PopupStyles.js";
 
 
