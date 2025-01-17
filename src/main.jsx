@@ -2,17 +2,17 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { GlobalStyles } from "./assets/globalStyles";
-import { AuthProvider, useAuth } from "./verification/AuthContext";
-import { Layout } from "./Layout";
-import { Login } from "./verification/Login";
-import { theme } from "./assets/theme"; 
-import { Dashboard } from "./pages/Dashboard";
-import { Bookings } from "./pages/Bookings";
-import { Rooms } from "./pages/Rooms";
-import { Contact } from "./pages/Contact";
-import { Users } from "./pages/Users";
-import {GuestDetails} from "./pages/GuestDetails"; 
+import { GlobalStyles } from "./assets/globalStyles.js";
+import { AuthProvider, useAuth } from "./verification/AuthContext.jsx";
+import { Layout } from "./Layout.jsx";
+import { Login } from "./verification/Login.jsx";
+import { theme } from "./assets/theme.js"; 
+import { Dashboard } from "./pages/Dashboard.jsx";
+import { Bookings } from "./pages/Bookings.jsx";
+import { Rooms } from "./pages/Rooms.jsx";
+import { Contact } from "./pages/Contact.jsx";
+import { Users } from "./pages/Users.jsx";
+import {GuestDetails} from "./pages/GuestDetails.jsx"; 
 
 const PrivateRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -38,7 +38,7 @@ createRoot(document.getElementById("root")).render(
               <Route index element={<Dashboard />} />
               <Route path="bookings" element={<Bookings />} />
               <Route path="rooms" element={<Rooms />} />
-              <Route path="contact" element={<Contact />} />
+              <Route path="contacts" element={<Contact />} />
               <Route path="users" element={<Users />} />
               <Route path="guest-details" element={<GuestDetails />} />
             </Route>

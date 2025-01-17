@@ -1,8 +1,7 @@
 import React from "react";
 import roomsData from "../data/Rooms.json"; 
 import { GenericTable } from "../components/common/GenericTable.jsx";
-import {TableData,GuestContainer,GuestImage} from "../assets/TableStyles.js";
-import {Button} from "../assets/ButtonStyles.js"
+import {TableData,GuestContainer,RoomImage} from "../assets/TableStyles.js";
 import {GenericButton} from "../components/common/GenericButton.jsx";
 
 export const Rooms = () => {
@@ -21,7 +20,7 @@ export const Rooms = () => {
     <>
       <TableData>
         <GuestContainer>
-          <GuestImage src={room.roomPhoto} alt={`Room ${room.roomNumber}`} />
+          <RoomImage src={room.roomPhoto} alt={`Room ${room.roomNumber}`} />
         </GuestContainer>
       </TableData>
       <TableData>{room.roomNumber}</TableData>

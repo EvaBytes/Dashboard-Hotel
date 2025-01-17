@@ -1,11 +1,11 @@
 import React from "react";
+import { ContactContainer } from "../assets/ContactStyles";
+
 
 export const Contact = () => {
   return (
     <div>
-      <h1>Contact</h1>
-
-      
+      Contact
     </div>
   );
 };

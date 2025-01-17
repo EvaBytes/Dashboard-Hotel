@@ -1,12 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { IoBedOutline, IoCalendarOutline } from "react-icons/io5";
 import { IoIosLogIn, IoIosLogOut } from "react-icons/io";
-import {DashboardContainer,IconContainer,TextContainer,StyledCard,StyledTypographyTitle,StyledTypographyValue,StyledLargeCard,StyledEmptyContainer,StyledBookingList,StyledBookingItem,StyledBookingInfo,StyledBookingButton,} from "../assets/DashboardStyles";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {DashboardContainer,IconContainer,TextContainer,StyledCard,StyledTypographyTitle,StyledTypographyValue,StyledLargeCard,StyledEmptyContainer,StyledBookingButtonContainer,StyledBookingList,StyledBookingItem,StyledBookingInfo,StyledBookingButton} from "../assets/DashboardStyles.js";
+import {BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer} from "recharts";
+import { LatestMessages } from "../components/common/LatestMessages.jsx";
+import { StyledMessagesCard} from"../assets/LatestMessagesStyles.js";
 import reservationStatsRaw from "../data/ReservationStats.json";
 import bookingData from "../data/Bookings.json";
-import { useNavigate } from "react-router-dom";
-
+import messagesData from "../data/Messages.json"; 
 
 const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -32,7 +34,6 @@ const processData = (data) => {
   return mapDataToOrder(groupedData, dayOrder);
 };
 
-
 const processedData = processData(reservationStatsRaw);
 
 const DashboardCard = ({ icon: Icon, title, value }) => {
@@ -56,21 +57,28 @@ const BookingList = () => {
     <StyledBookingList>
       {bookingData.slice(0, 3).map((booking, index) => (
         <StyledBookingItem key={index}>
-          <img src={booking.guest.image} alt={booking.guest.fullName} />
+          <img src={booking.roomPhoto || "src/assets/img/LUXURYcutre.jpg"} alt={booking.roomType} />
           <StyledBookingInfo>
-            <h4>
-              {booking.roomType} - {booking.guest.reservationNumber}
-            </h4>
-            <p>{booking.guest.fullName}</p>
-            <p>
-              Check-in: {booking.checkIn} · Check-out: {booking.checkOut}
-            </p>
+            <div className="room-info">
+              <h4>{booking.roomType}</h4>
+              <p>Room No: {booking.guest.reservationNumber}</p>
+            </div>
+            <div className="guest-info">
+              <p>{booking.guest.fullName}</p>
+              <p>Check-in: {booking.checkIn}</p>
+              <p>Check-out: {booking.checkOut}</p>
+            </div>
           </StyledBookingInfo>
         </StyledBookingItem>
       ))}
-      <StyledBookingButton onClick={() => navigate("/bookings")}>View More</StyledBookingButton>
+      <StyledBookingButtonContainer>
+        <StyledBookingButton onClick={() => navigate("/bookings")}>
+          View More
+        </StyledBookingButton>
+      </StyledBookingButtonContainer>
     </StyledBookingList>
   );
+  
 };
 
 export const Dashboard = () => {
@@ -104,6 +112,11 @@ export const Dashboard = () => {
       </div>
 
       <BookingList />
+
+      <StyledMessagesCard>
+        <h4>Latest Messages</h4>
+        <LatestMessages messages={messagesData} />
+      </StyledMessagesCard>
     </div>
   );
 };

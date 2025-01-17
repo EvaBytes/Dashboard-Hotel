@@ -6,22 +6,21 @@ export const Overlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5); 
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  justify-content: center;
+  z-index: 999;
 `;
 
 export const Popup = styled.div`
   background: #fff;
   padding: 2rem;
-  border-radius: 12px;
-  max-width: 500px;
-  width: 90%;
+  border-radius: 10px; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  width: 80%; 
+  max-width: 600px; 
   text-align: center;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  animation: fadeIn 0.3s ease;
 
   h3 {
     font-size: 1.5rem;
@@ -35,18 +34,17 @@ export const Popup = styled.div`
     line-height: 1.6;
     margin-bottom: 1.5rem;
   }
-
 `;
 
 export const CloseButton = styled.button`
-  margin-top: 10px;
-  padding: 0.8rem 2rem;
-  border: none;
-  background-color: #135846;
+  margin-top: 1rem; 
+  padding: 0.5rem 1rem;
+  background: #135846;
   color: #fff;
+  border: none;
+  border-radius: 5px; 
   font-size: 1rem;
   font-weight: bold;
-  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 

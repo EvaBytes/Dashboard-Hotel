@@ -113,6 +113,7 @@ export const StyledBookingItem = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
+  gap: 1 rem;
   border-bottom: 1px solid #e0e0e0;
 
   &:last-child {
@@ -128,6 +129,10 @@ export const StyledBookingItem = styled.div`
 `;
 
 export const StyledBookingInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem; 
+
   h4 {
     margin: 0;
     font-size: 16px;
@@ -140,16 +145,19 @@ export const StyledBookingInfo = styled.div`
   }
 `;
 
-export const StyledBookingButton = styled.button`
+export const StyledBookingButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 1rem;
+`;
+
+export const StyledBookingButton = styled.button`
   padding: 0.5rem 1rem;
-  background-color: #135846;
-  color: #fff;
+  background-color: #fff; 
+  color: #135846; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
 
-  &:hover {
-    background-color: #0e4439;
-  }
 `;

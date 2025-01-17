@@ -34,10 +34,12 @@ export const TableRow = styled.tr`
 `;
 
 export const TableData = styled.td`
-  padding: .6rem;
+  padding: 0.6rem;
   border-bottom: 1px solid #ddd;
-  vertical-align: middle;
+  vertical-align: middle; 
+  text-align: center; 
 `;
+
 
 export const GuestContainer = styled.div`
   display: flex;
@@ -51,6 +53,13 @@ export const GuestImage = styled.img`
   margin-right: 10px;
 `;
 
+export const RoomImage = styled.img`
+  width: 5rem;
+  height: 3rem;
+  border-radius: 8px;
+  text-align: center; 
+`;
+
 export const GuestInfo = styled.div`
   display: flex;
   flex-direction: column;
@@ -59,6 +68,17 @@ export const GuestInfo = styled.div`
 
   small {
     color: #888;
+  }
+`;
+
+export const CustomerInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  p {
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
+    color: #555;
   }
 `;
 
@@ -121,5 +141,20 @@ export const ViewNotesButton = styled.button`
 
   &:hover {
     background-color: #DFF4E4;
+  }
+`;
+
+export const ArchiveButton = styled.button`
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #e23428; // Rojo para Archivar
+  color: white;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #c21f1c;
   }
 `;
