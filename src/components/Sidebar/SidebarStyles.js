@@ -39,27 +39,24 @@ export const SidebarListItem = styled.li`
   margin-bottom: 1rem;
 `;
 
-export const SidebarLink = styled(NavLink)`
+export const SidebarLink = styled(NavLink).attrs(({ isActive }) => ({
+  "data-active": isActive,
+}))`
   text-decoration: none;
   display: flex;
   align-items: center;
-  padding: 0.5rem 1rem;
-  color: #135846;
-  font-weight: normal;
-  border-left: 4px solid transparent;
+  padding: 0.8rem 1.5rem;
+  color: ${(props) => (props["data-active"] ? "#e23428" : "#135846")};
+  font-weight: ${(props) => (props["data-active"] ? "bold" : "normal")};
+  border-left: ${(props) => (props["data-active"] ? "4px solid #e23428" : "4px solid transparent")};
   transition: all 0.3s ease;
-
-  &.active {
-    color: #e23428;
-    font-weight: bold;
-    border-left: 3px solid #e23428;
-  }
 
   &:hover {
     color: #e23428;
     text-decoration: none;
   }
 `;
+
 
 export const SidebarIcon = styled.span`
   font-size: 20px;

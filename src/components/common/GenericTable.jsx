@@ -54,7 +54,7 @@ const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10 }) => {
           <PageButton
             key={page}
             onClick={() => handlePageChange(page)}
-            active={currentPage === page}
+            data-active={currentPage === page}
           >
             {page}
           </PageButton>

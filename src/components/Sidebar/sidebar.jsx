@@ -1,15 +1,23 @@
 import React from "react";
+import {
+  SidebarContainer,
+  SidebarTitle,
+  SidebarTitleIcon,
+  SidebarList,
+  SidebarListItem,
+  SidebarLink,
+  SidebarFooter,
+  SidebarIcon,
+} from "./SidebarStyles";
+import { UserContainer } from "./UserContainer.jsx";
 import { LuLayoutDashboard, LuBedSingle } from "react-icons/lu";
 import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts } from "react-icons/ai";
 import { FaHotel } from "react-icons/fa";
-import { useLocation } from "react-router-dom";
-import {SidebarContainer,SidebarTitle,SidebarTitleIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon} from "./SidebarStyles";
-import { UserContainer } from "./UserContainer.jsx";
 
 const Sidebar = () => {
   const user = {
-    name: "Eva Sevillano Plata",
-    email: "evasevillanop@gmail.com",
+    name: "William Johanson",
+    email: "williamj@gmail.com",
     image: "src/assets/img/profile.jpeg",
   };
 
@@ -17,7 +25,7 @@ const Sidebar = () => {
     { label: "Dashboard", path: "/", icon: <LuLayoutDashboard /> },
     { label: "Bookings", path: "/bookings", icon: <AiOutlineCalendar /> },
     { label: "Rooms", path: "/rooms", icon: <LuBedSingle /> },
-    { label: "Contacts", path: "/contacts", icon: <AiOutlineContacts /> },
+    { label: "Contact", path: "/contact", icon: <AiOutlineContacts /> },
     { label: "Users", path: "/users", icon: <AiOutlineUser /> },
   ];
 
@@ -27,13 +35,13 @@ const Sidebar = () => {
         <SidebarTitleIcon>
           <FaHotel />
         </SidebarTitleIcon>
-        HOTEL MIRANDA
+        TRAVL
       </SidebarTitle>
 
       <SidebarList>
         {links.map((link) => (
           <SidebarListItem key={link.path}>
-            <SidebarLink to={link.path} activeClassName="active">
+            <SidebarLink to={link.path}>
               <SidebarIcon>{link.icon}</SidebarIcon>
               {link.label}
             </SidebarLink>
@@ -44,7 +52,7 @@ const Sidebar = () => {
       <UserContainer user={user} />
 
       <SidebarFooter>
-        <h3>Travel Hotel Admin Dashboard</h3>
+        <h3>Travi Hotel Admin Dashboard</h3>
         <p>© 2025 All Rights Reserved</p>
         <p>Made with ♥ by Eva</p>
       </SidebarFooter>

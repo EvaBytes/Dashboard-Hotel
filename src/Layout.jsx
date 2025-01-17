@@ -5,23 +5,23 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { LayoutContainer, MainContent, Content, SidebarContainer } from "./assets/layoutStyles";
 
 const Layout = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(true);  
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);  
+    setSidebarOpen(!sidebarOpen);
   };
 
   return (
     <LayoutContainer>
       <Navbar toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
 
-      <SidebarContainer sidebarOpen={sidebarOpen}>
+      <SidebarContainer $sidebarOpen={sidebarOpen}>
         {sidebarOpen && <Sidebar />}
       </SidebarContainer>
-      
-      <MainContent style={{ marginLeft: sidebarOpen ? "250px" : "0" }}>
+
+      <MainContent $sidebarOpen={sidebarOpen}>
         <Content>
-          <Outlet></Outlet>
+          <Outlet />
         </Content>
       </MainContent>
     </LayoutContainer>

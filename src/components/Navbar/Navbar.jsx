@@ -18,7 +18,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     "/": "Dashboard",
     "/bookings": "Bookings",
     "/rooms": "Rooms",
-    "/contacts": "Contacts",
+    "/contact": "Contact",
     "/users": "Users",
   };
 
@@ -28,7 +28,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   }
 
   return (
-    <NavbarContainer sidebarOpen={sidebarOpen}>
+    <NavbarContainer $sidebarOpen={sidebarOpen}>
       <NavbarLeft>
         <IconButton onClick={toggleSidebar}>
           {sidebarOpen ? (

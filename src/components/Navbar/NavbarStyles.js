@@ -11,8 +11,8 @@ export const NavbarContainer = styled.nav`
   z-index: 100;
   top: 0;
   position: fixed;
-  width: ${(props) => (props.sidebarOpen ? "calc(100% - 240px)" : "100%")};
-  margin-left: ${(props) => (props.sidebarOpen ? "250px" : "0")};
+  width: ${(props) => (props.$sidebarOpen ? "calc(100% - 240px)" : "100%")};
+  margin-left: ${(props) => (props.$sidebarOpen ? "250px" : "0")};
   transition: width 0.4s ease-in-out, margin-left 0.4s ease-in-out;
 `;
 

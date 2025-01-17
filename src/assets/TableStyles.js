@@ -109,12 +109,14 @@ export const PaginationContainer = styled.div`
   margin: 20px 0;
 `;
 
-export const PageButton = styled.button`
+export const PageButton = styled.button.attrs((props) => ({
+  "data-active": props.active, 
+}))`
   margin: 0 5px;
   padding: 5px 10px;
   border: 1px solid #ddd;
-  background-color: ${({ active }) => (active ? "#135846" : "white")};
-  color: ${({ active }) => (active ? "white" : "#000")};
+  background-color: ${({ "data-active": isActive }) => (isActive ? "#135846" : "white")};
+  color: ${({ "data-active": isActive }) => (isActive ? "white" : "#000")};
   border-radius: 4px;
   cursor: pointer;
 
@@ -129,6 +131,7 @@ export const PageButton = styled.button`
     color: white;
   }
 `;
+
 
 export const ViewNotesButton = styled.button`
   margin-top: 0.5rem;
