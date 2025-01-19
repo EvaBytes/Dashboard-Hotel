@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Table, TableHeader, TableRow, TableData } from "../../assets/TableStyles.js";
-import { PaginationContainer, PageButton } from "../../assets/TableStyles.js"; 
+import { Table, TableHeader, TableRow, TableData } from "../../styles/TableStyles.js";
+import { PaginationContainer, PageButton } from "../../styles/TableStyles.js"; 
 
 const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10 }) => {
   const [currentPage, setCurrentPage] = useState(1);

@@ -4,9 +4,8 @@ export const NavbarContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem;
   background-color: #fff;
-  border-radius: 3px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 100;
   top: 0;
@@ -29,11 +28,12 @@ export const NavbarRight = styled.div`
 export const IconButton = styled.button`
   background: none;
   border: none;
-  margin: 0 0.8rem;
+  color: #135846;
+  margin: 0 .8rem;
   cursor: pointer;
   padding: 0;
 
   &:hover {
-    opacity: 0.7;
+    opacity: .5;
   }
 `;

@@ -3,8 +3,9 @@ import styled from "styled-components";
 export const ContactPageContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px;
+  gap: 1.5rem;
+  padding: 1.4rem;
+  margin-top:3rem;
 `;
 
 export const SectionContainer = styled.div`

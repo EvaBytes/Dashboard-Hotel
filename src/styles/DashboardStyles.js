@@ -6,6 +6,7 @@ export const DashboardContainer = styled.div`
   justify-content: space-between;
   gap: 0.4rem;
   padding: 2rem 1rem;
+  margin-top:1rem;
 `;
 
 export const StyledCard = styled.div`

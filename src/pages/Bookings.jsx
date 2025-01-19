@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom"; 
+import { HiOutlineDotsVertical } from "react-icons/hi";
 import bookingsData from "../data/Bookings.json";
 import { GenericTable } from "../components/common/GenericTable.jsx";
-import {GenericButton} from "../components/common/GenericButton.jsx";
-import {TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge,} from "../assets/TableStyles.js";
-import { Overlay, Popup, CloseButton } from "../assets/PopupStyles.js";
-
+import { GenericButton } from "../components/common/GenericButton.jsx";
+import {TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge} from "../styles/TableStyles.js";
+import { Overlay, Popup, CloseButton } from "../styles/PopupStyles.js";
 
 const NotesPopup = ({ isOpen, onClose, specialRequest }) => {
   if (!isOpen) return null;
@@ -24,6 +25,7 @@ const NotesPopup = ({ isOpen, onClose, specialRequest }) => {
 export const Bookings = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentSpecialRequest, setCurrentSpecialRequest] = useState("");
+  const navigate = useNavigate(); 
 
   const openPopup = (specialRequest) => {
     setCurrentSpecialRequest(specialRequest);
@@ -48,6 +50,7 @@ export const Bookings = () => {
     "Special Request",
     "Room Type",
     "Status",
+    "", 
   ];
 
   const renderRow = (booking) => (
@@ -73,6 +76,14 @@ export const Bookings = () => {
       <TableData>{booking.roomType}</TableData>
       <TableData>
         <StatusBadge status={booking.status}>{booking.status}</StatusBadge>
+      </TableData>
+      <TableData>
+        <HiOutlineDotsVertical
+          size={18}
+          color="#6E6E6E"
+          style={{ cursor: "pointer" }}
+          onClick={() => navigate(`/guestdetails/${booking.guest.reservationNumber}`)}
+        />
       </TableData>
     </>
   );

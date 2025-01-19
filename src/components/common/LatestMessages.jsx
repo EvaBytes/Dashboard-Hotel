@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Overlay, Popup, CloseButton } from "../../assets/PopupStyles.js";
-import { LatestMessagesContainer, MessageCard, NavigationButton } from "../../assets/LatestMessagesStyles.js";
+import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
+import { LatestMessagesContainer, MessageCard, NavigationButton } from "../../styles/LatestMessagesStyles.js";
 import { GiCancel } from "react-icons/gi";
 import { FaRegCheckCircle } from "react-icons/fa";
 

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { theme } from "../assets/theme";
-import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField,} from "../assets/loginStyles";
+import { theme } from "../styles/theme.js";
+import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField,} from "../styles/loginStyles.js";
 
 const Login = () => {
   const [email, setEmail] = useState("");

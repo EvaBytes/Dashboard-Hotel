@@ -1,14 +1,5 @@
 import React from "react";
-import {
-  SidebarContainer,
-  SidebarTitle,
-  SidebarTitleIcon,
-  SidebarList,
-  SidebarListItem,
-  SidebarLink,
-  SidebarFooter,
-  SidebarIcon,
-} from "./SidebarStyles";
+import {SidebarContainer,SidebarTitle,SidebarTitleIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon} from "./SidebarStyles";
 import { UserContainer } from "./UserContainer.jsx";
 import { LuLayoutDashboard, LuBedSingle } from "react-icons/lu";
 import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts } from "react-icons/ai";
@@ -16,8 +7,8 @@ import { FaHotel } from "react-icons/fa";
 
 const Sidebar = () => {
   const user = {
-    name: "William Johanson",
-    email: "williamj@gmail.com",
+    name: "Eva Sevillano",
+    email: "evasevillanop@gmail.com",
     image: "src/assets/img/profile.jpeg",
   };
 
@@ -35,7 +26,7 @@ const Sidebar = () => {
         <SidebarTitleIcon>
           <FaHotel />
         </SidebarTitleIcon>
-        TRAVL
+        HOTEL MIRANDA
       </SidebarTitle>
 
       <SidebarList>
@@ -52,7 +43,7 @@ const Sidebar = () => {
       <UserContainer user={user} />
 
       <SidebarFooter>
-        <h3>Travi Hotel Admin Dashboard</h3>
+        <h3>Hotel Miranda Dashboard</h3>
         <p>© 2025 All Rights Reserved</p>
         <p>Made with ♥ by Eva</p>
       </SidebarFooter>

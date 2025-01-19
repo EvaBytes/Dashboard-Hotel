@@ -39,5 +39,7 @@ export const EmployeeInfo = styled.div`
 
 export const StatusText = styled.span`
   font-weight: bold;
+  font-size: 10px;
+  margin-right: 1rem;
   color: ${({ status }) => (status === "ACTIVE" ? "green" : "red")};
 `;

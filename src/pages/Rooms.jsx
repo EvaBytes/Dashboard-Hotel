@@ -1,7 +1,7 @@
 import React from "react";
 import roomsData from "../data/Rooms.json"; 
 import { GenericTable } from "../components/common/GenericTable.jsx";
-import {TableData,GuestContainer,RoomImage} from "../assets/TableStyles.js";
+import {TableData,GuestContainer,RoomImage} from "../styles/TableStyles.js";
 import {GenericButton} from "../components/common/GenericButton.jsx";
 
 export const Rooms = () => {

@@ -1,7 +1,8 @@
 import React from "react";
 import employeesData from "../data/Workers.json"; 
 import { GenericTable } from "../components/common/GenericTable.jsx";
-import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo,StatusText} from "../assets/UsersStyles.js";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo,StatusText} from "../styles/UsersStyles.js";
 
 export const Users = () => {
   const headers = ["Name", "Description", "Contact", "Status"];
@@ -23,6 +24,11 @@ export const Users = () => {
       <TableData>{employee.contact}</TableData>
       <TableData>
         <StatusText status={employee.status}>{employee.status}</StatusText>
+        <HiOutlineDotsVertical
+          size={18}
+          color="#6E6E6E"
+          style={{ cursor: "pointer" }}
+        />
       </TableData>
     </>
   );

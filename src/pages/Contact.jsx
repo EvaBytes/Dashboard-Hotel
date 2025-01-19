@@ -1,8 +1,8 @@
 import React from "react";
 import { LatestMessages } from "../components/common/LatestMessages.jsx";
 import { GenericTable } from "../components/common/GenericTable.jsx";
-import {ContactPageContainer,SectionContainer,Title} from "../assets/ContactStyles.js"; 
-import {GuestImage,GuestInfo,GuestName,StatusBadge} from "../assets/GuestDetailsStyles.js"; 
+import {ContactPageContainer,SectionContainer,Title} from "../styles/ContactStyles.js"; 
+import {GuestImage,GuestInfo,GuestName,StatusBadge} from "../styles/GuestDetailsStyles.js"; 
 import messagesData from "../data/Messages.json";
 
 const Contact = () => {

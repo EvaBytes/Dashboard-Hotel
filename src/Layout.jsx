@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar/Sidebar";
 import { Navbar } from "./components/Navbar/Navbar";
-import { LayoutContainer, MainContent, Content, SidebarContainer } from "./assets/layoutStyles";
+import { LayoutContainer, MainContent, Content, SidebarContainer } from "./styles/layoutStyles.js";
 
 const Layout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
