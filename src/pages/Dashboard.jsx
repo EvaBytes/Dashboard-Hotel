@@ -5,10 +5,10 @@ import { IoIosLogIn, IoIosLogOut } from "react-icons/io";
 import {DashboardContainer,IconContainer,TextContainer,StyledCard,StyledTypographyTitle,StyledTypographyValue,StyledLargeCard,StyledEmptyContainer,StyledBookingButtonContainer,StyledBookingList,StyledBookingItem,StyledBookingInfo,StyledBookingButton} from "../styles/DashboardStyles.js";
 import {BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Legend,ResponsiveContainer} from "recharts";
 import { LatestMessages } from "../components/common/LatestMessages.jsx";
-import { StyledMessagesCard} from"../styles/LatestMessagesStyles.js";
+import { StyledMessagesCard } from "../styles/LatestMessagesStyles.js";
 import reservationStatsRaw from "../data/ReservationStats.json";
 import bookingData from "../data/Bookings.json";
-import messagesData from "../data/Messages.json"; 
+import messagesData from "../data/Messages.json";
 
 const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
@@ -57,7 +57,13 @@ const BookingList = () => {
     <StyledBookingList>
       {bookingData.slice(0, 3).map((booking, index) => (
         <StyledBookingItem key={index}>
-          <img src={booking.roomPhoto || "src/assets/img/LUXURYcutre.jpg"} alt={booking.roomType} />
+          <div className="room-photo">
+            <img
+              src={booking.roomPhoto || "src/assets/img/LUXURYcutre.jpg"} 
+              alt={booking.roomType}
+              className="large-photo"
+            />
+          </div>
           <StyledBookingInfo>
             <div className="room-info">
               <h4>{booking.roomType}</h4>
@@ -78,7 +84,6 @@ const BookingList = () => {
       </StyledBookingButtonContainer>
     </StyledBookingList>
   );
-  
 };
 
 export const Dashboard = () => {

@@ -12,7 +12,6 @@ export const LatestMessagesContainer = styled.div`
   box-sizing: border-box;
 `;
 
-
 export const MessageCard = styled.div`
   background: #fff;
   padding: 1rem;

@@ -10,7 +10,7 @@ export const TableData = styled.td`
 export const EmployeeContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: .9rem;
 `;
 
 export const EmployeeImage = styled.img`
@@ -32,7 +32,7 @@ export const EmployeeInfo = styled.div`
 
   p {
     margin: 0.2rem 0;
-    font-size: 0.9rem;
+    font-size: .7rem;
     color: #555;
   }
 `;

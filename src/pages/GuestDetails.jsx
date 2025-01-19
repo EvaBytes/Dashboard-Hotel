@@ -35,7 +35,6 @@ const GuestDetails = () => {
         <BreadcrumbLink to="/bookings">Guest</BreadcrumbLink> / {guest.fullName}
       </BreadcrumbContainer>
 
-      {/* Main Guest Details */}
       <GuestDetailsContainer>
         <GuestInfoCard>
           <GuestImage src={guest.image} alt={guest.fullName} />

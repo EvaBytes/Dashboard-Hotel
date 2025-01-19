@@ -34,7 +34,7 @@ export const TableRow = styled.tr`
 `;
 
 export const TableData = styled.td`
-  padding: 0.6rem;
+  padding: 0.5rem;
   border-bottom: 1px solid #ddd;
   vertical-align: middle; 
   text-align: center; 
@@ -147,17 +147,3 @@ export const ViewNotesButton = styled.button`
   }
 `;
 
-export const ArchiveButton = styled.button`
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: #e23428; // Rojo para Archivar
-  color: white;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #c21f1c;
-  }
-`;
