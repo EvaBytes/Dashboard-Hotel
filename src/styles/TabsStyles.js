@@ -3,21 +3,30 @@ import styled from "styled-components";
 export const TabsContainer = styled.div`
   display: flex;
   align-items: center;
-  margin-top: 4rem;
-  margin-bottom: 1.5rem;
+  justify-content: space-between;
   border-bottom: 1px solid #ddd;
+  margin-top: 4rem;
+  padding: 0 1rem;
 `;
 
-export const Tab = styled.button`
-  padding: 0.8rem 1rem;
+export const Tab = styled.button.attrs(({ isActive }) => ({
+  className: isActive ? "active" : "",
+}))`
+  padding: 0.8rem 1.5rem;
   background: none;
   border: none;
   font-size: 14px;
   cursor: pointer;
-  color: ${(props) => (props.active ? "#135846" : "#6E6E6E")};
-  border-bottom: ${(props) => (props.active ? "2px solid #135846" : "2px solid transparent")};
-  font-weight: ${(props) => (props.active ? "bold" : "normal")};
+  color: #6e6e6e;
+  border-bottom: 2px solid transparent;
+  font-weight: normal;
   transition: color 0.3s ease, border-bottom 0.3s ease;
+
+  &.active {
+    color: #135846;
+    border-bottom: 2px solid #135846;
+    font-weight: bold;
+  }
 
   &:hover {
     color: #135846;
@@ -27,25 +36,43 @@ export const Tab = styled.button`
 export const SearchContainer = styled.div`
   display: flex;
   align-items: center;
+  gap: 0.5rem;
+  margin-bottom: .5rem;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
   border: 1px solid #ddd;
-  border-radius: 15px;
-  padding: 0.5rem;
-  margin-left:auto;
-  background-color: #fff;
-  width: 17rem; 
 `;
 
-export const SearchIconWrapper = styled.div`
+export const SearchIconWrapper = styled.span`
   display: flex;
   align-items: center;
-  margin-right: 0.5rem;
+  justify-content: center;
 `;
 
 export const SearchInput = styled.input`
   border: none;
+  background: none;
   outline: none;
   font-size: 14px;
-  font-style: italic;
+  color: #6e6e6e;
+
+  &::placeholder {
+    color: #aaa;
+  }
 `;
 
+export const ActionButton = styled.button`
+  padding: 0.8rem 1.5rem;
+  background-color: #135846;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 
+  &:hover {
+    background-color: #0f423c;
+  }
+`;
