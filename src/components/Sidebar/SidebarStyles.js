@@ -7,7 +7,7 @@ export const SidebarContainer = styled.aside`
   color: ${(props) => props.theme.palette.text.primary};
   border-radius: 3px;
   height: 100vh;
-  padding: 20px;
+  padding: 1.3rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -19,7 +19,7 @@ export const SidebarTitleIcon = styled.span`
   align-items: center;
   justify-content: center;
   font-size: 38px;
-  margin-right: 0.7rem;
+  margin-right: .7rem;
   margin-left: 2rem;
 `;
 
@@ -39,17 +39,21 @@ export const SidebarListItem = styled.li`
   margin-bottom: 1rem;
 `;
 
-export const SidebarLink = styled(NavLink).attrs(({ isActive }) => ({
-  "data-active": isActive,
-}))`
+export const SidebarLink = styled(NavLink)`
   text-decoration: none;
   display: flex;
   align-items: center;
   padding: 0.8rem 1.5rem;
-  color: ${(props) => (props["data-active"] ? "#e23428" : "#135846")};
-  font-weight: ${(props) => (props["data-active"] ? "bold" : "normal")};
-  border-left: ${(props) => (props["data-active"] ? "4px solid #e23428" : "4px solid transparent")};
+  color: #135846; 
+  font-weight: normal;
+  border-left: 4px solid transparent; 
   transition: all 0.3s ease;
+
+  &.active {
+    color: #e23428; 
+    font-weight: bold;
+    border-left: 4px solid #e23428; 
+  }
 
   &:hover {
     color: #e23428;

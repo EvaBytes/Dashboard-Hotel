@@ -8,8 +8,11 @@ const GuestDetails = () => {
   const navigate = useNavigate();
 
   const guestDetails = bookingsData.find(
-    (booking) => booking.guest.reservationNumber === reservationId
+    (booking) => booking.guest.reservationNumber === `Nº ${reservationId}`
   );
+  
+  console.log("Guest Details:", guestDetails);
+  
 
   if (!guestDetails) {
     return <div>Guest details not found</div>;
