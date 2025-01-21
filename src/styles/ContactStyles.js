@@ -18,7 +18,7 @@ export const SectionContainer = styled.div`
 export const Title = styled.h2`
   font-size: 1.5rem;
   margin-bottom: 10px;
-  color: #333;
+  color: #135846;
 `;
 
 

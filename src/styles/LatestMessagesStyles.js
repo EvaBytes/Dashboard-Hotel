@@ -70,7 +70,7 @@ export const MessageCard = styled.div`
   .status-icons {
     position: absolute;
     bottom: 1rem;
-    right: 1rem; /* Cambiado de left a right para mover el icono a la derecha */
+    right: 1rem;
 
     svg {
       font-size: 1.5rem;

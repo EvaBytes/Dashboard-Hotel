@@ -3,18 +3,18 @@ import styled from "styled-components";
 export const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
-  margin-top: .5rem;
+  margin-top: 0.5rem;
   font-size: 13px;
   text-align: left;
 `;
 
 export const TableHeader = styled.th`
-  background-color: #FFFFFF;
+  background-color: ${(props) => props.theme.palette.primary.main};
   padding: 0.7rem;
-  border-bottom: 2px solid #ddd;
+  border-bottom: 2px solid ${(props) => props.theme.palette.background.paper};
   text-align: center;
   font-weight: bold;
-  color: #333;
+  color: ${(props) => props.theme.palette.text.primary};
 
   &:first-child {
     border-top-left-radius: 10px;
@@ -26,20 +26,19 @@ export const TableHeader = styled.th`
 `;
 
 export const TableRow = styled.tr`
-  background-color: #FFFFFF;
-  
+  background-color: ${(props) => props.theme.palette.primary.main};
+
   &:hover {
-    background-color: #f1f1f1;
+    background-color: ${(props) => props.theme.palette.background.default};
   }
 `;
 
 export const TableData = styled.td`
   padding: 0.5rem;
-  border-bottom: 1px solid #ddd;
-  vertical-align: middle; 
-  text-align: center; 
+  border-bottom: 1px solid ${(props) => props.theme.palette.background.paper};
+  vertical-align: middle;
+  text-align: center;
 `;
-
 
 export const GuestContainer = styled.div`
   display: flex;
@@ -57,17 +56,19 @@ export const RoomImage = styled.img`
   width: 5rem;
   height: 3rem;
   border-radius: 8px;
-  text-align: center; 
+  text-align: center;
 `;
 
 export const GuestInfo = styled.div`
   display: flex;
   flex-direction: column;
   font-size: 12px;
-  color: #333;
+  font-weight: bold;
+  color: #393939;
 
   small {
-    color: #888;
+    font-weight: normal;
+    color: ${(props) => props.theme.palette.text.secondary};
   }
 `;
 
@@ -76,9 +77,9 @@ export const CustomerInfo = styled.div`
   flex-direction: column;
 
   p {
-    margin: 0.2rem 0;
-    font-size: 0.9rem;
-    color: #555;
+    margin: .2rem 0;
+    font-size: .9rem;
+    color: "#135846";
   }
 `;
 
@@ -110,40 +111,41 @@ export const PaginationContainer = styled.div`
 `;
 
 export const PageButton = styled.button.attrs((props) => ({
-  "data-active": props.active, 
+  "data-active": props.active,
 }))`
   margin: 0 5px;
   padding: 5px 10px;
-  border: 1px solid #ddd;
-  background-color: ${({ "data-active": isActive }) => (isActive ? "#135846" : "white")};
-  color: ${({ "data-active": isActive }) => (isActive ? "white" : "#000")};
-  border-radius: 4px;
+  border: 1px solid ${(props) => props.theme.palette.background.paper};
+  background-color: ${({ "data-active": isActive, theme }) =>
+    isActive ? theme.palette.secondary.main : theme.palette.primary.main};
+  color: ${({ "data-active": isActive, theme }) =>
+    isActive ? theme.palette.primary.main : theme.palette.text.primary};
+  border-radius: ${(props) => props.theme.styles.button.borderRadius};
   cursor: pointer;
 
   &:disabled {
-    background-color: #f4f4f4;
-    color: #aaa;
+    background-color: ${(props) => props.theme.styles.button.disabled.backgroundColor};
+    color: ${(props) => props.theme.styles.button.disabled.color};
     cursor: not-allowed;
   }
 
   &:hover:not(:disabled) {
-    background-color: #135846;
-    color: white;
+    background-color: ${(props) => props.theme.styles.button.hover.backgroundColor};
+    color: ${(props) => props.theme.styles.button.hover.color};
   }
 `;
-
 
 export const ViewNotesButton = styled.button`
   margin-top: 0.5rem;
-  padding: 0.3rem 0.5rem;
-  background-color: #EEF9F2;
-  color: #212121;
+  padding: ${(props) => props.theme.styles.button.padding};
+  background-color: ${(props) => props.theme.styles.button.hover.backgroundColor};
+  color: ${(props) => props.theme.palette.primary.main};
   border: none;
-  border-radius: 5px;
+  border-radius: ${(props) => props.theme.styles.button.borderRadius};
   cursor: pointer;
 
   &:hover {
-    background-color: #DFF4E4;
+    background-color: ${(props) => props.theme.palette.secondary.main};
+    color: ${(props) => props.theme.palette.primary.main};
   }
 `;
-

@@ -5,6 +5,24 @@ export const TableData = styled.td`
   border-bottom: 1px solid #ddd;
   vertical-align: top;
   text-align: left;
+  white-space: nowrap; 
+
+  &:nth-child(1) {
+    width: 25%;
+  }
+
+  &:nth-child(2) { 
+    width: 30%;
+    overflow: hidden;
+  }
+
+  &:nth-child(3) { 
+    width: 20%;
+  }
+
+  &:nth-child(4) { 
+    width: 25%;
+  }
 `;
 
 export const EmployeeContainer = styled.div`
@@ -26,20 +44,42 @@ export const EmployeeInfo = styled.div`
 
   h4 {
     margin: 0;
-    font-size: 1rem;
+    font-size: .9rem;
     font-weight: bold;
   }
 
   p {
     margin: 0.2rem 0;
     font-size: .7rem;
-    color: #555;
+    color: "#135846";
   }
 `;
+
+export const DescriptionText = styled.div`
+  font-size: 0.8rem;
+  color: #393939;
+  margin-left: 5rem;
+
+`;
+
+export const ContactText = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 3.5rem;
+  gap: 0.5rem; 
+  font-size: 0.8rem;
+  color: #393939;
+`;
+
 
 export const StatusText = styled.span`
   font-weight: bold;
   font-size: 10px;
-  margin-right: 1rem;
+  margin: 0 1rem 0 7.7rem;
   color: ${({ status }) => (status === "ACTIVE" ? "green" : "red")};
+`;
+
+export const DotsContainer = styled.div`
+  display: flex;
+  justify-content: flex-end; 
 `;

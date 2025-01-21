@@ -22,13 +22,13 @@ export const theme = {
       fontSize: "32px",
       fontWeight: 700,
       lineHeight: "1.2",
-      letterSpacing: "0.5px",
+      letterSpacing: ".5px",
     },
     h2: {
       fontSize: "24px",
       fontWeight: 600,
       lineHeight: "1.3",
-      letterSpacing: "0.3px",
+      letterSpacing: ".3px",
     },
     body1: {
       fontSize: "16px",

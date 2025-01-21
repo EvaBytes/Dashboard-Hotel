@@ -15,7 +15,7 @@ export const SidebarContainer = styled.div`
   background-color: #fff;
   transition: width 0.3s ease;
   z-index: 100;
-  overflow: hidden; // Esconde contenido si el ancho es 0
+  overflow: hidden; 
 `;
 
 export const MainContent = styled.div`
