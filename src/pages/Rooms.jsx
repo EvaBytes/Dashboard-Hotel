@@ -1,17 +1,18 @@
 import React, { useState } from "react";
 import roomsData from "../data/Rooms.json";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa";
-import { GenericTable } from "../components/common/GenericTable.jsx";
-import {Table,TableHeader,TableRow,TableData,GuestContainer,RoomImage} from "../styles/TableStyles.js";
+import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { TabsContainer, Tab, ActionButton } from "../styles/TabsStyles.js";
-import { GenericButton } from "../components/common/GenericButton.jsx";
+import { GenericTable } from "../components/common/GenericTable.jsx";
+import { RoomImage, DiscountSpan, StatusButton, SortIcon } from "../styles/TableStyles.js";
 
 export const Rooms = () => {
-  const [activeTab, setActiveTab] = useState("allRooms"); 
-  const [sortBy, setSortBy] = useState(null); 
-  const [sortOrder, setSortOrder] = useState("asc"); 
+  const [activeTab, setActiveTab] = useState("allRooms");
+  const [sortBy, setSortBy] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
 
-  const handleTabChange = (tab) => setActiveTab(tab);
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
 
   const handleSort = (column) => {
     if (sortBy === column) {
@@ -22,48 +23,70 @@ export const Rooms = () => {
     }
   };
 
-  const sortedRooms = [...roomsData]
-    .filter((room) => {
-      if (activeTab === "availableRooms") return room.status === "Available";
-      if (activeTab === "bookedRooms") return room.status === "Booked";
-      return true;
-    })
-    .sort((a, b) => {
-      if (!sortBy) return 0; 
-      const valueA = a[sortBy];
-      const valueB = b[sortBy];
+  const filteredRooms = roomsData.filter((room) => {
+    if (activeTab === "availableRooms") return room.status === "Available";
+    if (activeTab === "bookedRooms") return room.status === "Booked";
+    return true;
+  });
 
-      if (sortBy === "rate" || sortBy === "offerPrice") {
-        return sortOrder === "asc"
-          ? parseFloat(valueA) - parseFloat(valueB)
-          : parseFloat(valueB) - parseFloat(valueA);
-      }
+  const sortedRooms = [...filteredRooms].sort((a, b) => {
+    if (!sortBy) return 0;
 
-      if (sortBy === "status") {
-        const statusOrder = {
-          available: 1,
-          booked: 2,
-        };
+    const valueA = a[sortBy];
+    const valueB = b[sortBy];
 
-        const normalizedA = valueA.toLowerCase();
-        const normalizedB = valueB.toLowerCase();
+    if (sortBy === "rate") {
+      return sortOrder === "asc"
+        ? parseFloat(valueA) - parseFloat(valueB)
+        : parseFloat(valueB) - parseFloat(valueA);
+    }
 
-        return sortOrder === "asc"
-          ? statusOrder[normalizedA] - statusOrder[normalizedB]
-          : statusOrder[normalizedB] - statusOrder[normalizedA];
-      }
+    if (sortBy === "status") {
+      const statusOrder = { Available: 1, Booked: 2, Maintenance: 3 };
+      return sortOrder === "asc"
+        ? statusOrder[valueA] - statusOrder[valueB]
+        : statusOrder[valueB] - statusOrder[valueA];
+    }
 
-      return 0;
-    });
+    return 0;
+  });
 
   const headers = [
-    "Photo",
-    "Room Number",
-    "Bed Type",
-    "Facilities",
-    "Rate",
-    "Offer Price",
-    "Status",
+    { label: "Photo", key: null },
+    { label: "Room Number", key: "roomNumber" },
+    { label: "Bed Type", key: "bedType" },
+    { label: "Facilities", key: "facilities" },
+    {
+      label: (
+        <div
+          onClick={() => handleSort("rate")}
+          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+        >
+          Rate
+          <SortIcon>
+            {sortBy === "rate" && sortOrder === "asc" ? <FaArrowUp /> : <FaArrowDown />}
+          </SortIcon>
+        </div>
+      ),
+      key: "rate",
+      sortable: true,
+    },
+    { label: "Offer Price", key: "offerPrice" },
+    {
+      label: (
+        <div
+          onClick={() => handleSort("status")}
+          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+        >
+          Status
+          <SortIcon>
+            {sortBy === "status" && sortOrder === "asc" ? <FaArrowUp /> : <FaArrowDown />}
+          </SortIcon>
+        </div>
+      ),
+      key: "status",
+      sortable: true,
+    },
   ];
 
   const renderRow = (room) => {
@@ -73,26 +96,22 @@ export const Rooms = () => {
 
     return (
       <>
-        <TableData>
-          <GuestContainer>
-            <RoomImage src={room.roomPhoto} alt={`Room ${room.roomNumber}`} />
-          </GuestContainer>
-        </TableData>
-        <TableData>{room.roomNumber}</TableData>
-        <TableData>{room.bedType}</TableData>
-        <TableData>{room.facilities}</TableData>
-        <TableData>{room.rate}</TableData>
-        <TableData>
+        <td>
+          <RoomImage src={room.roomPhoto} alt={`Room ${room.roomNumber}`} />
+        </td>
+        <td>{room.roomNumber}</td>
+        <td>{room.bedType}</td>
+        <td>{room.facilities}</td>
+        <td>{room.rate}</td>
+        <td>
           {room.offerPrice}{" "}
-          <span style={{ color: "#E23428", fontSize: "0.9rem" }}>
+          <DiscountSpan>
             ({discountPercentage}% off)
-          </span>
-        </TableData>
-        <TableData>
-          <GenericButton variant={room.status.toLowerCase()}>
-            {room.status}
-          </GenericButton>
-        </TableData>
+          </DiscountSpan>
+        </td>
+        <td>
+          <StatusButton $status={room.status}>{room.status}</StatusButton>
+        </td>
       </>
     );
   };
@@ -100,28 +119,22 @@ export const Rooms = () => {
   return (
     <div>
       <TabsContainer>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
+        <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
           <div>
             <Tab
-              isActive={activeTab === "allRooms"}
+              $isActive={activeTab === "allRooms"}
               onClick={() => handleTabChange("allRooms")}
             >
               All Rooms
             </Tab>
             <Tab
-              isActive={activeTab === "availableRooms"}
+              $isActive={activeTab === "availableRooms"}
               onClick={() => handleTabChange("availableRooms")}
             >
               Available Rooms
             </Tab>
             <Tab
-              isActive={activeTab === "bookedRooms"}
+              $isActive={activeTab === "bookedRooms"}
               onClick={() => handleTabChange("bookedRooms")}
             >
               Booked Rooms
@@ -134,43 +147,12 @@ export const Rooms = () => {
         <ActionButton>+ New Room</ActionButton>
       </div>
 
-      <Table>
-        <thead>
-          <TableRow>
-            {headers.map((header, index) => (
-              <TableHeader
-                key={index}
-                onClick={() =>
-                  header === "Rate" || header === "Status"
-                    ? handleSort(header.toLowerCase().replace(" ", ""))
-                    : null
-                }
-                style={{ cursor: header === "Rate" || header === "Status" ? "pointer" : "default" }}
-              >
-                {header}{" "}
-                {(header === "Rate" || header === "Status") && (
-                  <>
-                    {sortBy === header.toLowerCase().replace(" ", "") ? (
-                      sortOrder === "asc" ? (
-                        <FaArrowUp style={{ fontSize: "12px", marginLeft: "5px" }} />
-                      ) : (
-                        <FaArrowDown style={{ fontSize: "12px", marginLeft: "5px" }} />
-                      )
-                    ) : (
-                      <FaArrowUp style={{ fontSize: "12px", marginLeft: "5px", color: "#ccc" }} />
-                    )}
-                  </>
-                )}
-              </TableHeader>
-            ))}
-          </TableRow>
-        </thead>
-        <tbody>
-          {sortedRooms.map((room, index) => (
-            <TableRow key={index}>{renderRow(room)}</TableRow>
-          ))}
-        </tbody>
-      </Table>
+      <GenericTable
+        headers={headers}
+        data={sortedRooms}
+        renderRow={renderRow}
+        itemsPerPage={10}
+      />
     </div>
   );
 };

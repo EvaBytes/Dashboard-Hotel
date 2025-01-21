@@ -4,7 +4,6 @@ export const TableData = styled.td`
   padding: 1rem;
   border-bottom: 1px solid #ddd;
   vertical-align: top;
-  text-align: left;
   white-space: nowrap; 
 
   &:nth-child(1) {
@@ -58,14 +57,12 @@ export const EmployeeInfo = styled.div`
 export const DescriptionText = styled.div`
   font-size: 0.8rem;
   color: #393939;
-  margin-left: 5rem;
 
 `;
 
 export const ContactText = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 3.5rem;
   gap: 0.5rem; 
   font-size: 0.8rem;
   color: #393939;
@@ -75,7 +72,7 @@ export const ContactText = styled.div`
 export const StatusText = styled.span`
   font-weight: bold;
   font-size: 10px;
-  margin: 0 1rem 0 7.7rem;
+  margin: 0 1rem 0 0;
   color: ${({ status }) => (status === "ACTIVE" ? "green" : "red")};
 `;
 

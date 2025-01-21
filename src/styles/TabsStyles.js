@@ -2,45 +2,40 @@ import styled from "styled-components";
 
 export const TabsContainer = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
   border-bottom: 1px solid ${(props) => props.theme.palette.background.paper};
   margin-top: 4rem;
   padding: 0 1rem;
 `;
 
-export const Tab = styled.button.attrs(({ isActive }) => ({
-  className: isActive ? "active" : "",
-}))`
+export const Tab = styled.button`
   padding: 0.8rem 1.5rem;
   background: none;
   border: none;
   font-size: 14px;
   cursor: pointer;
-  color: ${(props) => props.theme.palette.text.secondary};
-  border-bottom: 2px solid transparent;
-  font-weight: normal;
+  color: ${(props) => (props.$isActive ? "#135846" : "#6E6E6E")};
+  font-weight: ${(props) => (props.$isActive ? "bold" : "normal")};
+  border-bottom: ${(props) =>
+    props.$isActive ? "2px solid #135846" : "2px solid transparent"};
+  margin-bottom: -2px; 
   transition: color 0.3s ease, border-bottom 0.3s ease;
-
-  &.active {
-    color: ${(props) => props.theme.palette.secondary.main};
-    border-bottom: 2px solid ${(props) => props.theme.palette.secondary.main};
-    font-weight: bold;
-  }
 
   &:hover {
     color: ${(props) => props.theme.palette.secondary.main};
   }
+  
 `;
 
 export const SearchContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: .5rem;
   background-color: ${(props) => props.theme.palette.background.default};
   border-radius: 10px;
-  padding: 0.5rem 1rem;
+  padding: .5rem 1rem;
   border: 1px solid lightgray;};
 `;
 
@@ -55,7 +50,7 @@ export const SearchInput = styled.input`
   background: none;
   outline: none;
   font-size: 14px;
-  color: ${(props) => props.theme.palette.text.primary};
+  font-style: italic;
 
   &::placeholder {
     color: gray;

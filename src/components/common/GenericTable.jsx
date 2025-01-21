@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Table, TableHeader, TableRow, TableData } from "../../styles/TableStyles.js";
-import { PaginationContainer, PageButton } from "../../styles/TableStyles.js"; 
+import { Table, TableHeader, TableRow, TableData, PaginationContainer, PageButton, SortIcon } from "../../styles/TableStyles.js";
 
-const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10 }) => {
+export const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10, onSort, sortBy, sortOrder }) => {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -20,10 +19,7 @@ const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10 }) => {
   const visiblePages = 3;
   const startPage = Math.max(1, currentPage - visiblePages);
   const endPage = Math.min(totalPages, currentPage + visiblePages);
-  const pageNumbers = Array.from(
-    { length: endPage - startPage + 1 },
-    (_, i) => startPage + i
-  );
+  const pageNumbers = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
   return (
     <div>
@@ -31,7 +27,20 @@ const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10 }) => {
         <thead>
           <TableRow>
             {headers.map((header, index) => (
-              <TableHeader key={index}>{header}</TableHeader>
+              <TableHeader
+                key={index}
+                $sortable={!!header.key} 
+                onClick={() => header.key && onSort(header.key)}
+                $active={sortBy === header.key}
+                $sortOrder={sortOrder}
+              >
+                {header.label} 
+                {header.key && (
+                  <SortIcon $active={sortBy === header.key} $sortOrder={sortOrder}>
+                    {sortBy === header.key && (sortOrder === "asc" ? "↑" : "↓")}
+                  </SortIcon>
+                )}
+              </TableHeader>
             ))}
           </TableRow>
         </thead>
@@ -43,32 +52,22 @@ const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10 }) => {
       </Table>
 
       <PaginationContainer>
-        <PageButton
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
+        <PageButton onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
           Prev
         </PageButton>
-        {startPage > 1 && <span>...</span>}
         {pageNumbers.map((page) => (
           <PageButton
             key={page}
+            $active={currentPage === page}
             onClick={() => handlePageChange(page)}
-            data-active={currentPage === page}
           >
             {page}
           </PageButton>
         ))}
-        {endPage < totalPages && <span>...</span>}
-        <PageButton
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
+        <PageButton onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
           Next
         </PageButton>
       </PaginationContainer>
     </div>
   );
 };
-
-export { GenericTable };

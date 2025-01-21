@@ -1,5 +1,5 @@
 import React from "react";
-import { AiOutlineMessage, AiOutlineBell } from "react-icons/ai";
+import { AiOutlineMail, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { BiSolidLeftArrowSquare, BiSolidRightArrowSquare } from "react-icons/bi";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -41,7 +41,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
       </NavbarLeft>
       <NavbarRight>
         <IconButton>
-          <AiOutlineMessage size={24} />
+          <AiOutlineMail size={24} />
         </IconButton>
         <IconButton>
           <AiOutlineBell size={24} />

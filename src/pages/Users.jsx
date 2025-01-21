@@ -3,8 +3,24 @@ import employeesData from "../data/Workers.json";
 import { GenericTable } from "../components/common/GenericTable.jsx";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
-import {TabsContainer,Tab, SearchContainer, SearchInput,SearchIconWrapper,ActionButton} from "../styles/TabsStyles.js";
-import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo,DescriptionText,ContactText,StatusText,DotsContainer} from "../styles/UsersStyles.js";
+import {
+  TabsContainer,
+  Tab,
+  SearchContainer,
+  SearchInput,
+  SearchIconWrapper,
+  ActionButton,
+} from "../styles/TabsStyles.js";
+import {
+  TableData,
+  EmployeeContainer,
+  EmployeeImage,
+  EmployeeInfo,
+  DescriptionText,
+  ContactText,
+  StatusText,
+  DotsContainer,
+} from "../styles/UsersStyles.js";
 
 export const Users = () => {
   const [activeTab, setActiveTab] = useState("allEmployees");
@@ -12,6 +28,7 @@ export const Users = () => {
   const [isNewEmployeeOpen, setIsNewEmployeeOpen] = useState(false);
 
   const handleTabChange = (tab) => setActiveTab(tab);
+
   const handleSearchChange = (event) =>
     setSearchText(event.target.value.toLowerCase());
 
@@ -26,7 +43,12 @@ export const Users = () => {
       employee.name.toLowerCase().includes(searchText)
     );
 
-  const headers = ["Name", "Description", "Contact", "Status"];
+  const headers = [
+    { label: "Name", key: null },
+    { label: "Description", key: null },
+    { label: "Contact", key: null },
+    { label: "Status", key: null },
+  ];
 
   const renderRow = (employee) => (
     <>
@@ -76,19 +98,19 @@ export const Users = () => {
         >
           <div>
             <Tab
-              isActive={activeTab === "allEmployees"}
+              $isActive={activeTab === "allEmployees"}
               onClick={() => handleTabChange("allEmployees")}
             >
               All Employees
             </Tab>
             <Tab
-              isActive={activeTab === "activeEmployees"}
+              $isActive={activeTab === "activeEmployees"}
               onClick={() => handleTabChange("activeEmployees")}
             >
               Active Employees
             </Tab>
             <Tab
-              isActive={activeTab === "inactiveEmployees"}
+              $isActive={activeTab === "inactiveEmployees"}
               onClick={() => handleTabChange("inactiveEmployees")}
             >
               Inactive Employees

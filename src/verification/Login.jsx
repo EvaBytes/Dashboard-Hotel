@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { theme } from "../styles/theme.js";
-import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField,} from "../styles/loginStyles.js";
+import {BackgroundContainer, StyledAuthContainer,StyledAuthButton, StyledSubtitle,Typography, Alert,CircularProgress,StyledTextField} from "../styles/loginStyles.js";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("user@testing.com");
+  const [password, setPassword] = useState("123456");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const Login = () => {
     setTimeout(() => {
       setLoading(false);
 
-      if (email === "admin@example.com" && password === "123456") {
+      if (email === "user@testing.com" && password === "123456") {
         localStorage.setItem("authToken", "fakeToken");
         navigate("/");
       } else {

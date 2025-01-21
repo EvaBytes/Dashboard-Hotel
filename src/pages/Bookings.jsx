@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
-import { LuUserRoundSearch } from "react-icons/lu"; 
+import { LuUserRoundSearch } from "react-icons/lu";
 import bookingsData from "../data/Bookings.json";
-import {Table,TableHeader,TableRow, TableData,GuestContainer, GuestImage, GuestInfo,StatusBadge, SortIcon} from "../styles/TableStyles.js";
-import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../styles/TabsStyles.js";
+import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton,} from "../styles/TabsStyles.js";
+import {Table,TableHeader,TableRow,TableData,GuestContainer, GuestImage,GuestInfo,StatusBadge,SortIcon,} from "../styles/TableStyles.js";
 
 export const Bookings = () => {
   const [activeTab, setActiveTab] = useState("allBookings");
@@ -36,26 +36,68 @@ export const Bookings = () => {
     checkOut: new Date(booking.checkOut.trim()),
   }));
 
-  const sortedData = cleanedData
-    .filter((booking) =>
-      booking.guest.fullName.toLowerCase().includes(searchText)
-    )
-    .sort((a, b) => {
-      if (!sortBy) return 0;
-      const valueA = a[sortBy];
-      const valueB = b[sortBy];
+  const filteredData = cleanedData.filter((booking) => {
+    if (activeTab === "checkIn") return booking.status === "Check-In";
+    if (activeTab === "checkOut") return booking.status === "Check-Out";
+    if (activeTab === "inProgress") return booking.status === "In Progress";
+    return true;
+  });
 
-      if (valueA instanceof Date && valueB instanceof Date) {
-        return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
-      }
-      return 0;
-    });
+  const searchedData = filteredData.filter((booking) =>
+    booking.guest.fullName.toLowerCase().includes(searchText)
+  );
+
+  const sortedData = [...searchedData].sort((a, b) => {
+    if (!sortBy) return 0;
+    const valueA = a[sortBy];
+    const valueB = b[sortBy];
+    if (valueA instanceof Date && valueB instanceof Date) {
+      return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
+    }
+    return 0;
+  });
 
   const headers = [
     { label: "Guest", key: null },
-    { label: "Order Date", key: "orderDate" },
-    { label: "Check In", key: "checkIn" },
-    { label: "Check Out", key: "checkOut" },
+    {
+      label: (
+        <>
+          Order Date{" "}
+          <SortIcon>
+            {sortBy === "orderDate" && sortOrder === "asc" && <FaArrowUp />}
+            {sortBy === "orderDate" && sortOrder === "desc" && <FaArrowDown />}
+            {sortBy !== "orderDate" && <FaArrowUp style={{ color: "#ccc" }} />}
+          </SortIcon>
+        </>
+      ),
+      key: "orderDate",
+    },
+    {
+      label: (
+        <>
+          Check In{" "}
+          <SortIcon>
+            {sortBy === "checkIn" && sortOrder === "asc" && <FaArrowUp />}
+            {sortBy === "checkIn" && sortOrder === "desc" && <FaArrowDown />}
+            {sortBy !== "checkIn" && <FaArrowUp style={{ color: "#ccc" }} />}
+          </SortIcon>
+        </>
+      ),
+      key: "checkIn",
+    },
+    {
+      label: (
+        <>
+          Check Out{" "}
+          <SortIcon>
+            {sortBy === "checkOut" && sortOrder === "asc" && <FaArrowUp />}
+            {sortBy === "checkOut" && sortOrder === "desc" && <FaArrowDown />}
+            {sortBy !== "checkOut" && <FaArrowUp style={{ color: "#ccc" }} />}
+          </SortIcon>
+        </>
+      ),
+      key: "checkOut",
+    },
     { label: "Special Request", key: null },
     { label: "Room Type", key: null },
     { label: "Status", key: null },
@@ -78,21 +120,17 @@ export const Bookings = () => {
       <TableData>{format(booking.checkIn, "MMM dd, yyyy")}</TableData>
       <TableData>{format(booking.checkOut, "MMM dd, yyyy")}</TableData>
       <TableData>
-        <ActionButton
-          variant="default"
-          onClick={() => alert(booking.specialRequest)}
-        >
+        <ActionButton onClick={() => alert(booking.specialRequest)}>
           View Notes
         </ActionButton>
       </TableData>
       <TableData>{booking.roomType}</TableData>
       <TableData>
-        <StatusBadge status={booking.status}>{booking.status}</StatusBadge>
+        <StatusBadge $status={booking.status}>{booking.status}</StatusBadge>
       </TableData>
       <TableData>
         <HiOutlineDotsVertical
           size={16}
-          color="#6E6E6E"
           style={{ cursor: "pointer" }}
           onClick={() =>
             navigate(`/guest-details/${booking.guest.reservationNumber}`)
@@ -105,34 +143,28 @@ export const Bookings = () => {
   return (
     <div>
       <TabsContainer>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
             <Tab
-              isActive={activeTab === "allBookings"}
+              $isActive={activeTab === "allBookings"}
               onClick={() => handleTabChange("allBookings")}
             >
               All Bookings
             </Tab>
             <Tab
-              isActive={activeTab === "checkIn"}
+              $isActive={activeTab === "checkIn"}
               onClick={() => handleTabChange("checkIn")}
             >
               Check-In
             </Tab>
             <Tab
-              isActive={activeTab === "checkOut"}
+              $isActive={activeTab === "checkOut"}
               onClick={() => handleTabChange("checkOut")}
             >
               Check-Out
             </Tab>
             <Tab
-              isActive={activeTab === "inProgress"}
+              $isActive={activeTab === "inProgress"}
               onClick={() => handleTabChange("inProgress")}
             >
               In Progress
@@ -140,7 +172,7 @@ export const Bookings = () => {
           </div>
           <SearchContainer>
             <SearchIconWrapper>
-              <LuUserRoundSearch size={20} color="#6E6E6E" />
+              <LuUserRoundSearch size={18} />
             </SearchIconWrapper>
             <SearchInput
               type="text"
@@ -151,13 +183,11 @@ export const Bookings = () => {
           </SearchContainer>
         </div>
       </TabsContainer>
-
-      <div style={{ margin: "1rem 0", textAlign: "right" }}>
-        <ActionButton onClick={() => navigate("/new-room")}>
-          + New Room
+      <div style={{ display: "flex", justifyContent: "flex-end", margin: "1rem 0" }}>
+        <ActionButton onClick={() => navigate("/new-booking")}>
+          + New Booking
         </ActionButton>
       </div>
-
       <Table>
         <thead>
           <TableRow>
@@ -172,19 +202,6 @@ export const Bookings = () => {
                 }}
               >
                 {header.label}
-                {header.key && (
-                  <SortIcon>
-                    {sortBy === header.key ? (
-                      sortOrder === "asc" ? (
-                        <FaArrowUp />
-                      ) : (
-                        <FaArrowDown />
-                      )
-                    ) : (
-                      <FaArrowUp style={{ color: "#ccc" }} />
-                    )}
-                  </SortIcon>
-                )}
               </TableHeader>
             ))}
           </TableRow>
