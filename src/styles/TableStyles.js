@@ -15,6 +15,8 @@ export const TableHeader = styled.th`
   text-align: center;
   font-weight: bold;
   color: ${(props) => props.theme.palette.text.primary};
+  cursor: ${(props) => (props.sortable ? "pointer" : "default")};
+  user-select: none;
 
   &:first-child {
     border-top-left-radius: 10px;
@@ -22,6 +24,14 @@ export const TableHeader = styled.th`
 
   &:last-child {
     border-top-right-radius: 10px;
+  }
+
+  svg {
+    font-size: 0.9rem; /* Ajusta el tamaño del ícono */
+    margin-left: 5px;
+    color: ${(props) => (props.active ? props.theme.palette.text.primary : "#ccc")};
+    transition: transform 0.2s ease;
+    transform: ${(props) => (props.sortOrder === "desc" ? "rotate(180deg)" : "none")};
   }
 `;
 
@@ -77,8 +87,8 @@ export const CustomerInfo = styled.div`
   flex-direction: column;
 
   p {
-    margin: .2rem 0;
-    font-size: .9rem;
+    margin: 0.2rem 0;
+    font-size: 0.9rem;
     color: "#135846";
   }
 `;
@@ -90,17 +100,19 @@ export const StatusBadge = styled.span`
   font-size: 12px;
   text-align: center;
 
-  background-color: ${({ status }) => ({
-    "Check-In": "#E8FFEE",
-    "Check-Out": "#FFEDEC",
-    Refund: "#ffea99",
-  }[status] || "#17a2b8")}; 
+  background-color: ${({ status }) =>
+    ({
+      "Check-In": "#E8FFEE",
+      "Check-Out": "#FFEDEC",
+      Refund: "#ffea99",
+    }[status] || "#17a2b8")};
 
-  color: ${({ status }) => ({
-    "Check-In": "#135846",
-    "Check-Out": "#E23428",
-    Refund: "#e0bc00",
-  }[status] || "#ffffff")}; 
+  color: ${({ status }) =>
+    ({
+      "Check-In": "#135846",
+      "Check-Out": "#E23428",
+      Refund: "#e0bc00",
+    }[status] || "#ffffff")};
 `;
 
 export const PaginationContainer = styled.div`
@@ -147,5 +159,19 @@ export const ViewNotesButton = styled.button`
   &:hover {
     background-color: ${(props) => props.theme.palette.secondary.main};
     color: ${(props) => props.theme.palette.primary.main};
+  }
+`;
+
+export const SortIcon = styled.span`
+  margin-left: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  font-size: 1rem;
+  color: ${(props) => (props.active ? props.theme.palette.text.primary : "#ccc")};
+  transition: transform 0.2s ease;
+
+  svg {
+    font-size: 0.9rem;
+    color: inherit;
   }
 `;

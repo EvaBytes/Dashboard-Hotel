@@ -1,21 +1,60 @@
 import React, { useState } from "react";
 import roomsData from "../data/Rooms.json";
+import { FaArrowDown, FaArrowUp } from "react-icons/fa";
 import { GenericTable } from "../components/common/GenericTable.jsx";
-import {TableData,GuestContainer,RoomImage} from "../styles/TableStyles.js";
-import {TabsContainer,Tab,ActionButton} from "../styles/TabsStyles.js";
+import {Table,TableHeader,TableRow,TableData,GuestContainer,RoomImage} from "../styles/TableStyles.js";
+import { TabsContainer, Tab, ActionButton } from "../styles/TabsStyles.js";
 import { GenericButton } from "../components/common/GenericButton.jsx";
 
 export const Rooms = () => {
   const [activeTab, setActiveTab] = useState("allRooms"); 
-  const [isNewRoomOpen, setIsNewRoomOpen] = useState(false); 
+  const [sortBy, setSortBy] = useState(null); 
+  const [sortOrder, setSortOrder] = useState("asc"); 
 
   const handleTabChange = (tab) => setActiveTab(tab);
 
-  const filteredRooms = roomsData.filter((room) => {
-    if (activeTab === "availableRooms") return room.status === "Available";
-    if (activeTab === "bookedRooms") return room.status === "Booked";
-    return true; 
-  });
+  const handleSort = (column) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const sortedRooms = [...roomsData]
+    .filter((room) => {
+      if (activeTab === "availableRooms") return room.status === "Available";
+      if (activeTab === "bookedRooms") return room.status === "Booked";
+      return true;
+    })
+    .sort((a, b) => {
+      if (!sortBy) return 0; 
+      const valueA = a[sortBy];
+      const valueB = b[sortBy];
+
+      if (sortBy === "rate" || sortBy === "offerPrice") {
+        return sortOrder === "asc"
+          ? parseFloat(valueA) - parseFloat(valueB)
+          : parseFloat(valueB) - parseFloat(valueA);
+      }
+
+      if (sortBy === "status") {
+        const statusOrder = {
+          available: 1,
+          booked: 2,
+        };
+
+        const normalizedA = valueA.toLowerCase();
+        const normalizedB = valueB.toLowerCase();
+
+        return sortOrder === "asc"
+          ? statusOrder[normalizedA] - statusOrder[normalizedB]
+          : statusOrder[normalizedB] - statusOrder[normalizedA];
+      }
+
+      return 0;
+    });
 
   const headers = [
     "Photo",
@@ -27,29 +66,39 @@ export const Rooms = () => {
     "Status",
   ];
 
-  const renderRow = (room) => (
-    <>
-      <TableData>
-        <GuestContainer>
-          <RoomImage src={room.roomPhoto} alt={`Room ${room.roomNumber}`} />
-        </GuestContainer>
-      </TableData>
-      <TableData>{room.roomNumber}</TableData>
-      <TableData>{room.bedType}</TableData>
-      <TableData>{room.facilities}</TableData>
-      <TableData>{room.rate}</TableData>
-      <TableData>{room.offerPrice}</TableData>
-      <TableData>
-        <GenericButton variant={room.status.toLowerCase()}>
-          {room.status === "Available" ? "Available" : "Booked"}
-        </GenericButton>
-      </TableData>
-    </>
-  );
+  const renderRow = (room) => {
+    const discountPercentage = Math.round(
+      ((parseFloat(room.rate) - parseFloat(room.offerPrice)) / parseFloat(room.rate)) * 100
+    );
+
+    return (
+      <>
+        <TableData>
+          <GuestContainer>
+            <RoomImage src={room.roomPhoto} alt={`Room ${room.roomNumber}`} />
+          </GuestContainer>
+        </TableData>
+        <TableData>{room.roomNumber}</TableData>
+        <TableData>{room.bedType}</TableData>
+        <TableData>{room.facilities}</TableData>
+        <TableData>{room.rate}</TableData>
+        <TableData>
+          {room.offerPrice}{" "}
+          <span style={{ color: "#E23428", fontSize: "0.9rem" }}>
+            ({discountPercentage}% off)
+          </span>
+        </TableData>
+        <TableData>
+          <GenericButton variant={room.status.toLowerCase()}>
+            {room.status}
+          </GenericButton>
+        </TableData>
+      </>
+    );
+  };
 
   return (
     <div>
-      {/* Tabs */}
       <TabsContainer>
         <div
           style={{
@@ -82,145 +131,46 @@ export const Rooms = () => {
       </TabsContainer>
 
       <div style={{ margin: "1rem 0", textAlign: "right" }}>
-        <ActionButton onClick={() => setIsNewRoomOpen(true)}>
-          + New Room
-        </ActionButton>
+        <ActionButton>+ New Room</ActionButton>
       </div>
 
-      <GenericTable
-        headers={headers}
-        data={filteredRooms}
-        renderRow={renderRow}
-        itemsPerPage={10}
-      />
-
-      {isNewRoomOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "#fff",
-              padding: "2rem",
-              borderRadius: "10px",
-              width: "400px",
-            }}
-          >
-            <h3>Add New Room</h3>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const newRoom = {
-                  roomPhoto: "https://via.placeholder.com/150", // Placeholder
-                  roomNumber: formData.get("roomNumber"),
-                  bedType: formData.get("bedType"),
-                  facilities: formData.get("facilities"),
-                  rate: formData.get("rate"),
-                  offerPrice: formData.get("offerPrice"),
-                  status: formData.get("status"),
-                };
-                roomsData.push(newRoom); 
-                setIsNewRoomOpen(false); 
-              }}
-            >
-              <div style={{ marginBottom: "1rem" }}>
-                <label>
-                  Room Number:
-                  <input
-                    type="text"
-                    name="roomNumber"
-                    required
-                    style={{ width: "100%", padding: "0.5rem" }}
-                  />
-                </label>
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                <label>
-                  Bed Type:
-                  <input
-                    type="text"
-                    name="bedType"
-                    required
-                    style={{ width: "100%", padding: "0.5rem" }}
-                  />
-                </label>
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                <label>
-                  Facilities:
-                  <input
-                    type="text"
-                    name="facilities"
-                    required
-                    style={{ width: "100%", padding: "0.5rem" }}
-                  />
-                </label>
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                <label>
-                  Rate:
-                  <input
-                    type="text"
-                    name="rate"
-                    required
-                    style={{ width: "100%", padding: "0.5rem" }}
-                  />
-                </label>
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                <label>
-                  Offer Price:
-                  <input
-                    type="text"
-                    name="offerPrice"
-                    required
-                    style={{ width: "100%", padding: "0.5rem" }}
-                  />
-                </label>
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                <label>
-                  Status:
-                  <select
-                    name="status"
-                    required
-                    style={{ width: "100%", padding: "0.5rem" }}
-                  >
-                    <option value="Available">Available</option>
-                    <option value="Booked">Booked</option>
-                  </select>
-                </label>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "1rem",
-                }}
+      <Table>
+        <thead>
+          <TableRow>
+            {headers.map((header, index) => (
+              <TableHeader
+                key={index}
+                onClick={() =>
+                  header === "Rate" || header === "Status"
+                    ? handleSort(header.toLowerCase().replace(" ", ""))
+                    : null
+                }
+                style={{ cursor: header === "Rate" || header === "Status" ? "pointer" : "default" }}
               >
-                <ActionButton
-                  type="button"
-                  onClick={() => setIsNewRoomOpen(false)}
-                >
-                  Cancel
-                </ActionButton>
-                <ActionButton type="submit">Submit</ActionButton>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+                {header}{" "}
+                {(header === "Rate" || header === "Status") && (
+                  <>
+                    {sortBy === header.toLowerCase().replace(" ", "") ? (
+                      sortOrder === "asc" ? (
+                        <FaArrowUp style={{ fontSize: "12px", marginLeft: "5px" }} />
+                      ) : (
+                        <FaArrowDown style={{ fontSize: "12px", marginLeft: "5px" }} />
+                      )
+                    ) : (
+                      <FaArrowUp style={{ fontSize: "12px", marginLeft: "5px", color: "#ccc" }} />
+                    )}
+                  </>
+                )}
+              </TableHeader>
+            ))}
+          </TableRow>
+        </thead>
+        <tbody>
+          {sortedRooms.map((room, index) => (
+            <TableRow key={index}>{renderRow(room)}</TableRow>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 };
