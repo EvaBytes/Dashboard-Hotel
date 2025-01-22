@@ -2,28 +2,25 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import { Provider } from "react-redux"; 
+import { store } from "./redux/store.js";
 import { GlobalStyles } from "./styles/globalStyles.js";
-import { AuthProvider, useAuth } from "./verification/AuthContext.jsx";
 import { Layout } from "./Layout.jsx";
 import { Login } from "./verification/Login.jsx";
-import { theme } from "./styles/theme.js"; 
+import { theme } from "./styles/theme.js";
 import { Dashboard } from "./pages/Dashboard.jsx";
 import { Bookings } from "./pages/Bookings.jsx";
 import { Rooms } from "./pages/Rooms.jsx";
 import { Contact } from "./pages/Contact.jsx";
 import { Users } from "./pages/Users.jsx";
-import { GuestDetails } from "./pages/GuestDetails.jsx"; 
-
-const PrivateRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to="/login" />;
-};
+import { GuestDetails } from "./pages/GuestDetails.jsx";
+import { PrivateRoute } from "./verification/PrivateRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
+    <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <GlobalStyles /> 
+        <GlobalStyles />
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -40,11 +37,14 @@ createRoot(document.getElementById("root")).render(
               <Route path="rooms" element={<Rooms />} />
               <Route path="contact" element={<Contact />} />
               <Route path="users" element={<Users />} />
-              <Route path="guest-details/:reservationId" element={<GuestDetails />} />
+              <Route
+                path="guest-details/:reservationId"
+                element={<GuestDetails />}
+              />
             </Route>
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
-    </AuthProvider>
+    </Provider>
   </StrictMode>
 );

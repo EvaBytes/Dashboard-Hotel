@@ -5,14 +5,19 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
 import bookingsData from "../data/Bookings.json";
-import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton,} from "../styles/TabsStyles.js";
-import {Table,TableHeader,TableRow,TableData,GuestContainer, GuestImage,GuestInfo,StatusBadge,SortIcon,} from "../styles/TableStyles.js";
+import {TabsContainer,Tab, SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../styles/TabsStyles.js";
+import {Table,TableHeader, TableRow,TableData, GuestContainer, GuestImage,GuestInfo,StatusBadge,SortIcon, PaginationContainer,PageButton} from "../styles/TableStyles.js";
+import { Overlay, Popup, CloseButton } from "../styles/PopupStyles.js";
 
 export const Bookings = () => {
   const [activeTab, setActiveTab] = useState("allBookings");
   const [searchText, setSearchText] = useState("");
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [popupData, setPopupData] = useState(null); 
+  const itemsPerPage = 10;
+
   const navigate = useNavigate();
 
   const handleTabChange = (tab) => setActiveTab(tab);
@@ -57,6 +62,21 @@ export const Bookings = () => {
     return 0;
   });
 
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentData = sortedData.slice(startIndex, endIndex);
+
+  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
+
+  const visiblePages = 4;
+  const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+  const endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+  const pageNumbers = Array.from(
+    { length: endPage - startPage + 1 },
+    (_, i) => startPage + i
+  );
+
   const headers = [
     { label: "Guest", key: null },
     {
@@ -66,7 +86,9 @@ export const Bookings = () => {
           <SortIcon>
             {sortBy === "orderDate" && sortOrder === "asc" && <FaArrowUp />}
             {sortBy === "orderDate" && sortOrder === "desc" && <FaArrowDown />}
-            {sortBy !== "orderDate" && <FaArrowUp style={{ color: "#ccc" }} />}
+            {sortBy !== "orderDate" && (
+              <FaArrowUp style={{ color: "#ccc" }} />
+            )}
           </SortIcon>
         </>
       ),
@@ -120,7 +142,7 @@ export const Bookings = () => {
       <TableData>{format(booking.checkIn, "MMM dd, yyyy")}</TableData>
       <TableData>{format(booking.checkOut, "MMM dd, yyyy")}</TableData>
       <TableData>
-        <ActionButton onClick={() => alert(booking.specialRequest)}>
+        <ActionButton onClick={() => setPopupData(booking.specialRequest)}>
           View Notes
         </ActionButton>
       </TableData>
@@ -143,60 +165,54 @@ export const Bookings = () => {
   return (
     <div>
       <TabsContainer>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div>
-            <Tab
-              $isActive={activeTab === "allBookings"}
-              onClick={() => handleTabChange("allBookings")}
-            >
-              All Bookings
-            </Tab>
-            <Tab
-              $isActive={activeTab === "checkIn"}
-              onClick={() => handleTabChange("checkIn")}
-            >
-              Check-In
-            </Tab>
-            <Tab
-              $isActive={activeTab === "checkOut"}
-              onClick={() => handleTabChange("checkOut")}
-            >
-              Check-Out
-            </Tab>
-            <Tab
-              $isActive={activeTab === "inProgress"}
-              onClick={() => handleTabChange("inProgress")}
-            >
-              In Progress
-            </Tab>
-          </div>
-          <SearchContainer>
-            <SearchIconWrapper>
-              <LuUserRoundSearch size={18} />
-            </SearchIconWrapper>
-            <SearchInput
-              type="text"
-              placeholder="Search by guest name"
-              value={searchText}
-              onChange={handleSearchChange}
-            />
-          </SearchContainer>
-        </div>
+        <Tab
+          $isActive={activeTab === "allBookings"}
+          onClick={() => handleTabChange("allBookings")}
+        >
+          All Bookings
+        </Tab>
+        <Tab
+          $isActive={activeTab === "checkIn"}
+          onClick={() => handleTabChange("checkIn")}
+        >
+          Check-In
+        </Tab>
+        <Tab
+          $isActive={activeTab === "checkOut"}
+          onClick={() => handleTabChange("checkOut")}
+        >
+          Check-Out
+        </Tab>
+        <Tab
+          $isActive={activeTab === "inProgress"}
+          onClick={() => handleTabChange("inProgress")}
+        >
+          In Progress
+        </Tab>
+        <SearchContainer>
+          <SearchIconWrapper>
+            <LuUserRoundSearch size={18} />
+          </SearchIconWrapper>
+          <SearchInput
+            type="text"
+            placeholder="Search by guest name"
+            value={searchText}
+            onChange={handleSearchChange}
+          />
+        </SearchContainer>
       </TabsContainer>
+
       <div style={{ display: "flex", justifyContent: "flex-end", margin: "1rem 0" }}>
-        <ActionButton onClick={() => navigate("/new-booking")}>
-          + New Booking
-        </ActionButton>
+        <ActionButton onClick={() => navigate("/new-room")}>+ New Booking</ActionButton>
       </div>
+
       <Table>
         <thead>
           <TableRow>
             {headers.map((header, index) => (
               <TableHeader
                 key={index}
-                onClick={() =>
-                  header.key ? handleSort(header.key) : null
-                }
+                onClick={() => (header.key ? handleSort(header.key) : null)}
                 style={{
                   cursor: header.key ? "pointer" : "default",
                 }}
@@ -207,11 +223,45 @@ export const Bookings = () => {
           </TableRow>
         </thead>
         <tbody>
-          {sortedData.map((booking, index) => (
+          {currentData.map((booking, index) => (
             <TableRow key={index}>{renderRow(booking)}</TableRow>
           ))}
         </tbody>
       </Table>
+
+      <PaginationContainer>
+        <PageButton
+          onClick={() => setCurrentPage(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Prev
+        </PageButton>
+        {pageNumbers.map((page) => (
+          <PageButton
+            key={page}
+            $active={currentPage === page}
+            onClick={() => setCurrentPage(page)}
+          >
+            {page}
+          </PageButton>
+        ))}
+        <PageButton
+          onClick={() => setCurrentPage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </PageButton>
+      </PaginationContainer>
+
+      {popupData && (
+        <Overlay>
+          <Popup>
+            <h3>Special Request</h3>
+            <p>{popupData}</p>
+            <CloseButton onClick={() => setPopupData(null)}>Close</CloseButton>
+          </Popup>
+        </Overlay>
+      )}
     </div>
   );
 };

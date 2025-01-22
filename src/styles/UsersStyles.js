@@ -68,12 +68,16 @@ export const ContactText = styled.div`
   color: #393939;
 `;
 
-
 export const StatusText = styled.span`
   font-weight: bold;
   font-size: 10px;
   margin: 0 1rem 0 0;
-  color: ${({ status }) => (status === "ACTIVE" ? "green" : "red")};
+  color: ${({ $status }) =>
+    $status === "ACTIVE"
+      ? "green"
+      : $status === "INACTIVE"
+      ? "red"
+      : "black"}; 
 `;
 
 export const DotsContainer = styled.div`

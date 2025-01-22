@@ -8,7 +8,7 @@ import { FaHotel } from "react-icons/fa";
 const Sidebar = () => {
   const user = {
     name: "Eva Sevillano",
-    email: "evasevillanop@gmail.com",
+    email: "user@testing.com",
     image: "src/assets/img/profile.jpeg",
   };
 

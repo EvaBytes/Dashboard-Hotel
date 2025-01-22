@@ -3,24 +3,8 @@ import employeesData from "../data/Workers.json";
 import { GenericTable } from "../components/common/GenericTable.jsx";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
-import {
-  TabsContainer,
-  Tab,
-  SearchContainer,
-  SearchInput,
-  SearchIconWrapper,
-  ActionButton,
-} from "../styles/TabsStyles.js";
-import {
-  TableData,
-  EmployeeContainer,
-  EmployeeImage,
-  EmployeeInfo,
-  DescriptionText,
-  ContactText,
-  StatusText,
-  DotsContainer,
-} from "../styles/UsersStyles.js";
+import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../styles/TabsStyles.js";
+import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo,DescriptionText,ContactText,StatusText,DotsContainer} from "../styles/UsersStyles.js";
 
 export const Users = () => {
   const [activeTab, setActiveTab] = useState("allEmployees");
@@ -73,8 +57,8 @@ export const Users = () => {
         </ContactText>
       </TableData>
       <TableData>
-        <StatusText status={employee.status}>{employee.status}</StatusText>
-        <DotsContainer>
+        <StatusText $status={employee.status}>{employee.status}</StatusText>
+      <DotsContainer>
           <HiOutlineDotsVertical size={18} color="#6E6E6E" />
         </DotsContainer>
       </TableData>

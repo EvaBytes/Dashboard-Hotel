@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ThemeProvider } from "styled-components";
-import { theme } from "../styles/theme.js";
-import {BackgroundContainer, StyledAuthContainer,StyledAuthButton, StyledSubtitle,Typography, Alert,CircularProgress,StyledTextField} from "../styles/loginStyles.js";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../redux/slices/authSlice";
+import { BackgroundContainer, StyledAuthContainer, StyledAuthButton, StyledSubtitle, Typography, Alert, CircularProgress, StyledTextField } from "../styles/loginStyles";
 
 const Login = () => {
   const [email, setEmail] = useState("user@testing.com");
@@ -10,12 +10,14 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   useEffect(() => {
-    if (localStorage.getItem("authToken")) {
+    if (isAuthenticated) {
       navigate("/");
     }
-  }, [navigate]);
+  }, [isAuthenticated, navigate]);
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -36,12 +38,17 @@ const Login = () => {
     }
 
     setLoading(true);
+
     setTimeout(() => {
       setLoading(false);
-
       if (email === "user@testing.com" && password === "123456") {
-        localStorage.setItem("authToken", "fakeToken");
-        navigate("/");
+        dispatch(
+          login({
+            name: "Eva Sevillano",
+            email: "user@testing.com",
+            image: "src/assets/img/profile.jpeg",
+          })
+        );
       } else {
         setErrors({
           password: "Credenciales inválidas. Inténtalo nuevamente.",
@@ -51,41 +58,32 @@ const Login = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <BackgroundContainer>
-        <StyledAuthContainer>
-          <Typography size="2rem" color={theme.palette.text.primary}>
-            Welcome
-          </Typography>
-          <StyledSubtitle>Please, insert your Login Data</StyledSubtitle>
+    <BackgroundContainer>
+      <StyledAuthContainer>
+        <Typography size="2rem">Welcome</Typography>
+        <StyledSubtitle>Please, insert your Login Data</StyledSubtitle>
 
-          {errors.email && <Alert type="error">{errors.email}</Alert>}
-          {errors.password && <Alert type="error">{errors.password}</Alert>}
+        {errors.email && <Alert type="error">{errors.email}</Alert>}
+        {errors.password && <Alert type="error">{errors.password}</Alert>}
 
-          <StyledTextField
-            type="email"
-            aria-label="Correo electrónico"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <StyledTextField
-            type="password"
-            aria-label="Contraseña"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <StyledTextField
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <StyledTextField
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <StyledAuthButton
-            onClick={handleLogin}
-            disabled={loading || !email || !password}
-          >
-            {loading ? <CircularProgress /> : "Login"}
-          </StyledAuthButton>
-        </StyledAuthContainer>
-      </BackgroundContainer>
-    </ThemeProvider>
+        <StyledAuthButton onClick={handleLogin} disabled={loading || !email || !password}>
+          {loading ? <CircularProgress /> : "Login"}
+        </StyledAuthButton>
+      </StyledAuthContainer>
+    </BackgroundContainer>
   );
 };
 

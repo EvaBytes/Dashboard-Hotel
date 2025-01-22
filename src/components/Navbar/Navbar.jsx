@@ -2,30 +2,19 @@ import React from "react";
 import { AiOutlineMail, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { BiSolidLeftArrowSquare, BiSolidRightArrowSquare } from "react-icons/bi";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/slices/authSlice"; 
 import { NavbarContainer, NavbarLeft, NavbarRight, IconButton } from "./navbarStyles";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const location = useLocation(); 
 
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
+    dispatch(logout()); 
     navigate("/login");
   };
-
-  const pageTitles = {
-    "/": "Dashboard",
-    "/bookings": "Bookings",
-    "/rooms": "Rooms",
-    "/contact": "Contact",
-    "/users": "Users",
-  };
-
-  let currentPageTitle = pageTitles[location.pathname] || "Dashboard";
-  if (location.pathname.includes("/guest-details")) {
-    currentPageTitle = "Guest Details";
-  }
 
   return (
     <NavbarContainer $sidebarOpen={sidebarOpen}>
@@ -37,7 +26,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
             <BiSolidRightArrowSquare size={24} />
           )}
         </IconButton>
-        <h1>{currentPageTitle}</h1> 
+        <h1>Dashboard</h1>
       </NavbarLeft>
       <NavbarRight>
         <IconButton>
