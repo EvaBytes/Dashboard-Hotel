@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import roomsData from "../data/Rooms.json";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import roomsData from "../../data/Rooms.json";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
-import { TabsContainer, Tab, ActionButton } from "../styles/TabsStyles.js";
-import { GenericTable } from "../components/common/GenericTable.jsx";
-import { RoomImage, DiscountSpan, StatusButton, SortIcon } from "../styles/TableStyles.js";
+import { TabsContainer, Tab, ActionButton } from "../../styles/TabsStyles.js";
+import { GenericTable } from "../../components/common/GenericTable.jsx";
+import { RoomImage, DiscountSpan, StatusButton, SortIcon } from "../../styles/TableStyles.js";
 
 export const Rooms = () => {
   const [activeTab, setActiveTab] = useState("allRooms");
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+
+  const navigate = useNavigate(); // Inicializar navigate
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
@@ -144,7 +147,7 @@ export const Rooms = () => {
       </TabsContainer>
 
       <div style={{ margin: "1rem 0", textAlign: "right" }}>
-        <ActionButton>+ New Room</ActionButton>
+        <ActionButton onClick={() => navigate("/new-room")}>+ New Room</ActionButton>
       </div>
 
       <GenericTable

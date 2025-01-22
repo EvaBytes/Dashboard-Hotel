@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { format } from "date-fns";
-import bookingsData from "../data/Bookings.json";
-import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper,CarouselItem,CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,BreadcrumbContainer,BreadcrumbLink,Divider} from "../styles/GuestDetailsStyles";
+import bookingsData from "../../data/Bookings.json";
+import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper,CarouselItem,CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,BreadcrumbContainer,BreadcrumbLink,Divider} from "../../styles/GuestDetailsStyles";
 import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
 
 const GuestDetails = () => {

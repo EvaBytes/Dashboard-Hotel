@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import employeesData from "../data/Workers.json";
-import { GenericTable } from "../components/common/GenericTable.jsx";
+import { useNavigate } from "react-router-dom"; 
+import employeesData from "../../data/Workers.json";
+import { GenericTable } from "../../components/common/GenericTable.jsx";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
-import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../styles/TabsStyles.js";
-import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo,DescriptionText,ContactText,StatusText,DotsContainer} from "../styles/UsersStyles.js";
+import {TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton} from "../../styles/TabsStyles.js";
+import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo, DescriptionText,ContactText,StatusText, DotsContainer} from "../../styles/UsersStyles.js";
 
 export const Users = () => {
   const [activeTab, setActiveTab] = useState("allEmployees");
   const [searchText, setSearchText] = useState("");
-  const [isNewEmployeeOpen, setIsNewEmployeeOpen] = useState(false);
+  const navigate = useNavigate(); 
 
   const handleTabChange = (tab) => setActiveTab(tab);
 
@@ -58,17 +59,12 @@ export const Users = () => {
       </TableData>
       <TableData>
         <StatusText $status={employee.status}>{employee.status}</StatusText>
-      <DotsContainer>
+        <DotsContainer>
           <HiOutlineDotsVertical size={18} color="#6E6E6E" />
         </DotsContainer>
       </TableData>
     </>
   );
-
-  const handleNewEmployee = (newEmployee) => {
-    employeesData.push(newEmployee);
-    setIsNewEmployeeOpen(false);
-  };
 
   return (
     <div>
@@ -115,8 +111,8 @@ export const Users = () => {
       </TabsContainer>
 
       <div style={{ margin: "1rem 0", textAlign: "right" }}>
-        <ActionButton onClick={() => setIsNewEmployeeOpen(true)}>
-          + New Employee
+        <ActionButton onClick={() => navigate("/new-user")}>
+          + New User
         </ActionButton>
       </div>
 
@@ -126,88 +122,6 @@ export const Users = () => {
         renderRow={renderRow}
         itemsPerPage={5}
       />
-
-      {isNewEmployeeOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: "0",
-            left: "0",
-            width: "100%",
-            height: "100%",
-            background: "rgba(0,0,0,0.5)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "#fff",
-              padding: "2rem",
-              borderRadius: "10px",
-              width: "400px",
-            }}
-          >
-            <h3>Add New Employee</h3>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const newEmployee = {
-                  name: formData.get("name"),
-                  employeeId: formData.get("id"),
-                  email: formData.get("email"),
-                  startDate: formData.get("startDate"),
-                  status: formData.get("status"),
-                  description: formData.get("description"),
-                  contact: formData.get("contact"),
-                  photo: "https://via.placeholder.com/150",
-                };
-                handleNewEmployee(newEmployee);
-              }}
-            >
-              <div style={{ marginBottom: "1rem" }}>
-                <label>
-                  Name:
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    style={{ width: "100%", padding: "0.5rem" }}
-                  />
-                </label>
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                <label>
-                  Contact:
-                  <input
-                    type="text"
-                    name="contact"
-                    required
-                    style={{ width: "100%", padding: "0.5rem" }}
-                  />
-                </label>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "1rem",
-                }}
-              >
-                <ActionButton
-                  type="button"
-                  onClick={() => setIsNewEmployeeOpen(false)}
-                >
-                  Cancel
-                </ActionButton>
-                <ActionButton type="submit">Submit</ActionButton>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

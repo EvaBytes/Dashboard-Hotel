@@ -4,10 +4,10 @@ import { format } from "date-fns";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
-import bookingsData from "../data/Bookings.json";
-import {TabsContainer,Tab, SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../styles/TabsStyles.js";
-import {Table,TableHeader, TableRow,TableData, GuestContainer, GuestImage,GuestInfo,StatusBadge,SortIcon, PaginationContainer,PageButton} from "../styles/TableStyles.js";
-import { Overlay, Popup, CloseButton } from "../styles/PopupStyles.js";
+import bookingsData from "../../data/Bookings.json";
+import {TabsContainer,Tab, SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
+import {Table,TableHeader, TableRow,TableData, GuestContainer, GuestImage,GuestInfo,StatusBadge,SortIcon, PaginationContainer,PageButton} from "../../styles/TableStyles.js";
+import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
 import { Link } from "react-router-dom";
 
 export const Bookings = () => {
@@ -203,7 +203,7 @@ export const Bookings = () => {
       </TabsContainer>
 
       <div style={{ display: "flex", justifyContent: "flex-end", margin: "1rem 0" }}>
-        <ActionButton onClick={() => navigate("/new-room")}>+ New Booking</ActionButton>
+        <ActionButton onClick={() => navigate("/new-booking")}>+ New Booking</ActionButton>
       </div>
 
       <Table>

@@ -18,6 +18,9 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     "/rooms": "Rooms",
     "/contact": "Contact",
     "/users": "Users",
+    "/new-booking": "New Booking",
+    "/new-room": "New Room",
+    "/new-user": "New User",
   };
 
   const pageTitle =
