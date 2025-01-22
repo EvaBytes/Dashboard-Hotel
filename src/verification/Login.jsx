@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/slices/authSlice";
-import { BackgroundContainer, StyledAuthContainer, StyledAuthButton, StyledSubtitle, Typography, Alert, CircularProgress, StyledTextField } from "../styles/loginStyles";
+import { login } from "../redux/slices/authSlice.js";
+import { BackgroundContainer, StyledAuthContainer, StyledAuthButton, StyledSubtitle, Typography, Alert, CircularProgress, StyledTextField } from "../styles/loginStyles.js";
 
 const Login = () => {
   const [email, setEmail] = useState("user@testing.com");

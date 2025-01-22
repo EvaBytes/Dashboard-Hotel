@@ -38,6 +38,32 @@ export const GuestInfo = styled.p`
   color: #666666;
 `;
 
+export const GuestActions = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #135846;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background: #0f4a3c;
+    }
+
+    svg {
+      font-size: 1.2rem;
+    }
+  }
+`;
+
 export const StatusBadge = styled.div`
   margin: 1rem 0;
   padding: 0.5rem 1rem;
@@ -156,7 +182,6 @@ export const BreadcrumbContainer = styled.div`
   color: #333333;
 `;
 
-// Breadcrumb Link
 export const BreadcrumbLink = styled(Link)`
   text-decoration: none;
   color: #135846;

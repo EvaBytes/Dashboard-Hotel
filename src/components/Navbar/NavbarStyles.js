@@ -17,7 +17,8 @@ export const NavbarContainer = styled.nav`
 
 export const NavbarLeft = styled.div`
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
 export const NavbarRight = styled.div`
@@ -29,11 +30,51 @@ export const IconButton = styled.button`
   background: none;
   border: none;
   color: #135846;
-  margin: 0 .8rem;
+  margin: 0 0.8rem;
   cursor: pointer;
   padding: 0;
 
   &:hover {
-    opacity: .5;
+    opacity: 0.5;
+  }
+`;
+
+export const TitleContainer = styled.div`
+  display: flex;
+  align-items: center; 
+  gap: 0.5rem; 
+`;
+
+export const TitleSection = styled.h1`
+  font-size: 1.5rem; /* Título principal */
+  font-weight: bold;
+  color: black;
+  margin: 0;
+`;
+
+export const BreadcrumbSection = styled.div`
+  margin-top: .2rem; 
+`;
+
+export const Breadcrumb = styled.div`
+  font-size: .8rem;
+  font-weight: normal;
+  color: #6c757d; 
+  display: flex;
+  align-items: center;
+
+  a {
+    text-decoration: none;
+    color: #135846; 
+    font-weight: bold;
+
+    &:hover {
+      opacity: 0.7; 
+    }
+  }
+
+  span {
+    margin-left: 0.5rem;
+    color: #6c757d; 
   }
 `;

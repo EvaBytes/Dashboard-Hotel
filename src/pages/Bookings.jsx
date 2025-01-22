@@ -8,6 +8,7 @@ import bookingsData from "../data/Bookings.json";
 import {TabsContainer,Tab, SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../styles/TabsStyles.js";
 import {Table,TableHeader, TableRow,TableData, GuestContainer, GuestImage,GuestInfo,StatusBadge,SortIcon, PaginationContainer,PageButton} from "../styles/TableStyles.js";
 import { Overlay, Popup, CloseButton } from "../styles/PopupStyles.js";
+import { Link } from "react-router-dom";
 
 export const Bookings = () => {
   const [activeTab, setActiveTab] = useState("allBookings");
@@ -151,13 +152,12 @@ export const Bookings = () => {
         <StatusBadge $status={booking.status}>{booking.status}</StatusBadge>
       </TableData>
       <TableData>
-        <HiOutlineDotsVertical
-          size={16}
-          style={{ cursor: "pointer" }}
-          onClick={() =>
-            navigate(`/guest-details/${booking.guest.reservationNumber}`)
-          }
-        />
+        <Link
+          to={`/guest-details/${booking.guest.reservationNumber}`}
+          style={{ display: "inline-block", cursor: "pointer" }}
+        >
+          <HiOutlineDotsVertical size={16} />
+        </Link>
       </TableData>
     </>
   );

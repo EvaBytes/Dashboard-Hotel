@@ -1,21 +1,39 @@
-import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { format } from "date-fns"; 
 import bookingsData from "../data/Bookings.json";
-import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestName,GuestInfo,RoomDetailsCard,StatusBadge,RoomInfo,FacilitiesContainer,FacilityItem,BookedBanner,BreadcrumbContainer,BreadcrumbLink} from "../styles/GuestDetailsStyles";
+import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestName,GuestInfo,RoomDetailsCard,StatusBadge,RoomInfo, FacilitiesContainer,FacilityItem,BookedBanner,BreadcrumbContainer,BreadcrumbLink} from "../styles/GuestDetailsStyles";
 
 const GuestDetails = () => {
-  const { reservationId } = useParams();
+  const { reservationId } = useParams(); 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const guestDetails = bookingsData.find(
-    (booking) => booking.guest.reservationNumber === `Nº ${reservationId}`
+    (booking) => booking.guest.reservationNumber === reservationId
   );
-  
-  console.log("Guest Details:", guestDetails);
-  
+
+  useEffect(() => {
+    if (guestDetails) {
+      navigate(location.pathname, {
+        replace: true,
+        state: { guestName: guestDetails.guest.fullName },
+      });
+    }
+  }, [guestDetails, navigate, location.pathname]);
 
   if (!guestDetails) {
-    return <div>Guest details not found</div>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <p>Guest details not found.</p>
+        <button
+          onClick={() => navigate(-1)}
+          style={{ padding: "0.5rem 1rem", cursor: "pointer" }}
+        >
+          Go Back
+        </button>
+      </div>
+    );
   }
 
   const {
@@ -24,6 +42,7 @@ const GuestDetails = () => {
     checkOut,
     specialRequest,
     roomType,
+    offerPrice,
     status,
     facilities,
     roomPhoto,
@@ -32,10 +51,14 @@ const GuestDetails = () => {
   return (
     <>
       <BreadcrumbContainer>
-        <button onClick={() => navigate(-1)} style={{ all: "unset", cursor: "pointer" }}>
+        <button
+          onClick={() => navigate(-1)}
+          style={{ all: "unset", cursor: "pointer", marginRight: "8px" }}
+        >
           &#8592;
         </button>
-        <BreadcrumbLink to="/bookings">Guest</BreadcrumbLink> / {guest.fullName}
+        <BreadcrumbLink to="/bookings">Bookings</BreadcrumbLink> /{" "}
+        <span>{guest.fullName}</span>
       </BreadcrumbContainer>
 
       <GuestDetailsContainer>
@@ -46,20 +69,25 @@ const GuestDetails = () => {
           <StatusBadge $status={status}>{status}</StatusBadge>
           <RoomInfo>
             <p>
-              <strong>Check-In:</strong> {checkIn}
+              <strong>Check-In:</strong>{" "}
+              {format(new Date(checkIn), "MMM dd, yyyy")}
             </p>
             <p>
-              <strong>Check-Out:</strong> {checkOut}
+              <strong>Check-Out:</strong>{" "}
+              {format(new Date(checkOut), "MMM dd, yyyy")}
             </p>
             <p>
               <strong>Room Type:</strong> {roomType}
             </p>
             <p>
-              <strong>Special Request:</strong> {specialRequest}
+              <strong>Room Price:</strong> {offerPrice}
+            </p>
+            <p>
+              <strong>Special Request:</strong> {specialRequest || "None"}
             </p>
             <FacilitiesContainer>
-              {facilities.split(",").map((facility) => (
-                <FacilityItem key={facility}>{facility}</FacilityItem>
+              {facilities?.split(",").map((facility) => (
+                <FacilityItem key={facility.trim()}>{facility.trim()}</FacilityItem>
               ))}
             </FacilitiesContainer>
           </RoomInfo>
@@ -75,8 +103,8 @@ const GuestDetails = () => {
           <div style={{ padding: "1rem" }}>
             <h3>{roomType} Room</h3>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </p>
           </div>
         </RoomDetailsCard>
