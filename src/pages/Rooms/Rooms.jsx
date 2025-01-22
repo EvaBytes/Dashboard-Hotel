@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Importar useNavigate
+import { useNavigate } from "react-router-dom";
 import roomsData from "../../data/Rooms.json";
 import { FaArrowUp, FaArrowDown } from "react-icons/fa";
 import { TabsContainer, Tab, ActionButton } from "../../styles/TabsStyles.js";
@@ -11,7 +11,7 @@ export const Rooms = () => {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
 
-  const navigate = useNavigate(); // Inicializar navigate
+  const navigate = useNavigate(); 
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);

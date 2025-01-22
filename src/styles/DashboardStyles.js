@@ -17,7 +17,7 @@ export const StyledCard = styled.div`
   max-width: 250px;
   background-color: #f5f5f5;
   border-radius: 10px;
-  margin: 1rem 0.8rem;
+  margin: 1.5rem 0.8rem .5rem 0.8rem;
   padding: 1rem;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   gap: 1rem;
@@ -89,7 +89,6 @@ export const StyledEmptyContainer = styled(StyledCard)`
 `;
 
 export const StyledBookingList = styled.div`
-  margin-top: 2rem;
   background-color: #fff;
   border-radius: 10px;
   padding: 1rem;
