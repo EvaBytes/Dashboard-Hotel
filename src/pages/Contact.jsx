@@ -2,7 +2,7 @@ import React from "react";
 import { LatestMessages } from "../components/common/LatestMessages.jsx";
 import { GenericTable } from "../components/common/GenericTable.jsx";
 import {ContactPageContainer,SectionContainer,Title} from "../styles/ContactStyles.js"; 
-import {GuestImage,GuestInfo,GuestName,StatusBadge} from "../styles/GuestDetailsStyles.js"; 
+import {GuestImage,GuestInfoSection,GuestNameDetails,StatusBadge} from "../styles/GuestDetailsStyles.js"; 
 import messagesData from "../data/Messages.json";
 
 const Contact = () => {
@@ -25,10 +25,10 @@ const Contact = () => {
       <td>{item.orderId}</td>
       <td>{item.date}</td>
       <td>
-        <GuestName>{item.customer}</GuestName>
+        <GuestNameDetails>{item.customer}</GuestNameDetails>
       </td>
       <td>
-        <GuestInfo>{item.comment}</GuestInfo>
+        <GuestInfoSection>{item.comment}</GuestInfoSection>
       </td>
       <td>
         <StatusBadge status={item.status === "read" ? "Check-In" : "Check-Out"}>

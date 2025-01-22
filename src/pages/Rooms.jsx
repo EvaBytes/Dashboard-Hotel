@@ -54,7 +54,7 @@ export const Rooms = () => {
   const headers = [
     { label: "Photo", key: null },
     { label: "Room Number", key: "roomNumber" },
-    { label: "Bed Type", key: "bedType" },
+    { label: "Room Type", key: "bedType" },
     { label: "Facilities", key: "facilities" },
     {
       label: (

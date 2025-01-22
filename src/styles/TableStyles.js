@@ -66,7 +66,7 @@ export const GuestContainer = styled.div`
 `;
 
 export const GuestImage = styled.img`
-  width: 3.5rem;
+  width: 4.7rem;
   height: 3.5rem;
   border-radius: 10px;
   margin-right: 1rem;

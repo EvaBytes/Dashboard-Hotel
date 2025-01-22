@@ -1,11 +1,9 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-
 export const GuestDetailsContainer = styled.div`
   display: flex;
-  gap: 2rem;
-  padding: 2rem;
+  padding: 2rem 1rem;
   background-color: #f9f9f9;
   border-radius: 10px;
 `;
@@ -13,59 +11,92 @@ export const GuestDetailsContainer = styled.div`
 export const GuestInfoCard = styled.div`
   flex: 1;
   background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  border-radius: 10px 0 0 10px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 `;
 
+
 export const GuestImage = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 10px;
   object-fit: cover;
   margin-bottom: 1rem;
 `;
 
-export const GuestName = styled.h2`
-  margin: 0;
-  font-size: 1.5rem;
-  color: #333333;
+export const GuestHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `;
 
-export const GuestInfo = styled.p`
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
-  color: #666666;
+export const GuestNameDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #799283;
+  }
 `;
 
 export const GuestActions = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem; 
   margin: 1rem 0;
 
   button {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.3rem; 
     background: #135846;
     color: #fff;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.7rem; 
     border-radius: 5px;
+    font-size: 0.8rem; 
     cursor: pointer;
+
+    svg {
+      font-size: 1rem; 
+    }
 
     &:hover {
       background: #0f4a3c;
     }
-
-    svg {
-      font-size: 1.2rem;
-    }
   }
 `;
 
-export const StatusBadge = styled.div`
+export const GuestInfoSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    strong {
+      color: #000;
+    }
+  }
+`;
+export const Divider = styled.hr`
+  border: none;
+  border-top: 1px solid #e0e0e0;
   margin: 1rem 0;
+`;
+
+export const StatusBadge = styled.div`
   padding: 0.5rem 1rem;
   background-color: ${({ $status }) =>
     $status === "Check-In"
@@ -82,20 +113,6 @@ export const StatusBadge = styled.div`
   font-weight: bold;
   border-radius: 5px;
   display: inline-block;
-`;
-
-export const RoomInfo = styled.div`
-  margin-top: 1rem;
-
-  p {
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
-    color: #444444;
-  }
-
-  strong {
-    color: #000;
-  }
 `;
 
 export const FacilitiesContainer = styled.div`
@@ -119,12 +136,11 @@ export const FacilityItem = styled.div`
 export const RoomDetailsCard = styled.div`
   flex: 1;
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 0 10px 10px 0;
   position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0 6px rgba(0, 0, 0, 0.1);
 `;
 
 export const BookedBanner = styled.div`
@@ -139,30 +155,54 @@ export const BookedBanner = styled.div`
   font-size: 0.9rem;
 `;
 
+export const CarouselWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  border-radius: 10px;
+  padding: 0 0 1rem 0;
+`;
+
+export const CarouselItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+`;
+
 export const CarouselImage = styled.img`
   width: 100%;
-  height: auto;
-  border-radius: 10px;
-  object-fit: cover;
+  aspect-ratio: 7 / 7; 
+  overflow: hidden;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const CarouselCaption = styled.div`
+  margin-top: 1rem;
+  padding: 0 1rem;
+  font-size: 1rem;
+  color: #444444;
+  text-align: left; 
 `;
 
 export const CarouselButton = styled.button`
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 45%;
   background: rgba(0, 0, 0, 0.5);
   color: #ffffff;
   border: none;
-  border-radius: 50%;
+  border-radius: 10px;
   cursor: pointer;
-  padding: 0.5rem 1rem;
+  padding: 1rem;
   z-index: 1;
 
   &:hover {
     background: rgba(0, 0, 0, 0.7);
   }
 `;
-
 export const CarouselButtonLeft = styled(CarouselButton)`
   left: 10px;
 `;
@@ -191,5 +231,3 @@ export const BreadcrumbLink = styled(Link)`
     text-decoration: underline;
   }
 `;
-
-

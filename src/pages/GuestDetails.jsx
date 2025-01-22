@@ -1,13 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { format } from "date-fns"; 
+import { format } from "date-fns";
 import bookingsData from "../data/Bookings.json";
-import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestName,GuestInfo,RoomDetailsCard,StatusBadge,RoomInfo, FacilitiesContainer,FacilityItem,BookedBanner,BreadcrumbContainer,BreadcrumbLink} from "../styles/GuestDetailsStyles";
+import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper,CarouselItem,CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,BreadcrumbContainer,BreadcrumbLink,Divider} from "../styles/GuestDetailsStyles";
+import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
 
 const GuestDetails = () => {
-  const { reservationId } = useParams(); 
+  const { reservationId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const guestDetails = bookingsData.find(
     (booking) => booking.guest.reservationNumber === reservationId
@@ -48,34 +50,54 @@ const GuestDetails = () => {
     roomPhoto,
   } = guestDetails;
 
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === roomPhoto.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? roomPhoto.length - 1 : prevIndex - 1
+    );
+  };
+
   return (
     <>
       <BreadcrumbContainer>
-        <button
-          onClick={() => navigate(-1)}
-          style={{ all: "unset", cursor: "pointer", marginRight: "8px" }}
-        >
-          &#8592;
-        </button>
+        <button onClick={() => navigate(-1)}>&#8592;</button>
         <BreadcrumbLink to="/bookings">Bookings</BreadcrumbLink> /{" "}
         <span>{guest.fullName}</span>
       </BreadcrumbContainer>
 
       <GuestDetailsContainer>
-        <GuestInfoCard>
-          <GuestImage src={guest.image} alt={guest.fullName} />
-          <GuestName>{guest.fullName}</GuestName>
-          <GuestInfo>ID: {guest.reservationNumber}</GuestInfo>
-          <StatusBadge $status={status}>{status}</StatusBadge>
-          <RoomInfo>
+      <GuestInfoCard>
+          <GuestHeader>
+            <GuestImage src={guest.image} alt={guest.fullName} />
+            <GuestNameDetails>
+              <h2>{guest.fullName}</h2>
+              <p>ID: {guest.reservationNumber}</p>
+            </GuestNameDetails>
+          </GuestHeader>
+          <GuestActions>
+            <button>
+              <MdOutlinePhone /> Call
+            </button>
+            <button>
+              <MdOutlineMailOutline /> Send Message
+            </button>
+          </GuestActions>
+          <Divider />
+          <GuestInfoSection>
             <p>
-              <strong>Check-In:</strong>{" "}
-              {format(new Date(checkIn), "MMM dd, yyyy")}
+              <strong>Check-In:</strong> {format(new Date(checkIn), "MMM dd, yyyy")}
             </p>
             <p>
-              <strong>Check-Out:</strong>{" "}
-              {format(new Date(checkOut), "MMM dd, yyyy")}
+              <strong>Check-Out:</strong> {format(new Date(checkOut), "MMM dd, yyyy")}
             </p>
+          </GuestInfoSection>
+          <Divider />
+          <GuestInfoSection>
             <p>
               <strong>Room Type:</strong> {roomType}
             </p>
@@ -85,28 +107,35 @@ const GuestDetails = () => {
             <p>
               <strong>Special Request:</strong> {specialRequest || "None"}
             </p>
-            <FacilitiesContainer>
-              {facilities?.split(",").map((facility) => (
-                <FacilityItem key={facility.trim()}>{facility.trim()}</FacilityItem>
-              ))}
-            </FacilitiesContainer>
-          </RoomInfo>
+          </GuestInfoSection>
+          <Divider />
+          <FacilitiesContainer>
+            {facilities?.split(",").map((facility) => (
+              <FacilityItem key={facility.trim()}>{facility.trim()}</FacilityItem>
+            ))}
+          </FacilitiesContainer>
         </GuestInfoCard>
 
+
         <RoomDetailsCard>
-          <BookedBanner>{status}</BookedBanner>
-          <img
-            src={roomPhoto}
-            alt={`Room ${roomType}`}
-            style={{ width: "100%", borderRadius: "10px" }}
-          />
-          <div style={{ padding: "1rem" }}>
-            <h3>{roomType} Room</h3>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </p>
-          </div>
+          <StatusBadge $status={status}>{status}</StatusBadge> 
+        <CarouselWrapper>
+            <CarouselButtonLeft onClick={handlePrevImage}>&#8592;</CarouselButtonLeft>
+            <CarouselItem>
+              <CarouselImage
+                src={roomPhoto[currentImageIndex]}
+                alt={`Room ${roomType} - ${currentImageIndex + 1}`}
+              />
+              <CarouselCaption>
+                <h3>{roomType} Room</h3>
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                  eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </p>
+              </CarouselCaption>
+            </CarouselItem>
+            <CarouselButtonRight onClick={handleNextImage}>&#8594;</CarouselButtonRight>
+          </CarouselWrapper>
         </RoomDetailsCard>
       </GuestDetailsContainer>
     </>
