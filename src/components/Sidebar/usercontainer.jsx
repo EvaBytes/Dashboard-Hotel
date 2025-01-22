@@ -46,7 +46,7 @@ const UserContainerComponent = ({ user, onSave }) => {
       {isEditing && (
         <ModalBackdrop>
           <ModalContent>
-            <ModalTitle>Editar Información</ModalTitle>
+            <ModalTitle>Edit Your User</ModalTitle>
 
             <InputField
               type="text"
@@ -64,8 +64,8 @@ const UserContainerComponent = ({ user, onSave }) => {
             />
 
             <ModalButtonContainer>
-              <SaveButton onClick={handleSave}>Guardar</SaveButton>
-              <CancelButton onClick={handleEditToggle}>Cancelar</CancelButton>
+              <SaveButton onClick={handleSave}>Save</SaveButton>
+              <CancelButton onClick={handleEditToggle}>Cancel</CancelButton>
             </ModalButtonContainer>
           </ModalContent>
         </ModalBackdrop>

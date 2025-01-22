@@ -16,7 +16,7 @@ export const FormGroup = styled.div`
 
 export const Label = styled.label`
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   font-weight: bold;
   color: ${({ theme: $theme }) => $theme.palette.text.primary};
   font-size: ${({ theme: $theme }) => $theme.typography.body1.fontSize};

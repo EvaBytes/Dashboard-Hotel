@@ -43,7 +43,6 @@ export const TableHeader = styled.th`
 
 export const TableRow = styled.tr`
   background-color: ${(props) => props.theme.palette.background.default};
-
   &:hover {
     background-color: ${(props) => props.theme.palette.background.paper};
   }

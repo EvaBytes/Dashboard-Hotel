@@ -53,11 +53,11 @@ export const TitleSection = styled.h1`
 `;
 
 export const BreadcrumbSection = styled.div`
-  margin-top: .2rem; 
+  margin: .5rem 0 0 3.5rem;
 `;
 
 export const Breadcrumb = styled.div`
-  font-size: .8rem;
+  font-size: .9rem;
   font-weight: normal;
   color: #6c757d; 
   display: flex;

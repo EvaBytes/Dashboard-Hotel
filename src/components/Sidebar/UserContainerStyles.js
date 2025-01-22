@@ -60,6 +60,7 @@ background-color: ${({ theme }) => theme.palette.background.default};
 `;
 
 export const SaveButton = styled(EditButton)`
+  color: white;
   background-color: ${({ theme }) => theme.palette.secondary.main};
 
   &:hover {

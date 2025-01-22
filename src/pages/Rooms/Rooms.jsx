@@ -70,13 +70,13 @@ export const Rooms = () => {
             {sortBy === "rate" && sortOrder === "asc" ? <FaArrowUp /> : <FaArrowDown />}
           </SortIcon>
         </div>
-      ),
-      key: "rate",
-      sortable: true,
-    },
-    { label: "Offer Price", key: "offerPrice" },
-    {
-      label: (
+            ),
+            key: "rate",
+            sortable: true,
+          },
+          { label: "Offer Price", key: "offerPrice" },
+          {
+            label: (
         <div
           onClick={() => handleSort("status")}
           style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
