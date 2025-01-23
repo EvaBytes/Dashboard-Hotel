@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 export const GuestDetailsContainer = styled.div`
   display: flex;
+  margin-top: 4rem;
   padding: 2rem 1rem;
   background-color: #f9f9f9;
   border-radius: 10px;

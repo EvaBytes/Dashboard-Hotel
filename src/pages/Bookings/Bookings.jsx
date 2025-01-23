@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { FaArrowUp, FaArrowDown } from "react-icons/fa";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
 import bookingsData from "../../data/Bookings.json";
-import {TabsContainer,Tab, SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
-import {Table,TableHeader, TableRow,TableData, GuestContainer, GuestImage,GuestInfo,StatusBadge,SortIcon, PaginationContainer,PageButton} from "../../styles/TableStyles.js";
+import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
+import {Table,TableHeader,TableRow,TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge,PaginationContainer,PageButton,ActionMenu,ActionMenuItem} from "../../styles/TableStyles.js";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
-import { Link } from "react-router-dom";
 
 export const Bookings = () => {
   const [activeTab, setActiveTab] = useState("allBookings");
@@ -16,8 +15,10 @@ export const Bookings = () => {
   const [sortBy, setSortBy] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [currentPage, setCurrentPage] = useState(1);
-  const [popupData, setPopupData] = useState(null); 
+  const [popupData, setPopupData] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(null);
   const itemsPerPage = 10;
+  const pagesPerBlock = 4;
 
   const navigate = useNavigate();
 
@@ -33,6 +34,24 @@ export const Bookings = () => {
       setSortBy(column);
       setSortOrder("asc");
     }
+  };
+
+  const handleMenuToggle = (id) => {
+    setMenuOpen((prevMenu) => (prevMenu === id ? null : id));
+  };
+
+  const handleEdit = (reservationId) => {
+    navigate(`/guest-details/${reservationId}`);
+  };
+
+  const handleDelete = (reservationId) => {
+    if (window.confirm("Are you sure you want to delete this booking?")) {
+      console.log(`Booking with ID ${reservationId} deleted.`);
+    }
+  };
+
+  const handleNewBooking = () => {
+    navigate("/new-booking");
   };
 
   const cleanedData = bookingsData.map((booking) => ({
@@ -63,68 +82,38 @@ export const Bookings = () => {
     return 0;
   });
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentData = sortedData.slice(startIndex, endIndex);
-
   const totalPages = Math.ceil(sortedData.length / itemsPerPage);
 
-  const visiblePages = 4;
-  const startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
-  const endPage = Math.min(totalPages, startPage + visiblePages - 1);
-
-  const pageNumbers = Array.from(
-    { length: endPage - startPage + 1 },
-    (_, i) => startPage + i
+  const currentData = sortedData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
+
+  const currentBlock = Math.ceil(currentPage / pagesPerBlock);
+  const startPage = (currentBlock - 1) * pagesPerBlock + 1;
+  const endPage = Math.min(startPage + pagesPerBlock - 1, totalPages);
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePageClick = (page) => {
+    setCurrentPage(page);
+  };
 
   const headers = [
     { label: "Guest", key: null },
-    {
-      label: (
-        <>
-          Order Date{" "}
-          <SortIcon>
-            {sortBy === "orderDate" && sortOrder === "asc" && <FaArrowUp />}
-            {sortBy === "orderDate" && sortOrder === "desc" && <FaArrowDown />}
-            {sortBy !== "orderDate" && (
-              <FaArrowUp style={{ color: "#ccc" }} />
-            )}
-          </SortIcon>
-        </>
-      ),
-      key: "orderDate",
-    },
-    {
-      label: (
-        <>
-          Check In{" "}
-          <SortIcon>
-            {sortBy === "checkIn" && sortOrder === "asc" && <FaArrowUp />}
-            {sortBy === "checkIn" && sortOrder === "desc" && <FaArrowDown />}
-            {sortBy !== "checkIn" && <FaArrowUp style={{ color: "#ccc" }} />}
-          </SortIcon>
-        </>
-      ),
-      key: "checkIn",
-    },
-    {
-      label: (
-        <>
-          Check Out{" "}
-          <SortIcon>
-            {sortBy === "checkOut" && sortOrder === "asc" && <FaArrowUp />}
-            {sortBy === "checkOut" && sortOrder === "desc" && <FaArrowDown />}
-            {sortBy !== "checkOut" && <FaArrowUp style={{ color: "#ccc" }} />}
-          </SortIcon>
-        </>
-      ),
-      key: "checkOut",
-    },
+    { label: "Order Date", key: "orderDate" },
+    { label: "Check In", key: "checkIn" },
+    { label: "Check Out", key: "checkOut" },
     { label: "Special Request", key: null },
     { label: "Room Type", key: null },
     { label: "Status", key: null },
-    { label: "", key: null },
+    { label: "Actions", key: null },
   ];
 
   const renderRow = (booking) => (
@@ -152,12 +141,23 @@ export const Bookings = () => {
         <StatusBadge $status={booking.status}>{booking.status}</StatusBadge>
       </TableData>
       <TableData>
-        <Link
-          to={`/guest-details/${booking.guest.reservationNumber}`}
-          style={{ display: "inline-block", cursor: "pointer" }}
-        >
-          <HiOutlineDotsVertical size={16} />
-        </Link>
+        <div style={{ position: "relative" }}>
+          <HiOutlineDotsVertical
+            size={18}
+            onClick={() => handleMenuToggle(booking.guest.reservationNumber)}
+            style={{ cursor: "pointer" }}
+          />
+          {menuOpen === booking.guest.reservationNumber && (
+            <ActionMenu>
+              <ActionMenuItem onClick={() => handleEdit(booking.guest.reservationNumber)}>
+                <FaPencilAlt /> Edit
+              </ActionMenuItem>
+              <ActionMenuItem onClick={() => handleDelete(booking.guest.reservationNumber)}>
+                <FaTrashAlt /> Delete
+              </ActionMenuItem>
+            </ActionMenu>
+          )}
+        </div>
       </TableData>
     </>
   );
@@ -203,7 +203,7 @@ export const Bookings = () => {
       </TabsContainer>
 
       <div style={{ display: "flex", justifyContent: "flex-end", margin: "1rem 0" }}>
-        <ActionButton onClick={() => navigate("/new-booking")}>+ New Booking</ActionButton>
+        <ActionButton onClick={handleNewBooking}>+ New Booking</ActionButton>
       </div>
 
       <Table>
@@ -212,10 +212,8 @@ export const Bookings = () => {
             {headers.map((header, index) => (
               <TableHeader
                 key={index}
-                onClick={() => (header.key ? handleSort(header.key) : null)}
-                style={{
-                  cursor: header.key ? "pointer" : "default",
-                }}
+                onClick={() => header.key && handleSort(header.key)}
+                style={{ cursor: header.key ? "pointer" : "default" }}
               >
                 {header.label}
               </TableHeader>
@@ -230,25 +228,22 @@ export const Bookings = () => {
       </Table>
 
       <PaginationContainer>
-        <PageButton
-          onClick={() => setCurrentPage(currentPage - 1)}
-          disabled={currentPage === 1}
-        >
+        <PageButton onClick={handlePrevPage} disabled={currentPage === 1}>
           Prev
         </PageButton>
-        {pageNumbers.map((page) => (
+        {Array.from(
+          { length: endPage - startPage + 1 },
+          (_, i) => startPage + i
+        ).map((page) => (
           <PageButton
             key={page}
             $active={currentPage === page}
-            onClick={() => setCurrentPage(page)}
+            onClick={() => handlePageClick(page)}
           >
             {page}
           </PageButton>
         ))}
-        <PageButton
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
-        >
+        <PageButton onClick={handleNextPage} disabled={currentPage === totalPages}>
           Next
         </PageButton>
       </PaginationContainer>

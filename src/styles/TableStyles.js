@@ -191,3 +191,34 @@ export const StatusButton = styled.button`
   font-weight: bold;
 `;
 
+export const ActionMenu = styled.div`
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 4px;
+  width: 150px;
+`;
+
+export const ActionMenuItem = styled.div`
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+  border-bottom: 1px solid #f1f1f1;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
