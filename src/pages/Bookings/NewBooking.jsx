@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {FormContainer,FormGroup,Label, Input,TextArea, SubmitButton,BackButton} from "../../styles/NewBookingStyles.js";
+import { useDispatch } from "react-redux";
+import { createBooking } from "../../redux/slices/bookingsSlice.js"; 
+import {FormContainer,FormGroup,Label,Input,TextArea,SubmitButton,BackButton} from "../../styles/NewBookingStyles.js";
 
-export const NewBooking = () => {
+const NewBooking = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     fullName: "",
     reservationId: "",
@@ -22,11 +25,15 @@ export const NewBooking = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const existingBookings = JSON.parse(localStorage.getItem("bookings")) || [];
-    const updatedBookings = [...existingBookings, formData];
-    localStorage.setItem("bookings", JSON.stringify(updatedBookings));
-    alert("New booking added successfully!");
-    navigate("/bookings");
+    dispatch(createBooking(formData)) 
+      .unwrap()
+      .then(() => {
+        alert("New booking added successfully!");
+        navigate("/bookings");
+      })
+      .catch((error) => {
+        alert(`Error: ${error}`);
+      });
   };
 
   return (
@@ -121,3 +128,5 @@ export const NewBooking = () => {
     </FormContainer>
   );
 };
+
+export { NewBooking };

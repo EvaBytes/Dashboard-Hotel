@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../redux/slices/authSlice.js";
+import { useAuth } from "./AuthContext.jsx";
 import { BackgroundContainer, StyledAuthContainer, StyledAuthButton, StyledSubtitle, Typography, Alert, CircularProgress, StyledTextField } from "../styles/loginStyles.js";
 
 const Login = () => {
@@ -9,15 +8,8 @@ const Login = () => {
   const [password, setPassword] = useState("123456");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth(); 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/");
-    }
-  }, [isAuthenticated, navigate]);
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
@@ -42,13 +34,12 @@ const Login = () => {
     setTimeout(() => {
       setLoading(false);
       if (email === "user@testing.com" && password === "123456") {
-        dispatch(
-          login({
-            name: "Eva Sevillano",
-            email: "user@testing.com",
-            image: "src/assets/img/profile.jpeg",
-          })
-        );
+        login({
+          name: "Eva Sevillano",
+          email: "user@testing.com",
+          image: "src/assets/img/profile.jpeg",
+        });
+        navigate("/");
       } else {
         setErrors({
           password: "Credenciales inválidas. Inténtalo nuevamente.",

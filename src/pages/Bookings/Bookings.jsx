@@ -1,120 +1,68 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { LuUserRoundSearch } from "react-icons/lu";
 import bookingsData from "../../data/Bookings.json";
+import { HiOutlineDotsVertical } from "react-icons/hi";
+import { FaPencilAlt, FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
+import { LuUserRoundSearch } from "react-icons/lu";
+import { useSelector, useDispatch } from "react-redux";
+import {setBookings,setActiveTab,setSearchText,setSortBy,setCurrentPage} from "../../redux/slices/bookingsSlice.js";
 import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
 import {Table,TableHeader,TableRow,TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge,PaginationContainer,PageButton,ActionMenu,ActionMenuItem} from "../../styles/TableStyles.js";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
 
 export const Bookings = () => {
-  const [activeTab, setActiveTab] = useState("allBookings");
-  const [searchText, setSearchText] = useState("");
-  const [sortBy, setSortBy] = useState(null);
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [popupData, setPopupData] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(null);
-  const itemsPerPage = 10;
-  const pagesPerBlock = 4;
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const handleTabChange = (tab) => setActiveTab(tab);
+  const [popupData, setPopupData] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(null);
+  const [pageRange, setPageRange] = useState({ start: 1, end: 4 });
 
-  const handleSearchChange = (event) =>
-    setSearchText(event.target.value.toLowerCase());
+  const activeTab = useSelector((state) => state.bookings.activeTab);
+  const searchText = useSelector((state) => state.bookings.searchText);
+  const sortBy = useSelector((state) => state.bookings.sortBy);
+  const sortOrder = useSelector((state) => state.bookings.sortOrder);
+  const currentPage = useSelector((state) => state.bookings.currentPage);
+  const itemsPerPage = useSelector((state) => state.bookings.itemsPerPage);
+  const filteredBookings = useSelector((state) => state.bookings.filteredBookings);
 
-  const handleSort = (column) => {
-    if (sortBy === column) {
-      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-    } else {
-      setSortBy(column);
-      setSortOrder("asc");
-    }
-  };
+  useEffect(() => {
+    console.log("Bookings Data:", bookingsData);
+    dispatch(setBookings(bookingsData));
+  }, [dispatch]);
 
-  const handleMenuToggle = (id) => {
-    setMenuOpen((prevMenu) => (prevMenu === id ? null : id));
-  };
-
-  const handleEdit = (reservationId) => {
-    navigate(`/guest-details/${reservationId}`);
-  };
-
-  const handleDelete = (reservationId) => {
-    if (window.confirm("Are you sure you want to delete this booking?")) {
-      console.log(`Booking with ID ${reservationId} deleted.`);
-    }
-  };
-
-  const handleNewBooking = () => {
-    navigate("/new-booking");
-  };
-
-  const cleanedData = bookingsData.map((booking) => ({
-    ...booking,
-    orderDate: new Date(booking.orderDate.trim()),
-    checkIn: new Date(booking.checkIn.trim()),
-    checkOut: new Date(booking.checkOut.trim()),
-  }));
-
-  const filteredData = cleanedData.filter((booking) => {
-    if (activeTab === "checkIn") return booking.status === "Check-In";
-    if (activeTab === "checkOut") return booking.status === "Check-Out";
-    if (activeTab === "inProgress") return booking.status === "In Progress";
-    return true;
-  });
-
-  const searchedData = filteredData.filter((booking) =>
-    booking.guest.fullName.toLowerCase().includes(searchText)
-  );
-
-  const sortedData = [...searchedData].sort((a, b) => {
-    if (!sortBy) return 0;
-    const valueA = a[sortBy];
-    const valueB = b[sortBy];
-    if (valueA instanceof Date && valueB instanceof Date) {
-      return sortOrder === "asc" ? valueA - valueB : valueB - valueA;
-    }
-    return 0;
-  });
-
-  const totalPages = Math.ceil(sortedData.length / itemsPerPage);
-
-  const currentData = sortedData.slice(
+  const currentData = filteredBookings.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
 
-  const currentBlock = Math.ceil(currentPage / pagesPerBlock);
-  const startPage = (currentBlock - 1) * pagesPerBlock + 1;
-  const endPage = Math.min(startPage + pagesPerBlock - 1, totalPages);
-
-  const handlePrevPage = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  const handleEdit = (reservationId) => {
+    navigate(`/guest/${reservationId}`);
   };
 
-  const handleNextPage = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  const handleDelete = (reservationId) => {
+    console.log("Delete booking:", reservationId);
   };
 
-  const handlePageClick = (page) => {
-    setCurrentPage(page);
+  const handleNextRange = () => {
+    setPageRange((prev) => ({
+      start: prev.start + 4,
+      end: Math.min(prev.end + 4, totalPages),
+    }));
   };
 
-  const headers = [
-    { label: "Guest", key: null },
-    { label: "Order Date", key: "orderDate" },
-    { label: "Check In", key: "checkIn" },
-    { label: "Check Out", key: "checkOut" },
-    { label: "Special Request", key: null },
-    { label: "Room Type", key: null },
-    { label: "Status", key: null },
-    { label: "Actions", key: null },
-  ];
+  const handlePrevRange = () => {
+    setPageRange((prev) => ({
+      start: Math.max(prev.start - 4, 1),
+      end: prev.end - 4,
+    }));
+  };
+
+  const handleSort = (field) => {
+    dispatch(setSortBy(field));
+  };
 
   const renderRow = (booking) => (
     <>
@@ -128,9 +76,9 @@ export const Bookings = () => {
           </GuestInfo>
         </GuestContainer>
       </TableData>
-      <TableData>{format(booking.orderDate, "MMM dd, yyyy hh:mm a")}</TableData>
-      <TableData>{format(booking.checkIn, "MMM dd, yyyy")}</TableData>
-      <TableData>{format(booking.checkOut, "MMM dd, yyyy")}</TableData>
+      <TableData>{format(new Date(booking.orderDate), "MMM dd, yyyy hh:mm a")}</TableData>
+      <TableData>{format(new Date(booking.checkIn), "MMM dd, yyyy")}</TableData>
+      <TableData>{format(new Date(booking.checkOut), "MMM dd, yyyy")}</TableData>
       <TableData>
         <ActionButton onClick={() => setPopupData(booking.specialRequest)}>
           View Notes
@@ -144,7 +92,7 @@ export const Bookings = () => {
         <div style={{ position: "relative" }}>
           <HiOutlineDotsVertical
             size={18}
-            onClick={() => handleMenuToggle(booking.guest.reservationNumber)}
+            onClick={() => setMenuOpen(booking.guest.reservationNumber)}
             style={{ cursor: "pointer" }}
           />
           {menuOpen === booking.guest.reservationNumber && (
@@ -167,25 +115,25 @@ export const Bookings = () => {
       <TabsContainer>
         <Tab
           $isActive={activeTab === "allBookings"}
-          onClick={() => handleTabChange("allBookings")}
+          onClick={() => dispatch(setActiveTab("allBookings"))}
         >
           All Bookings
         </Tab>
         <Tab
           $isActive={activeTab === "checkIn"}
-          onClick={() => handleTabChange("checkIn")}
+          onClick={() => dispatch(setActiveTab("checkIn"))}
         >
           Check-In
         </Tab>
         <Tab
           $isActive={activeTab === "checkOut"}
-          onClick={() => handleTabChange("checkOut")}
+          onClick={() => dispatch(setActiveTab("checkOut"))}
         >
           Check-Out
         </Tab>
         <Tab
           $isActive={activeTab === "inProgress"}
-          onClick={() => handleTabChange("inProgress")}
+          onClick={() => dispatch(setActiveTab("inProgress"))}
         >
           In Progress
         </Tab>
@@ -197,53 +145,74 @@ export const Bookings = () => {
             type="text"
             placeholder="Search by guest name"
             value={searchText}
-            onChange={handleSearchChange}
+            onChange={(e) => dispatch(setSearchText(e.target.value))}
           />
         </SearchContainer>
       </TabsContainer>
 
       <div style={{ display: "flex", justifyContent: "flex-end", margin: "1rem 0" }}>
-        <ActionButton onClick={handleNewBooking}>+ New Booking</ActionButton>
+        <ActionButton onClick={() => navigate("/new-booking")}>+ New Booking</ActionButton>
       </div>
 
       <Table>
         <thead>
           <TableRow>
-            {headers.map((header, index) => (
-              <TableHeader
-                key={index}
-                onClick={() => header.key && handleSort(header.key)}
-                style={{ cursor: header.key ? "pointer" : "default" }}
-              >
-                {header.label}
-              </TableHeader>
-            ))}
+            <TableHeader>Guest</TableHeader>
+            <TableHeader onClick={() => handleSort("orderDate")}>
+              Order Date
+              {sortBy === "orderDate" && (
+                <span>
+                  {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+                </span>
+              )}
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("checkIn")}>
+              Check In
+              {sortBy === "checkIn" && (
+                <span>
+                  {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+                </span>
+              )}
+            </TableHeader>
+            <TableHeader onClick={() => handleSort("checkOut")}>
+              Check Out
+              {sortBy === "checkOut" && (
+                <span>
+                  {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+                </span>
+              )}
+            </TableHeader>
+            <TableHeader>Special Request</TableHeader>
+            <TableHeader>Room Type</TableHeader>
+            <TableHeader>Status</TableHeader>
+            <TableHeader>Actions</TableHeader>
           </TableRow>
         </thead>
         <tbody>
-          {currentData.map((booking, index) => (
-            <TableRow key={index}>{renderRow(booking)}</TableRow>
+          {currentData.map((booking) => (
+            <TableRow key={booking.guest.reservationNumber}>
+              {renderRow(booking)}
+            </TableRow>
           ))}
         </tbody>
       </Table>
 
       <PaginationContainer>
-        <PageButton onClick={handlePrevPage} disabled={currentPage === 1}>
+        <PageButton onClick={handlePrevRange} disabled={pageRange.start === 1}>
           Prev
         </PageButton>
-        {Array.from(
-          { length: endPage - startPage + 1 },
-          (_, i) => startPage + i
-        ).map((page) => (
-          <PageButton
-            key={page}
-            $active={currentPage === page}
-            onClick={() => handlePageClick(page)}
-          >
-            {page}
-          </PageButton>
-        ))}
-        <PageButton onClick={handleNextPage} disabled={currentPage === totalPages}>
+        {Array.from({ length: totalPages }, (_, i) => i + 1)
+          .slice(pageRange.start - 1, pageRange.end)
+          .map((page) => (
+            <PageButton
+              key={page}
+              $active={currentPage === page}
+              onClick={() => dispatch(setCurrentPage(page))}
+            >
+              {page}
+            </PageButton>
+          ))}
+        <PageButton onClick={handleNextRange} disabled={pageRange.end >= totalPages}>
           Next
         </PageButton>
       </PaginationContainer>

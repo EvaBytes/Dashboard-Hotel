@@ -4,7 +4,6 @@ import { FiLogOut } from "react-icons/fi";
 import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../../redux/slices/authSlice";
 import {NavbarContainer, NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection, BreadcrumbSection, Breadcrumb} from "./navbarStyles";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {

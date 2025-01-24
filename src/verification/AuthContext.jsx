@@ -24,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (token) {
-      dispatch({ type: "LOGIN", payload: { email: "user@testing.com" } });
+      dispatch({ type: "LOGIN", payload: { email: "user@testing.com" } }); 
     }
   }, []);
 

@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
+import { AuthProvider } from "./verification/AuthContext.jsx";
 import { Provider } from "react-redux"; 
 import { store } from "./redux/store.js";
 import { GlobalStyles } from "./styles/globalStyles.js";
@@ -21,36 +22,35 @@ import { PrivateRoute } from "./verification/PrivateRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route
-              path="/*"
-              element={
-                <PrivateRoute>
-                  <Layout />
-                </PrivateRoute>
-              }
-            >
-              <Route index element={<Dashboard />} />
-              <Route path="bookings" element={<Bookings />} />
-              <Route path="rooms" element={<Rooms />} />
-              <Route path="contact" element={<Contact />} />
-              <Route path="users" element={<Users />} />
+    <AuthProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
               <Route
-                path="guest-details/:reservationId"
-                element={<GuestDetails />}
-              />
-              <Route path="new-booking" element={<NewBooking />} />
-              <Route path="new-room" element={<NewRoom />} />
-              <Route path="new-user" element={<NewUser />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </Provider>
+                path="/*"
+                element={
+                  <PrivateRoute>
+                    <Layout />
+                  </PrivateRoute>
+                }
+              >
+                <Route index element={<Dashboard />} />
+                <Route path="bookings" element={<Bookings />} />
+                <Route path="rooms" element={<Rooms />} />
+                <Route path="contact" element={<Contact />} />
+                <Route path="users" element={<Users />} />
+                <Route path="guest/:reservationId" element={<GuestDetails />} />
+                <Route path="new-booking" element={<NewBooking />} />
+                <Route path="new-room" element={<NewRoom />} />
+                <Route path="new-user" element={<NewUser />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
+    </AuthProvider>
   </StrictMode>
 );
