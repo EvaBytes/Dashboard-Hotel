@@ -3,13 +3,13 @@ import { AiOutlineMail, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import {NavbarContainer, NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection, BreadcrumbSection, Breadcrumb} from "./navbarStyles";
+import { useAuth } from "../../verification/AuthContext.jsx";
+import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,BreadcrumbSection,Breadcrumb} from "./NavbarStyles.js";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuth();
 
   const pageTitleMap = {
     "/": "Dashboard",
@@ -20,23 +20,40 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     "/new-booking": "New Booking",
     "/new-room": "New Room",
     "/new-user": "New User",
+    "/guest": "Guest Details", 
   };
 
-  const pageTitle =
-    pageTitleMap[location.pathname.split("/")[1] ? `/${location.pathname.split("/")[1]}` : "/"] ||
-    (location.pathname.startsWith("/guest-details") && "Bookings") ||
-    "Unknown Page";
 
-  const breadcrumbs =
-    location.pathname.startsWith("/guest-details") ? (
-      <Breadcrumb>
-        <Link to="/bookings">Guest</Link> /{" "}
-        <span>{location.state?.guestName || "Guest Details"}</span>
-      </Breadcrumb>
-    ) : null;
+  const getPageTitle = () => {
+    const pathSegments = location.pathname.split("/");
+    const basePath = `/${pathSegments[1]}`;
+
+ 
+    if (basePath === "/guest") {
+      return "Bookings"; 
+    }
+
+    return pageTitleMap[basePath] || "Unknown Page";
+  };
+
+  const pageTitle = getPageTitle();
+
+  const getBreadcrumbs = () => {
+    if (location.pathname.startsWith("/guest")) {
+      return (
+        <Breadcrumb>
+          <Link to="/bookings">Bookings</Link> /{" "}
+          <span>{location.state?.guestName || "Guest Details"}</span>
+        </Breadcrumb>
+      );
+    }
+    return null;
+  };
+
+  const breadcrumbs = getBreadcrumbs();
 
   const handleLogout = () => {
-    dispatch(logout());
+    logout();
     navigate("/login");
   };
 
