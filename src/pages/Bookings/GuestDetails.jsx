@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingById } from "../../redux/slices/bookingsSlice.js"; 
+import { fetchBookingById } from "../../redux/thunks/bookingsThunks.js"; 
 import { format } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
 import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper,CarouselItem, CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,Divider} from "../../styles/GuestDetailsStyles";

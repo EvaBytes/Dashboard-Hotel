@@ -1,5 +1,6 @@
 import React, { createContext, useReducer, useContext, useEffect } from "react";
 
+
 const AuthContext = createContext();
 
 const initialState = {
@@ -23,26 +24,44 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    if (token) {
-      dispatch({ type: "LOGIN", payload: { email: "user@testing.com" } }); 
+    const user = JSON.parse(localStorage.getItem("user")); 
+    if (token && user) {
+      dispatch({ type: "LOGIN", payload: user });
     }
   }, []);
 
+
   const login = (user) => {
-    localStorage.setItem("authToken", "fakeToken");
+    localStorage.setItem("authToken", "fakeToken"); 
+    localStorage.setItem("user", JSON.stringify(user)); 
     dispatch({ type: "LOGIN", payload: user });
   };
 
+
   const logout = () => {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("user"); 
     dispatch({ type: "LOGOUT" });
   };
 
+
+  const value = {
+    state,
+    login,
+    logout,
+  };
+
   return (
-    <AuthContext.Provider value={{ state, login, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth without AuthProvider is not allowed");
+  }
+  return context;
+};

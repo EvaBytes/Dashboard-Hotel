@@ -3,12 +3,14 @@ import styled from "styled-components";
 export const LatestMessagesContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
+  justify-content: flex-start;
+  gap: 2rem;
   width: 100%;
   margin: auto;
   padding: 1rem 0;
   box-sizing: border-box;
+  overflow-x: auto; 
+  scroll-snap-type: x mandatory; 
 `;
 
 export const MessageCard = styled.div`

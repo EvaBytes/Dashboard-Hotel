@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { useSwipeable } from "react-swipeable";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
 import { LatestMessagesContainer, MessageCard, NavigationButton } from "../../styles/LatestMessagesStyles.js";
 import { GiCancel } from "react-icons/gi";
 import { FaRegCheckCircle } from "react-icons/fa";
 
-const LatestMessages = ({ messages }) => {
+const LatestMessages = ({ messages, showNavigationButtons = false }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedMessage, setSelectedMessage] = useState(null);
 
@@ -19,9 +20,16 @@ const LatestMessages = ({ messages }) => {
     setCurrentPage((prevPage) => (prevPage === 0 ? totalPages - 1 : prevPage - 1));
   };
 
+  const handlers = useSwipeable({
+    onSwipedLeft: () => nextPage(), 
+    onSwipedRight: () => prevPage(), 
+    preventDefaultTouchmoveEvent: true, 
+    trackMouse: true, 
+  });
+
   const paginatedMessages = messages.slice(
     currentPage * itemsPerPage,
-    currentPage * itemsPerPage + itemsPerPage
+    (currentPage + 1) * itemsPerPage
   );
 
   const openPopup = (message) => {
@@ -34,8 +42,11 @@ const LatestMessages = ({ messages }) => {
 
   return (
     <>
-      <LatestMessagesContainer>
-        <NavigationButton onClick={prevPage}>&lt;</NavigationButton>
+      <LatestMessagesContainer {...handlers}>
+        {showNavigationButtons && (
+          <NavigationButton onClick={prevPage}>&lt;</NavigationButton>
+        )}
+
         {paginatedMessages.map((message, index) => (
           <MessageCard key={index} onClick={() => openPopup(message)}>
             <h4>{message.subject}</h4>
@@ -47,18 +58,20 @@ const LatestMessages = ({ messages }) => {
               <span>{message.fullName}</span>
             </div>
             <div className="status-icons">
-                {message.status === "unread" ? (
-                  <GiCancel className="unread" />
-                ) : (
-                  <FaRegCheckCircle className="read" />
-                )}
+              {message.status === "unread" ? (
+                <GiCancel className="unread" />
+              ) : (
+                <FaRegCheckCircle className="read" />
+              )}
             </div>
-
           </MessageCard>
         ))}
-        <NavigationButton onClick={nextPage}>&gt;</NavigationButton>
+
+        {showNavigationButtons && (
+          <NavigationButton onClick={nextPage}>&gt;</NavigationButton>
+        )}
       </LatestMessagesContainer>
-  
+
       {selectedMessage && (
         <Overlay>
           <Popup>
@@ -72,7 +85,6 @@ const LatestMessages = ({ messages }) => {
       )}
     </>
   );
-  
 };
 
 export { LatestMessages };

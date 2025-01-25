@@ -4,7 +4,6 @@ import { useAuth } from "./AuthContext.jsx";
 
 const PrivateRoute = ({ children }) => {
   const { state } = useAuth();
-
   return state.isAuthenticated ? children : <Navigate to="/login" />;
 };
 

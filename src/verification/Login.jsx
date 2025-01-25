@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext.jsx";
-import { BackgroundContainer, StyledAuthContainer, StyledAuthButton, StyledSubtitle, Typography, Alert, CircularProgress, StyledTextField } from "../styles/loginStyles.js";
+import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField} from "../styles/loginStyles.js";
 
 const Login = () => {
   const [email, setEmail] = useState("user@testing.com");
   const [password, setPassword] = useState("123456");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -18,10 +18,10 @@ const Login = () => {
     setErrors({});
 
     if (!validateEmail(email)) {
-      newErrors.email = "El correo electrónico no es válido.";
+      newErrors.email = "Email is not valid.";
     }
     if (password.length < 6) {
-      newErrors.password = "La contraseña debe tener al menos 6 caracteres.";
+      newErrors.password = "The password must have at least 6 characters.";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -42,7 +42,7 @@ const Login = () => {
         navigate("/");
       } else {
         setErrors({
-          password: "Credenciales inválidas. Inténtalo nuevamente.",
+          password: "Invalid credentials. Please try again.",
         });
       }
     }, 1500);

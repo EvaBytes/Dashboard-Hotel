@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { createBooking } from "../../redux/slices/bookingsSlice.js"; 
+import { createBooking } from "../../redux/thunks/bookingsThunks.js"; 
 import {FormContainer,FormGroup,Label,Input,TextArea,SubmitButton,BackButton} from "../../styles/NewBookingStyles.js";
 
 const NewBooking = () => {

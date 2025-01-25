@@ -98,7 +98,7 @@ export const Bookings = () => {
           {menuOpen === booking.guest.reservationNumber && (
             <ActionMenu>
               <ActionMenuItem onClick={() => handleEdit(booking.guest.reservationNumber)}>
-                <FaPencilAlt /> Edit
+                <FaPencilAlt /> Details
               </ActionMenuItem>
               <ActionMenuItem onClick={() => handleDelete(booking.guest.reservationNumber)}>
                 <FaTrashAlt /> Delete

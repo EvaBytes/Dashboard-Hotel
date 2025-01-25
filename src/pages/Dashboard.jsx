@@ -2,19 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { IoBedOutline, IoCalendarOutline } from "react-icons/io5";
 import { IoIosLogIn, IoIosLogOut } from "react-icons/io";
-import {
-  DashboardContainer,
-  IconContainer,
-  TextContainer,
-  StyledCard,
-  StyledTypographyTitle,
-  StyledTypographyValue,
-  StyledBookingButtonContainer,
-  StyledBookingList,
-  StyledBookingItem,
-  StyledBookingInfo,
-  StyledBookingButton,
-} from "../styles/DashboardStyles.js";
+import {DashboardContainer,IconContainer,TextContainer,StyledCard,StyledTypographyTitle,StyledTypographyValue,StyledBookingButtonContainer,StyledBookingList,StyledBookingItem,StyledBookingInfo,StyledBookingButton} from "../styles/DashboardStyles.js";
 import { LatestMessages } from "../components/common/LatestMessages.jsx";
 import { StyledMessagesCard } from "../styles/LatestMessagesStyles.js";
 import bookingData from "../data/Bookings.json";
@@ -58,7 +46,7 @@ const BookingList = () => {
           <StyledBookingInfo>
             <div className="room-info">
               <h4>{booking.roomType}</h4>
-              <p>Room No: {booking.guest.reservationNumber}</p>
+              <p>Room: {booking.roomNumber}</p>
             </div>
             <div className="guest-info">
               <p>{booking.guest.fullName}</p>
@@ -93,7 +81,7 @@ export const Dashboard = () => {
 
       <StyledMessagesCard>
         <h4>Latest Messages</h4>
-        <LatestMessages messages={messagesData} />
+        <LatestMessages messages={messagesData} showNavigationButtons={true} />
       </StyledMessagesCard>
     </div>
   );

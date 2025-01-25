@@ -1,51 +1,5 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-
-// THUNKS
-export const createBooking = createAsyncThunk(
-  'bookings/createBooking',
-  async (bookingData, thunkAPI) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      const newBooking = {
-        ...bookingData,
-        id: Date.now(),
-      };
-      return newBooking;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
-
-export const deleteBooking = createAsyncThunk(
-  'bookings/deleteBooking',
-  async (reservationId, thunkAPI) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      return reservationId; 
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
-
-export const fetchBookingById = createAsyncThunk(
-  'bookings/fetchBookingById',
-  async (reservationId, thunkAPI) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      const booking = thunkAPI.getState().bookings.bookings.find(
-        (b) => b.guest.reservationNumber === reservationId
-      );
-      if (!booking) {
-        throw new Error('Booking not found');
-      }
-      return booking;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(error.message);
-    }
-  }
-);
+import { createSlice } from '@reduxjs/toolkit';
+import {createBooking,deleteBooking,fetchBookingById,editBooking,fetchAllBookings} from '../thunks/bookingsThunks.js'; 
 
 const initialState = {
   bookings: [],
@@ -61,9 +15,6 @@ const initialState = {
   currentBooking: null,
 };
 
-
-
-// SLICES
 const bookingsSlice = createSlice({
   name: 'bookings',
   initialState,
@@ -108,6 +59,7 @@ const bookingsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
       .addCase(deleteBooking.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -125,6 +77,27 @@ const bookingsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+      .addCase(editBooking.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(editBooking.fulfilled, (state, action) => {
+        state.loading = false;
+        const index = state.bookings.findIndex(
+          (b) => b.id === action.payload.id
+        );
+        if (index !== -1) {
+          state.bookings[index] = action.payload;
+          state.filteredBookings = filterBookingsByTab(state); // Update filtered bookings
+        }
+      })
+      .addCase(editBooking.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+
       .addCase(fetchBookingById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -134,6 +107,20 @@ const bookingsSlice = createSlice({
         state.currentBooking = action.payload;
       })
       .addCase(fetchBookingById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(fetchAllBookings.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllBookings.fulfilled, (state, action) => {
+        state.loading = false;
+        state.bookings = action.payload;
+        state.filteredBookings = action.payload; 
+      })
+      .addCase(fetchAllBookings.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
@@ -171,6 +158,6 @@ function sortBookings(state) {
   });
 }
 
-export const { setBookings, setActiveTab, setSearchText, setSortBy, setCurrentPage } =
-  bookingsSlice.actions;
-export { bookingsSlice };
+export const {setBookings,setActiveTab,setSearchText,setSortBy,setCurrentPage} = bookingsSlice.actions;
+
+export default bookingsSlice.reducer;

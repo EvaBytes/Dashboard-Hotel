@@ -1,12 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import {thunk} from 'redux-thunk';
-import {bookingsSlice} from '../redux/slices/bookingsSlice.js';
+import bookingsReducer from '../redux/slices/bookingsSlice'; 
 
 export const store = configureStore({
   reducer: {
-    bookings: bookingsSlice.reducer,
+    bookings: bookingsReducer, 
   },
-
-middleware: (getDefaultMiddleware) =>
-  getDefaultMiddleware().concat(thunk),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 });
