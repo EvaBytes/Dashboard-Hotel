@@ -119,3 +119,9 @@ export const NavigationButton = styled.button`
     box-shadow: 0 0 0 3px rgba(19, 88, 70, 0.3);
   }
 `;
+
+export const NavigationPlaceholder = styled.div`
+  width: 2.5rem;
+  height: 2.5rem;
+  visibility: hidden;
+`;

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { format } from "date-fns";
 import bookingsData from "../../data/Bookings.json";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaPencilAlt, FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
-import { useSelector, useDispatch } from "react-redux";
-import {setBookings,setActiveTab,setSearchText,setSortBy,setCurrentPage} from "../../redux/slices/bookingsSlice.js";
+import {setBookings,setActiveTab,setSearchText,setSortBy,setCurrentPage,deleteBooking} from "../../redux/slices/bookingsSlice.js";
 import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
 import {Table,TableHeader,TableRow,TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge,PaginationContainer,PageButton,ActionMenu,ActionMenuItem} from "../../styles/TableStyles.js";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
@@ -32,6 +32,16 @@ export const Bookings = () => {
     dispatch(setBookings(bookingsData));
   }, [dispatch]);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuOpen && !e.target.closest(".action-menu")) {
+        setMenuOpen(null);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [menuOpen]);
+
   const currentData = filteredBookings.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -43,6 +53,7 @@ export const Bookings = () => {
   };
 
   const handleDelete = (reservationId) => {
+    dispatch(deleteBooking(reservationId));
     console.log("Delete booking:", reservationId);
   };
 
@@ -68,17 +79,35 @@ export const Bookings = () => {
     <>
       <TableData>
         <GuestContainer>
-          <GuestImage src={booking.guest.image} alt="Guest" />
+          <GuestImage
+            src={booking.guest?.image || "/default-image.png"}
+            alt="Guest"
+            onError={(e) => {
+              e.target.src = "/default-image.png";
+            }}
+          />
           <GuestInfo>
-            {booking.guest.fullName}
+            {booking.guest?.fullName || "No name"}
             <br />
-            <small>{booking.guest.reservationNumber}</small>
+            <small>{booking.guest?.reservationNumber || "No reservation number"}</small>
           </GuestInfo>
         </GuestContainer>
       </TableData>
-      <TableData>{format(new Date(booking.orderDate), "MMM dd, yyyy hh:mm a")}</TableData>
-      <TableData>{format(new Date(booking.checkIn), "MMM dd, yyyy")}</TableData>
-      <TableData>{format(new Date(booking.checkOut), "MMM dd, yyyy")}</TableData>
+      <TableData>
+        {booking.orderDate && !isNaN(new Date(booking.orderDate).getTime())
+          ? format(new Date(booking.orderDate), "MMM dd, yyyy hh:mm a")
+          : "Invalid date"}
+      </TableData>
+      <TableData>
+        {booking.checkIn && !isNaN(new Date(booking.checkIn).getTime())
+          ? format(new Date(booking.checkIn), "MMM dd, yyyy")
+          : "Invalid date"}
+      </TableData>
+      <TableData>
+        {booking.checkOut && !isNaN(new Date(booking.checkOut).getTime())
+          ? format(new Date(booking.checkOut), "MMM dd, yyyy")
+          : "Invalid date"}
+      </TableData>
       <TableData>
         <ActionButton onClick={() => setPopupData(booking.specialRequest)}>
           View Notes
@@ -92,11 +121,14 @@ export const Bookings = () => {
         <div style={{ position: "relative" }}>
           <HiOutlineDotsVertical
             size={18}
-            onClick={() => setMenuOpen(booking.guest.reservationNumber)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOpen(menuOpen === booking.guest.reservationNumber ? null : booking.guest.reservationNumber);
+            }}
             style={{ cursor: "pointer" }}
           />
           {menuOpen === booking.guest.reservationNumber && (
-            <ActionMenu>
+            <ActionMenu className="action-menu">
               <ActionMenuItem onClick={() => handleEdit(booking.guest.reservationNumber)}>
                 <FaPencilAlt /> Details
               </ActionMenuItem>
@@ -189,16 +221,24 @@ export const Bookings = () => {
           </TableRow>
         </thead>
         <tbody>
-          {currentData.map((booking) => (
-            <TableRow key={booking.guest.reservationNumber}>
-              {renderRow(booking)}
+          {currentData && currentData.length > 0 ? (
+            currentData.map((booking) => (
+              <TableRow key={booking.guest?.reservationNumber || Math.random()}>
+                {renderRow(booking)}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableData colSpan="8" style={{ textAlign: "center" }}>
+                No bookings found.
+              </TableData>
             </TableRow>
-          ))}
+          )}
         </tbody>
       </Table>
 
       <PaginationContainer>
-        <PageButton onClick={handlePrevRange} disabled={pageRange.start === 1}>
+        <PageButton onClick={handlePrevRange} disabled={pageRange.start === 1 || totalPages === 0}>
           Prev
         </PageButton>
         {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -212,7 +252,7 @@ export const Bookings = () => {
               {page}
             </PageButton>
           ))}
-        <PageButton onClick={handleNextRange} disabled={pageRange.end >= totalPages}>
+        <PageButton onClick={handleNextRange} disabled={pageRange.end >= totalPages || totalPages === 0}>
           Next
         </PageButton>
       </PaginationContainer>

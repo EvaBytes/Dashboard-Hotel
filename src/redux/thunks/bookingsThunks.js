@@ -59,7 +59,7 @@ export const fetchBookingById = createAsyncThunk(
   'bookings/fetchBookingById',
   async (reservationId, thunkAPI) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200)); // Simulate API delay
+      await new Promise((resolve) => setTimeout(resolve, 200));
       const booking = thunkAPI.getState().bookings.bookings.find(
         (b) => b.guest.reservationNumber === reservationId
       );

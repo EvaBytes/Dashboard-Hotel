@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
-import { LatestMessagesContainer, MessageCard, NavigationButton } from "../../styles/LatestMessagesStyles.js";
+import { LatestMessagesContainer, MessageCard, NavigationButton, NavigationPlaceholder } from "../../styles/LatestMessagesStyles.js";
 import { GiCancel } from "react-icons/gi";
 import { FaRegCheckCircle } from "react-icons/fa";
 
@@ -43,9 +43,13 @@ const LatestMessages = ({ messages, showNavigationButtons = false }) => {
   return (
     <>
       <LatestMessagesContainer {...handlers}>
-        {showNavigationButtons && (
-          <NavigationButton onClick={prevPage}>&lt;</NavigationButton>
-        )}
+        {showNavigationButtons ? (
+          currentPage > 0 ? (
+            <NavigationButton onClick={prevPage}>&lt;</NavigationButton>
+          ) : (
+            <NavigationPlaceholder /> // Espacio reservado invisible
+          )
+        ) : null}
 
         {paginatedMessages.map((message, index) => (
           <MessageCard key={index} onClick={() => openPopup(message)}>
@@ -67,7 +71,7 @@ const LatestMessages = ({ messages, showNavigationButtons = false }) => {
           </MessageCard>
         ))}
 
-        {showNavigationButtons && (
+        {showNavigationButtons && currentPage < totalPages - 1 && (
           <NavigationButton onClick={nextPage}>&gt;</NavigationButton>
         )}
       </LatestMessagesContainer>

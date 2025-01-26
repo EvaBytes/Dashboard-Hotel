@@ -3,14 +3,14 @@ import styled from "styled-components";
 export const TabsContainer = styled.div`
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
+  justify-content: flex-start;
   border-bottom: 1px solid ${(props) => props.theme.palette.background.paper};
   margin-top: 4rem;
-  padding: 0 1rem;
+  padding: 0 .5rem;
 `;
 
 export const Tab = styled.button`
-  padding: 0.8rem 1.5rem;
+  padding: 0.8rem 1.4rem;
   background: none;
   border: none;
   font-size: 14px;

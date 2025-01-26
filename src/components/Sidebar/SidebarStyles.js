@@ -46,6 +46,7 @@ export const SidebarLink = styled(NavLink)`
   padding: 0.8rem 1.5rem;
   color: #135846; 
   font-weight: normal;
+  border-radius: 3px;
   border-left: 4px solid transparent; 
   transition: all 0.3s ease;
 

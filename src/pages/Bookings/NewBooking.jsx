@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { createBooking } from "../../redux/thunks/bookingsThunks.js"; 
+import { createBooking } from "../../redux/slices/bookingsSlice.js";
 import {FormContainer,FormGroup,Label,Input,TextArea,SubmitButton,BackButton} from "../../styles/NewBookingStyles.js";
 
 const NewBooking = () => {
@@ -17,6 +17,7 @@ const NewBooking = () => {
     specialRequest: "",
     amenities: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,15 +26,30 @@ const NewBooking = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(createBooking(formData)) 
+
+    if (new Date(formData.checkOut) <= new Date(formData.checkIn)) {
+      alert("Check-out date must be after check-in date.");
+      return;
+    }
+
+    setIsLoading(true);
+
+    const formattedData = {
+      ...formData,
+      checkIn: new Date(formData.checkIn).toISOString(),
+      checkOut: new Date(formData.checkOut).toISOString(),
+    };
+
+    dispatch(createBooking(formattedData))
       .unwrap()
       .then(() => {
         alert("New booking added successfully!");
         navigate("/bookings");
       })
       .catch((error) => {
-        alert(`Error: ${error}`);
-      });
+        alert(`Error: ${error.message || "Failed to create booking"}`);
+      })
+      .finally(() => setIsLoading(false));
   };
 
   return (
@@ -119,7 +135,9 @@ const NewBooking = () => {
           />
         </FormGroup>
         <div style={{ display: "flex", gap: "1rem" }}>
-          <SubmitButton type="submit">Submit</SubmitButton>
+          <SubmitButton type="submit" disabled={isLoading}>
+            {isLoading ? "Submitting..." : "Submit"}
+          </SubmitButton>
           <BackButton type="button" onClick={() => navigate("/bookings")}>
             Cancel
           </BackButton>
