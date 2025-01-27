@@ -44,7 +44,7 @@ export const theme = {
   styles: {
     button: {
       borderRadius: "8px",
-      padding: ".6rem 1.2rem",
+      padding: ".5rem .9rem",
       hover: {
         backgroundColor: "#135846",
         color: "#ffffff",

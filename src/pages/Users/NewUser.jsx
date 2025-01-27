@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {FormContainer,FormGroup,Label,Input,SubmitButton, BackButton} from "../../styles/NewUserStyles.js";
+import { useDispatch } from "react-redux"; 
+import { createUser } from "../../redux/thunks/usersThunk.js";
+import {FormContainer,FormGroup,Label,Input,SubmitButton,BackButton} from "../../styles/NewUserStyles.js";
 
 export const NewUser = () => {
+
   const [userData, setUserData] = useState({
     photo: "",
     fullName: "",
@@ -15,19 +18,36 @@ export const NewUser = () => {
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUserData((prev) => ({ ...prev, photo: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-    const updatedUsers = [...existingUsers, userData];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-    alert("New user added successfully!");
-    navigate("/users"); 
+    dispatch(createUser(userData))
+      .unwrap() 
+      .then(() => {
+        alert("New user added successfully!");
+        navigate("/users"); 
+      })
+      .catch((error) => {
+        alert(`Error: ${error}`); 
+      });
   };
 
   return (
@@ -35,15 +55,15 @@ export const NewUser = () => {
       <h2>New User</h2>
       <form onSubmit={handleSubmit}>
         <FormGroup>
-          <Label>Photo URL</Label>
+          <Label>Upload Photo</Label>
           <Input
-            type="text"
+            type="file"
             name="photo"
-            placeholder="https://put-your-pretty-face-url-here.com"
-            value={userData.photo}
-            onChange={handleInputChange}
+            accept="image/*"
+            onChange={handlePhotoChange}
           />
         </FormGroup>
+
         <FormGroup>
           <Label>Full Name</Label>
           <Input
@@ -54,6 +74,7 @@ export const NewUser = () => {
             onChange={handleInputChange}
           />
         </FormGroup>
+
         <FormGroup>
           <Label>ID User</Label>
           <Input
@@ -64,6 +85,7 @@ export const NewUser = () => {
             onChange={handleInputChange}
           />
         </FormGroup>
+
         <FormGroup>
           <Label>Email</Label>
           <Input
@@ -74,6 +96,7 @@ export const NewUser = () => {
             onChange={handleInputChange}
           />
         </FormGroup>
+
         <FormGroup>
           <Label>Start Date</Label>
           <Input
@@ -83,6 +106,7 @@ export const NewUser = () => {
             onChange={handleInputChange}
           />
         </FormGroup>
+
         <FormGroup>
           <Label>Description</Label>
           <Input
@@ -93,6 +117,7 @@ export const NewUser = () => {
             onChange={handleInputChange}
           />
         </FormGroup>
+
         <FormGroup>
           <Label>Contact</Label>
           <Input
@@ -103,9 +128,10 @@ export const NewUser = () => {
             onChange={handleInputChange}
           />
         </FormGroup>
+
         <SubmitButton type="submit">Save User</SubmitButton>
         <BackButton type="button" onClick={() => navigate("/users")}>
-            Cancel
+          Cancel
         </BackButton>
       </form>
     </FormContainer>

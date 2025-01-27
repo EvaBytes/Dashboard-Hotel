@@ -47,7 +47,7 @@ const LatestMessages = ({ messages, showNavigationButtons = false }) => {
           currentPage > 0 ? (
             <NavigationButton onClick={prevPage}>&lt;</NavigationButton>
           ) : (
-            <NavigationPlaceholder /> // Espacio reservado invisible
+            <NavigationPlaceholder />
           )
         ) : null}
 

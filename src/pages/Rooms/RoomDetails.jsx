@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {NewRoomContainer,RoomInfoCard,RoomHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/NewRoomStyles.js";
-import { createRoom} from "../../redux/thunks/roomsThunks.js";
+import React, { useState, useEffect } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
+import {RoomDetailsContainer,RoomDetailsCard,RoomDetailsHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/RoomDetailsStyles.js";
 
 const roomTypePhotos = {
   "Single Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
@@ -34,78 +32,89 @@ The cancellation is free of charge 7 days prior to the date of arrival, after th
 
 Non-Refundable Rate:
 For the non refundable bookings are no cancellation or changes possible. In case of a cancellation, 90% of the total amount will be charged as cancellation fee.
-
 `;
 
-const NewRoom = () => {
+const RoomDetails = () => {
+  const { roomNumber } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [roomData, setRoomData] = useState({
-    photos: [],
-    roomType: "",
+    roomPhoto: "",
     roomNumber: "",
+    roomType: "",
+    facilities: [],
+    rate: "",
+    offerPrice: "",
+    status: "",
+    guest: {
+      fullName: "",
+      reservationNumber: "",
+      image: "",
+    },
+    orderDate: "",
+    checkIn: "",
+    checkOut: "",
     description: "",
     offer: "NO",
-    price: "",
     discount: "",
     cancellationPolicy: cancellationPolicyText,
-    amenities: [],
+    amenities: [], 
   });
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.rooms); 
+  useEffect(() => {
+    if (location.state?.roomData) {
+      const roomToEdit = location.state.roomData;
+      setRoomData({
+        ...roomToEdit,
+        facilities: roomToEdit.facilities ? roomToEdit.facilities.split(",") : [], 
+        amenities: roomToEdit.amenities || [], 
+        photos: roomTypePhotos[roomToEdit.roomType] || [], 
+      });
+    }
+  }, [location.state]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setRoomData((prev) => ({ ...prev, [name]: value }));
-
-    if (name === "roomType" && roomTypePhotos[value]) {
-      setRoomData((prev) => ({
-        ...prev,
-        photos: roomTypePhotos[value],
-      }));
-    }
+    setRoomData((prev) => ({
+      ...prev,
+      [name]: value,
+      photos: name === "roomType" ? roomTypePhotos[value] || [] : prev.photos,
+    }));
   };
 
   const handleAmenityToggle = (amenity) => {
     setRoomData((prev) => ({
       ...prev,
-      amenities: prev.amenities.includes(amenity)
+      amenities: prev.amenities?.includes(amenity)
         ? prev.amenities.filter((item) => item !== amenity)
-        : [...prev.amenities, amenity],
+        : [...(prev.amenities || []), amenity],
     }));
   };
 
   const handleSaveRoom = (e) => {
     e.preventDefault();
-
-    if (!roomData.roomNumber || !roomData.roomType || !roomData.price) {
-      Swal.fire("Error", "Please fill in all required fields.", "error");
-      return;
-    }
-
-    dispatch(createRoom(roomData))
-      .unwrap() 
-      .then(() => {
-        Swal.fire("Success", "Room created successfully!", "success");
-        navigate("/rooms"); 
-      })
-      .catch((error) => {
-        Swal.fire("Error", error || "Failed to create room.", "error");
-      });
+    const existingRooms = JSON.parse(localStorage.getItem("rooms")) || [];
+    const updatedRooms = existingRooms.map((room) =>
+      room.roomNumber === roomNumber ? roomData : room
+    );
+    localStorage.setItem("rooms", JSON.stringify(updatedRooms));
+    alert("Room updated successfully!");
+    navigate("/rooms");
   };
 
   return (
-    <NewRoomContainer>
-      <RoomInfoCard>
-        <RoomHeader>
-          <h2>New Room</h2>
-        </RoomHeader>
+    <RoomDetailsContainer>
+      <RoomDetailsCard>
+        <RoomDetailsHeader>
+          <h2>Room Details</h2>
+        </RoomDetailsHeader>
         <form onSubmit={handleSaveRoom}>
           <RoomDetailsSection>
             <label>Room Type</label>
             <select
               name="roomType"
-              value={roomData.roomType}
+              value={roomData.roomType || ""}
               onChange={handleInputChange}
               required
             >
@@ -137,7 +146,7 @@ const NewRoom = () => {
             <label>Offer</label>
             <select
               name="offer"
-              value={roomData.offer}
+              value={roomData.offer || "NO"}
               onChange={handleInputChange}
             >
               <option value="NO">NO</option>
@@ -147,8 +156,8 @@ const NewRoom = () => {
             <label>Price per Night</label>
             <input
               type="number"
-              name="price"
-              value={roomData.price || ""}
+              name="rate"
+              value={roomData.rate ? roomData.rate.replace("$", "") : ""}
               onChange={handleInputChange}
               required
             />
@@ -167,20 +176,20 @@ const NewRoom = () => {
             <textarea
               rows="6"
               name="cancellationPolicy"
-              value={roomData.cancellationPolicy}
+              value={roomData.cancellationPolicy || ""}
               onChange={handleInputChange}
               required
             />
 
             <label>Amenities</label>
             <AmenitiesContainer>
-              {amenitiesList.map((amenity) => (
+              {roomData.facilities?.map((facility, index) => (
                 <AmenityItem
-                  key={amenity}
-                  onClick={() => handleAmenityToggle(amenity)}
-                  $selected={roomData.amenities.includes(amenity)}
+                  key={index}
+                  onClick={() => handleAmenityToggle(facility)}
+                  $selected={roomData.amenities?.includes(facility)} 
                 >
-                  {amenity}
+                  {facility}
                 </AmenityItem>
               ))}
             </AmenitiesContainer>
@@ -188,7 +197,7 @@ const NewRoom = () => {
             <ImageUploadSection>
               <label>Room Photos</label>
               <div>
-                {roomData.photos.map((photo, index) => (
+                {roomData.photos?.map((photo, index) => (
                   <ImagePreview
                     key={index}
                     src={photo}
@@ -199,16 +208,14 @@ const NewRoom = () => {
             </ImageUploadSection>
           </RoomDetailsSection>
 
-          <SaveButton type="submit" disabled={loading}>
-            {loading ? "Saving..." : "Save Room"}
-          </SaveButton>
+          <SaveButton type="submit">Save Changes</SaveButton>
           <BackButton type="button" onClick={() => navigate("/rooms")}>
             Cancel
           </BackButton>
         </form>
-      </RoomInfoCard>
-    </NewRoomContainer>
+      </RoomDetailsCard>
+    </RoomDetailsContainer>
   );
 };
 
-export { NewRoom };
+export { RoomDetails };

@@ -21,15 +21,15 @@ const bookingsSlice = createSlice({
   reducers: {
     setBookings: (state, action) => {
       state.bookings = action.payload;
-      state.filteredBookings = filterBookings(state); 
+      state.filteredBookings = filterBookings(state);
     },
     setActiveTab: (state, action) => {
       state.activeTab = action.payload;
-      state.filteredBookings = filterBookings(state); 
+      state.filteredBookings = filterBookings(state);
     },
     setSearchText: (state, action) => {
       state.searchText = action.payload.toLowerCase();
-      state.filteredBookings = filterBookings(state); 
+      state.filteredBookings = filterBookings(state);
     },
     setSortBy: (state, action) => {
       state.sortBy = action.payload;
@@ -38,12 +38,16 @@ const bookingsSlice = createSlice({
       } else {
         state.sortOrder = "asc";
       }
-      state.filteredBookings = sortBookings(state); 
+      state.filteredBookings = sortBookings(state);
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
     },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
   },
+  
   extraReducers: (builder) => {
     builder
       .addCase(createBooking.pending, (state) => {

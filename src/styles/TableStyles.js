@@ -15,7 +15,7 @@ export const Table = styled.table`
 
 export const TableHeader = styled.th`
   background-color: ${(props) => props.theme.palette.background.default};
-  padding: 1rem;
+  padding: .8rem;
   border-bottom: 2px solid ${(props) => props.theme.palette.background.paper};
   text-align: left;
   font-weight: bold;
@@ -139,7 +139,7 @@ export const PageButton = styled.button.attrs((props) => ({
 `;
 
 export const ViewNotesButton = styled.button`
-  padding: 0.5rem 1rem;
+  padding: 0.3rem .8rem;
   background-color: ${(props) => props.theme.palette.secondary.main};
   color: ${(props) => props.theme.palette.text.primary};
   border: none;
@@ -176,19 +176,25 @@ export const RoomImage = styled.img`
 
 export const DiscountSpan = styled.span`
   color: #e23428;
-  font-size: 0.9rem;
+  font-size: .7rem;
 `;
 
 export const StatusButton = styled.button`
-  padding: 0.5rem 1rem;
-  background-color: ${({ $status }) =>
-    $status === "Available" ? "#E8FFEE" : "#FFEDEC"};
-  color: ${({ $status }) =>
-    $status === "Available" ? "#135846" : "#E23428"};
-  border-radius: 5px;
+  background-color: ${({ $status }) => $status === "Available" ? "#E8FFEE" : "#FFEDEC"};
+  color: ${({ $status }) => $status === "Available" ? "#135846" : "#E23428"};
+  padding: ${({ theme }) => theme?.styles?.button?.padding || ".6rem 1.5rem"};
   border: none;
   cursor: pointer;
   font-weight: bold;
+`;
+
+export const IconContainer = styled.div`
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  width: 100%; 
+  height: 100%; 
+  position: relative;
 `;
 
 export const ActionMenu = styled.div`
@@ -207,7 +213,7 @@ export const ActionMenuItem = styled.div`
   padding: 10px 15px;
   cursor: pointer;
   color: #333;
-  font-size: 14px;
+  font-size: 12px;
   border-bottom: 1px solid #f1f1f1;
 
   &:hover {

@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const NewRoomContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 4rem 2rem;;
+  margin: 4rem 2rem;
   background-color: ${({ theme }) => theme?.palette?.background?.default || "#f9f9f9"};
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -58,20 +58,53 @@ export const AmenitiesContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+`;
 
-  div {
-    padding: 0.5rem 1rem;
-    background-color: ${({ theme }) => theme?.palette?.background?.default || "#f9f9f9"};
-    color: ${({ theme }) => theme?.palette?.secondary?.main || "#135846"};
-    border-radius: ${({ theme }) => theme?.styles?.button?.borderRadius || "8px"};
-    font-size: ${({ theme }) => theme?.typography?.body2?.fontSize || "12px"};
+export const AmenityItem = styled.div`
+  padding: 0.5rem 1rem;
+  border: 2px solid ${({ $selected, theme }) => ($selected ? theme?.palette?.secondary?.main : "#ccc")};
+  border-radius: ${({ theme }) => theme?.styles?.button?.borderRadius || "8px"};
+  cursor: pointer;
+  background-color: ${({ $selected, theme }) =>
+    $selected ? theme?.palette?.secondary?.main : "transparent"};
+  color: ${({ $selected, theme }) =>
+    $selected ? theme?.palette?.primary?.main : theme?.palette?.text?.secondary};
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme?.palette?.secondary?.main};
+    background-color: ${({ theme }) => theme?.palette?.secondary?.main};
+    color: ${({ theme }) => theme?.palette?.primary?.main};
   }
+`;
+
+export const ImageUploadSection = styled.div`
+  margin-bottom: 1rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  input[type="file"] {
+    margin-top: 0.5rem;
+    width: 100%;
+  }
+`;
+
+export const ImagePreview = styled.img`
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  margin-right: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
 `;
 
 export const SaveButton = styled.button`
   background-color: ${({ theme }) => theme?.palette?.secondary?.main || "#135846"};
   color: ${({ theme }) => theme?.palette?.primary?.main || "#FFFFFF"};
-  padding: ${({ theme }) => theme?.styles?.button?.padding || "0.6rem 1.5rem"};
+  padding: ${({ theme }) => theme?.styles?.button?.padding || ".6rem 1.5rem"};
   border: none;
   border-radius: ${({ theme }) => theme?.styles?.button?.borderRadius || "8px"};
   font-size: ${({ theme }) => theme?.typography?.body1?.fontSize || "16px"};
@@ -86,22 +119,19 @@ export const SaveButton = styled.button`
 `;
 
 export const BackButton = styled.button`
-  background-color: ${({ theme: $theme }) => $theme.palette.background.default};
-  color: ${({ theme: $theme }) => $theme.palette.text.secondary};
-  padding: ${({ theme: $theme }) => $theme.styles.button.padding};
+  background-color: ${({ theme }) => theme?.palette?.background?.default || "#f9f9f9"};
+  color: red;
+  padding: ${({ theme }) => theme?.styles?.button?.padding || ".6rem 1.5rem"};
+  font-size: ${({ theme }) => theme?.typography?.body1?.fontSize || "16px"};
+  margin-left: 1rem;
   border: none;
-  border-radius: ${({ theme: $theme }) => $theme.styles.button.borderRadius};
+  border-radius: ${({ theme }) => theme?.styles?.button?.borderRadius || "8px"};
   cursor: pointer;
+  transition: all 0.3s ease;
 
   &:hover {
-    background-color: ${({ theme: $theme }) =>
-      $theme.styles.button.hover.backgroundColor};
-    color: ${({ theme: $theme }) => $theme.palette.primary.main};
+    background-color: red;
+    color: white;
   }
 
-  &:disabled {
-    background-color: ${({ theme: $theme }) =>
-      $theme.styles.button.disabled.backgroundColor};
-    color: ${({ theme: $theme }) => $theme.styles.button.disabled.color};
-  }
 `;

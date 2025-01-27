@@ -1,38 +1,99 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import employeesData from "../../data/Workers.json";
-import { GenericTable } from "../../components/common/GenericTable.jsx";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
-import {TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton} from "../../styles/TabsStyles.js";
-import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo, DescriptionText,ContactText,StatusText, DotsContainer} from "../../styles/UsersStyles.js";
+import { FaPencilAlt, FaTrashAlt, FaUser} from "react-icons/fa";
+import { GenericTable } from "../../components/common/GenericTable.jsx";
+import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
+import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo,DescriptionText,ContactText,StatusText,DotsContainer,ActionMenu,ActionMenuItem} from "../../styles/UsersStyles.js";
+import {setActiveTab,setSearchText,setError} from "../../redux/slices/usersSlice.js";
+import { fetchAllUsers,fetchUserById,deleteUser} from "../../redux/thunks/usersThunk.js";
+import Swal from "sweetalert2";
 
 export const Users = () => {
-  const [activeTab, setActiveTab] = useState("allEmployees");
-  const [searchText, setSearchText] = useState("");
-  const navigate = useNavigate(); 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(null);
 
-  const handleTabChange = (tab) => setActiveTab(tab);
+  const {
+    filteredUsers: filteredEmployees,
+    activeTab,
+    searchText,
+    loading,
+    error,
+    currentUser,
+  } = useSelector((state) => state.users);
 
-  const handleSearchChange = (event) =>
-    setSearchText(event.target.value.toLowerCase());
+  
+  useEffect(() => {
+    if (filteredEmployees.length === 0) {
+      dispatch(fetchAllUsers(employeesData)); 
+      console.log("Data loaded:", filteredEmployees);
+    }
+  }, [dispatch, filteredEmployees]);
 
-  const filteredEmployees = employeesData
-    .filter((employee) => {
-      if (activeTab === "activeEmployees") return employee.status === "Active";
-      if (activeTab === "inactiveEmployees")
-        return employee.status === "Inactive";
-      return true;
-    })
-    .filter((employee) =>
-      employee.name.toLowerCase().includes(searchText)
-    );
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      }).then(() => {
+        dispatch(setError(null));
+      });
+    }
+  }, [error, dispatch]);
+
+  const handleTabChange = (tab) => {
+    dispatch(setActiveTab(tab));
+  };
+
+  const handleSearchChange = (event) => {
+    dispatch(setSearchText(event.target.value));
+  };
+
+  const handleEdit = (employee) => {
+    navigate(`/edit-user/${employee.employeeId}`, { state: { employeeData: employee } });
+  };
+
+  const handleDelete = (employeeId) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteUser(employeeId)).then(() => {
+          Swal.fire("Deleted!", "The user has been deleted.", "success");
+        });
+      }
+    });
+  };
+
+  const handleCreateUser = () => {
+    navigate("/new-user");
+  };
+
+  const handleFetchUserById = (employeeId) => {
+    dispatch(fetchUserById(employeeId)).then(() => {
+      if (currentUser) {
+        navigate(`/user-details/${employeeId}`);
+      }
+    });
+  };
 
   const headers = [
     { label: "Name", key: null },
     { label: "Description", key: null },
     { label: "Contact", key: null },
     { label: "Status", key: null },
+    { label: "Actions", key: null },
   ];
 
   const renderRow = (employee) => (
@@ -59,12 +120,51 @@ export const Users = () => {
       </TableData>
       <TableData>
         <StatusText $status={employee.status}>{employee.status}</StatusText>
+      </TableData>
+      <TableData>
         <DotsContainer>
-          <HiOutlineDotsVertical size={18} color="#6E6E6E" />
+          <HiOutlineDotsVertical
+            size={16}
+            color="#6E6E6E"
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOpen(menuOpen === employee.employeeId ? null : employee.employeeId);
+            }}
+            style={{ cursor: "pointer" }}
+          />
+          {menuOpen === employee.employeeId && (
+            <ActionMenu>
+              <button
+                onClick={() => {
+                  handleEdit(employee);
+                  setMenuOpen(null);
+                }}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
+                  padding: "0.5rem",
+                }}
+              >
+                <FaPencilAlt style={{ marginRight: "0.5rem" }} /> Edit
+              </button>
+              <ActionMenuItem onClick={() => handleDelete(employee.employeeId)}>
+                <FaTrashAlt style={{ marginRight: "0.5rem" }} /> Delete
+              </ActionMenuItem>
+              <ActionMenuItem onClick={() => handleFetchUserById(employee.employeeId)}>
+                <FaUser style={{ marginRight: "0.5rem" }} /> View Details
+              </ActionMenuItem>
+            </ActionMenu>
+          )}
         </DotsContainer>
       </TableData>
     </>
   );
+
+  if (loading) return <p>Loading employees...</p>;
 
   return (
     <div>
@@ -111,16 +211,10 @@ export const Users = () => {
       </TabsContainer>
 
       <div style={{ margin: "1rem 0", textAlign: "right" }}>
-        <ActionButton onClick={() => navigate("/new-user")}>
-          + New User
-        </ActionButton>
+        <ActionButton onClick={handleCreateUser}>+ New User</ActionButton>
       </div>
 
-      <GenericTable
-        headers={headers}
-        data={filteredEmployees}
-        renderRow={renderRow}
-        itemsPerPage={5}
+      <GenericTable headers={headers}data={filteredEmployees}renderRow={renderRow}itemsPerPage={5}
       />
     </div>
   );

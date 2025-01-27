@@ -4,7 +4,7 @@ import { FiLogOut } from "react-icons/fi";
 import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../verification/AuthContext.jsx";
-import { NavbarContainer, NavbarLeft, NavbarRight, IconButton, TitleContainer, TitleSection, BreadcrumbSection, Breadcrumb } from "./NavbarStyles.js";
+import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,BreadcrumbSection,Breadcrumb} from "./NavbarStyles.js";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const navigate = useNavigate();
@@ -21,25 +21,35 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     "/new-room": "New Room",
     "/new-user": "New User",
     "/guest": "Guest Details",
+    "/room-details": "Room Details", 
   };
 
   const getPageTitle = () => {
     const pathSegments = location.pathname.split("/");
     const basePath = `/${pathSegments[1]}`;
 
+    if (basePath === "/room-details") {
+      return "Room Details";
+    }
+
     return basePath === "/guest" ? "Bookings" : pageTitleMap[basePath] || "Unknown Page";
   };
 
   const pageTitle = getPageTitle();
 
-  const getBreadcrumbs = () => (
-    location.pathname.startsWith("/guest") ? (
+  const getBreadcrumbs = () => {
+    return location.pathname.startsWith("/guest") ? (
       <Breadcrumb>
         <Link to="/bookings">Bookings</Link> /{" "}
         <span>{location.state?.guestName || "Guest Details"}</span>
       </Breadcrumb>
-    ) : null
-  );
+    ) : location.pathname.startsWith("/room-details") ? (
+      <Breadcrumb>
+        <Link to="/rooms">Rooms</Link> /{" "}
+        <span>{location.state?.roomNumber || "Room Details"}</span>
+      </Breadcrumb>
+    ) : null;
+  };
 
   const breadcrumbs = getBreadcrumbs();
 

@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { format } from "date-fns";
-import bookingsData from "../../data/Bookings.json";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaPencilAlt, FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
-import {setBookings,setActiveTab,setSearchText,setSortBy,setCurrentPage,deleteBooking} from "../../redux/slices/bookingsSlice.js";
+import {setActiveTab,setSearchText,setSortBy,setCurrentPage} from "../../redux/slices/bookingsSlice.js";
+import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks.js";
 import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
 import {Table,TableHeader,TableRow,TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge,PaginationContainer,PageButton,ActionMenu,ActionMenuItem} from "../../styles/TableStyles.js";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
+import Swal from "sweetalert2";
 
 export const Bookings = () => {
   const dispatch = useDispatch();
@@ -26,11 +27,24 @@ export const Bookings = () => {
   const currentPage = useSelector((state) => state.bookings.currentPage);
   const itemsPerPage = useSelector((state) => state.bookings.itemsPerPage);
   const filteredBookings = useSelector((state) => state.bookings.filteredBookings);
+  const loading = useSelector((state) => state.bookings.loading); 
+  const error = useSelector((state) => state.bookings.error); 
 
   useEffect(() => {
-    console.log("Bookings Data:", bookingsData);
-    dispatch(setBookings(bookingsData));
+    dispatch(fetchAllBookings());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      }).then(() => {
+        dispatch(setError(null));
+      });
+    }
+  }, [error, dispatch]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -53,8 +67,25 @@ export const Bookings = () => {
   };
 
   const handleDelete = (reservationId) => {
-    dispatch(deleteBooking(reservationId));
-    console.log("Delete booking:", reservationId);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteBooking(reservationId))
+          .then(() => {
+            Swal.fire("Deleted!", "The booking has been deleted.", "success");
+          })
+          .catch((error) => {
+            Swal.fire("Error!", "Failed to delete the booking.", "error");
+          });
+      }
+    });
   };
 
   const handleNextRange = () => {
@@ -120,7 +151,7 @@ export const Bookings = () => {
       <TableData>
         <div style={{ position: "relative" }}>
           <HiOutlineDotsVertical
-            size={18}
+            size={16}
             onClick={(e) => {
               e.stopPropagation();
               setMenuOpen(menuOpen === booking.guest.reservationNumber ? null : booking.guest.reservationNumber);
@@ -192,27 +223,33 @@ export const Bookings = () => {
             <TableHeader>Guest</TableHeader>
             <TableHeader onClick={() => handleSort("orderDate")}>
               Order Date
-              {sortBy === "orderDate" && (
-                <span>
-                  {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
-                </span>
-              )}
+              <span style={{ marginLeft: "8px" }}>
+                {sortBy === "orderDate" && sortOrder === "asc" ? (
+                  <FaSortUp style={{ opacity: 1, transition: "opacity 0.2s" }} />
+                ) : (
+                  <FaSortDown style={{ opacity: 1, transition: "opacity 0.2s" }} />
+                )}
+              </span>
             </TableHeader>
             <TableHeader onClick={() => handleSort("checkIn")}>
               Check In
-              {sortBy === "checkIn" && (
-                <span>
-                  {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
-                </span>
-              )}
+              <span style={{ marginLeft: "8px" }}>
+                {sortBy === "checkIn" && sortOrder === "asc" ? (
+                  <FaSortUp style={{ opacity: 1, transition: "opacity 0.2s" }} />
+                ) : (
+                  <FaSortDown style={{ opacity: 1, transition: "opacity 0.2s" }} />
+                )}
+              </span>
             </TableHeader>
             <TableHeader onClick={() => handleSort("checkOut")}>
               Check Out
-              {sortBy === "checkOut" && (
-                <span>
-                  {sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
-                </span>
-              )}
+              <span style={{ marginLeft: "8px" }}>
+                {sortBy === "checkOut" && sortOrder === "asc" ? (
+                  <FaSortUp style={{ opacity: 1, transition: "opacity 0.2s" }} />
+                ) : (
+                  <FaSortDown style={{ opacity: 1, transition: "opacity 0.2s" }} />
+                )}
+              </span>
             </TableHeader>
             <TableHeader>Special Request</TableHeader>
             <TableHeader>Room Type</TableHeader>

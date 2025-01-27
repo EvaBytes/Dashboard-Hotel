@@ -13,9 +13,11 @@ import { Dashboard } from "./pages/Dashboard.jsx";
 import { Bookings } from "./pages/Bookings/Bookings.jsx";
 import { Rooms } from "./pages/Rooms/Rooms.jsx";
 import { NewRoom } from "./pages/Rooms/NewRoom.jsx";
+import { RoomDetails } from "./pages/Rooms/RoomDetails.jsx";
 import { Contact } from "./pages/Contact.jsx";
 import { Users } from "./pages/Users/Users.jsx";
 import { NewUser } from "./pages/Users/NewUser.jsx";
+import { UserDetails } from "./pages/Users/UserDetails.jsx";
 import { GuestDetails } from "./pages/Bookings/GuestDetails.jsx";
 import { NewBooking } from "./pages/Bookings/NewBooking.jsx"; 
 import { PrivateRoute } from "./verification/PrivateRoute.jsx";
@@ -40,12 +42,14 @@ createRoot(document.getElementById("root")).render(
                 <Route index element={<Dashboard />} />
                 <Route path="bookings" element={<Bookings />} />
                 <Route path="rooms" element={<Rooms />} />
+                <Route path="room-details/:roomNumber" element={<RoomDetails />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="users" element={<Users />} />
+                <Route path="new-user" element={<NewUser />} />
+                <Route path="user-details/:employeeId" element={<UserDetails />} />
                 <Route path="guest/:reservationId" element={<GuestDetails />} />
                 <Route path="new-booking" element={<NewBooking />} />
                 <Route path="new-room" element={<NewRoom />} />
-                <Route path="new-user" element={<NewUser />} />
               </Route>
             </Routes>
           </BrowserRouter>
