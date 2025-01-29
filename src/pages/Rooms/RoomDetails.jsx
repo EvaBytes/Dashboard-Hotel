@@ -102,7 +102,7 @@ const RoomDetails = () => {
     alert("Room updated successfully!");
     navigate("/rooms");
   };
-
+console.log(roomData)
   return (
     <RoomDetailsContainer>
       <RoomDetailsCard>
@@ -197,7 +197,8 @@ const RoomDetails = () => {
             <ImageUploadSection>
               <label>Room Photos</label>
               <div>
-                {roomData.photos?.map((photo, index) => (
+              {roomTypePhotos[roomData.bedType].photos === undefined ? <> </> :  roomTypePhotos[roomData.bedType].photos.map((photo, index) => (
+              
                   <ImagePreview
                     key={index}
                     src={photo}
