@@ -60,17 +60,19 @@ const Login = () => {
         <StyledTextField
           type="email"
           placeholder="Email"
+          data-cy="email-input" 
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <StyledTextField
           type="password"
           placeholder="Password"
+          data-cy="password-input" 
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <StyledAuthButton onClick={handleLogin} disabled={loading || !email || !password}>
+        <StyledAuthButton data-cy="login-button" onClick={handleLogin} disabled={loading || !email || !password}>
           {loading ? <CircularProgress /> : "Login"}
         </StyledAuthButton>
       </StyledAuthContainer>
