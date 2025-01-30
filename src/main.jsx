@@ -2,12 +2,12 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { AuthProvider } from "./verification/AuthContext.jsx";
+import { AuthProvider } from "./Authentication/AuthContext.jsx";
 import { Provider } from "react-redux"; 
 import { store } from "./redux/store.js";
 import { GlobalStyles } from "./styles/globalStyles.js";
 import { Layout } from "./Layout.jsx";
-import { Login } from "./verification/Login.jsx";
+import { Login } from "./Authentication/Login.jsx";
 import { theme } from "./styles/theme.js";
 import { Dashboard } from "./pages/Dashboard.jsx";
 import { Bookings } from "./pages/Bookings/Bookings.jsx";
@@ -20,7 +20,7 @@ import { NewUser } from "./pages/Users/NewUser.jsx";
 import { UserDetails } from "./pages/Users/UserDetails.jsx";
 import { GuestDetails } from "./pages/Bookings/GuestDetails.jsx";
 import { NewBooking } from "./pages/Bookings/NewBooking.jsx"; 
-import { PrivateRoute } from "./verification/PrivateRoute.jsx";
+import { PrivateRoute } from "./Authentication/PrivateRoute.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

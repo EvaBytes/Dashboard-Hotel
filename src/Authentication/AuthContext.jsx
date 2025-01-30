@@ -1,5 +1,4 @@
-import React, { createContext, useReducer, useContext, useEffect } from "react";
-
+import React, { createContext, useReducer, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
@@ -21,38 +20,35 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    const user = JSON.parse(localStorage.getItem("user")); 
+    const user = JSON.parse(localStorage.getItem("user"));
     if (token && user) {
       dispatch({ type: "LOGIN", payload: user });
     }
+    setIsLoading(false);
   }, []);
 
-
   const login = (user) => {
-    localStorage.setItem("authToken", "fakeToken"); 
-    localStorage.setItem("user", JSON.stringify(user)); 
+    localStorage.setItem("authToken", "fakeToken");
+    localStorage.setItem("user", JSON.stringify(user));
     dispatch({ type: "LOGIN", payload: user });
   };
 
-
   const logout = () => {
     localStorage.removeItem("authToken");
-    localStorage.removeItem("user"); 
+    localStorage.removeItem("user");
     dispatch({ type: "LOGOUT" });
   };
 
-
-  const value = {
-    state,
-    login,
-    logout,
-  };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ state, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
