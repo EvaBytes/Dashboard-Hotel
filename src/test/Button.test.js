@@ -22,8 +22,6 @@ const testButton = {
     };
 
 
-
-
     const renderWithTheme = (ui) => render(<ThemeProvider theme={testButton}>{ui}</ThemeProvider>);
     
     describe('PageButton Component', () => {

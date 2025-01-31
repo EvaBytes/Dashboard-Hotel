@@ -46,7 +46,7 @@ export const TitleContainer = styled.div`
 `;
 
 export const TitleSection = styled.h1`
-  font-size: 1.5rem; /* Título principal */
+  font-size: 1.5rem; 
   font-weight: bold;
   color: black;
   margin: 0;

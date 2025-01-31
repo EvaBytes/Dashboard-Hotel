@@ -22,4 +22,12 @@ describe('Testing E2E Login Dashboard Hotel Miranda ', () => {
     cy.location('pathname', { timeout: 2000 }).should('eq', '/login');
   });
 
+  it ('Whenever you visit a room without identification, not allowed' , () => {
+    cy.visit('http://localhost:5173/bokings')
+    cy.get('[data-cy="login-button"]');
+
+  })
+
+  
+
 })

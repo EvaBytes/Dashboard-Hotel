@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
-import {LatestMessagesContainer,MessageCard,NavigationButton,NavigationPlaceholder,MessageDetail} from "../../styles/LatestMessagesStyles.js";
+import { LatestMessagesContainer, MessageCard, NavigationButton, NavigationPlaceholder, MessageDetail } from "../../styles/LatestMessagesStyles.js";
 import { GiCancel } from "react-icons/gi";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
-import { Navigation } from "swiper/modules";
+import "swiper/css/free-mode";
+import "swiper/css/mousewheel";
+import { Navigation, FreeMode, Mousewheel } from "swiper/modules";
 
 const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -31,21 +33,13 @@ const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }
     setSelectedMessage(null);
   };
 
-  const paginatedMessages = messages.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
+  const paginatedMessages = messages.slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
   return (
     <>
       {!hideContainer && mode === "pagination" && (
         <LatestMessagesContainer>
-          {currentPage > 0 ? (
-            <NavigationButton onClick={prevPage}>&lt;</NavigationButton>
-          ) : (
-            <NavigationPlaceholder />
-          )}
-
+          {currentPage > 0 ? <NavigationButton onClick={prevPage}>&lt;</NavigationButton> : <NavigationPlaceholder />}
           {paginatedMessages.map((message, index) => (
             <MessageCard key={message.messageId || index} onClick={() => openPopup(message)}>
               <h4>{message.subject}</h4>
@@ -57,18 +51,11 @@ const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }
                 <span>{message.fullName}</span>
               </div>
               <div className="status-icons">
-                {message.status === "unread" ? (
-                  <GiCancel className="unread" />
-                ) : (
-                  <FaRegCheckCircle className="read" />
-                )}
+                {message.status === "unread" ? <GiCancel className="unread" /> : <FaRegCheckCircle className="read" />}
               </div>
             </MessageCard>
           ))}
-
-          {currentPage < totalPages - 1 && (
-            <NavigationButton onClick={nextPage}>&gt;</NavigationButton>
-          )}
+          {currentPage < totalPages - 1 && <NavigationButton onClick={nextPage}>&gt;</NavigationButton>}
         </LatestMessagesContainer>
       )}
 
@@ -76,6 +63,36 @@ const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }
         <Swiper modules={[Navigation]} navigation={!hideContainer} spaceBetween={20} slidesPerView={4} loop={true}>
           {messages.map((message) => (
             <SwiperSlide key={message.messageId}>
+              <MessageCard onClick={() => openPopup(message)}>
+                <h4>{message.subject}</h4>
+                <h5>{message.comment}</h5>
+                <MessageDetail>Email: {message.email}</MessageDetail>
+                <MessageDetail>Phone: {message.phone}</MessageDetail>
+                <div className="message-footer">
+                  <img src={message.photo || "/placeholder-image.jpg"} alt={message.fullName} />
+                  <span>{message.fullName}</span>
+                </div>
+                <div className="status-icons">
+                  {message.status === "unread" ? <GiCancel className="unread" /> : <FaRegCheckCircle className="read" />}
+                </div>
+              </MessageCard>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
+
+      {mode === "scroll" && (
+        <Swiper
+          modules={[FreeMode, Mousewheel]}
+          freeMode={true}
+          mousewheel={true}
+          spaceBetween={20}
+          slidesPerView="auto"
+          loop={true}
+          style={{ paddingBottom: "10px" }}
+        >
+          {messages.map((message) => (
+            <SwiperSlide key={message.messageId} style={{ width: "300px" }}>
               <MessageCard onClick={() => openPopup(message)}>
                 <h4>{message.subject}</h4>
                 <h5>{message.comment}</h5>

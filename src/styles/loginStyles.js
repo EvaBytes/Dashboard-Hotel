@@ -79,7 +79,7 @@ export const Alert = styled.div`
 `;
 
 export const CircularProgress = styled.div`
-  border: 4px solid #f3f3f3; /* Gris claro */
+  border: 4px solid #f3f3f3;
   border-top: 4px solid ${(props) => props.theme.palette.primary.main}; 
   border-radius: 50%;
   width: 24px;

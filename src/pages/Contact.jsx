@@ -4,11 +4,11 @@ import { archiveMessage, unarchiveMessage, setActiveTab, setCurrentPage } from "
 import { fetchMessages } from "../redux/thunks/contactThunks.js";
 import { LatestMessages } from "../components/common/LatestMessages.jsx";
 import { Table, TableHeader, TableRow, TableData, PaginationContainer, PageButton } from "../styles/TableStyles.js";
-import { ContactPageContainer, TabsContainer, TabButton, CustomerName, CustomerEmail, CustomerPhone, Subject, Comment, ArchiveButton } from "../styles/ContactStyles.js";
+import {ContactPageContainer,TabsContainer,TabButton,CustomerName,CustomerEmail,CustomerPhone,Subject,Comment,ArchiveButton} from "../styles/ContactStyles.js";
 
 const Contact = () => {
   const dispatch = useDispatch();
-  const { allMessages, archivedMessages, activeTab, currentPage, itemsPerPage, loading, error } = useSelector(
+  const { allMessages, archivedMessages, activeTab, currentPage, itemsPerPage, error } = useSelector(
     (state) => state.contact
   );
 
@@ -60,7 +60,6 @@ const Contact = () => {
     (_, index) => adjustedStartPage + index
   );
 
-
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -69,7 +68,7 @@ const Contact = () => {
     <ContactPageContainer>
       {uniqueAllMessages.length > 0 ? (
         <div style={{ marginBottom: "20px" }}>
-          <LatestMessages mode="slides" messages={uniqueAllMessages} hideContainer />
+          <LatestMessages mode="scroll" messages={uniqueAllMessages} hideContainer />
         </div>
       ) : (
         <div>No messages to display</div>
