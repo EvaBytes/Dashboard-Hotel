@@ -23,4 +23,3 @@ A React.js-based hotel management dashboard for handling reservations, rooms, an
   **React Router**
   
   **Redux**
-
