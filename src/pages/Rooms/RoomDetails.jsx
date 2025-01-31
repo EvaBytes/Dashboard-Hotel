@@ -3,28 +3,13 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import {RoomDetailsContainer,RoomDetailsCard,RoomDetailsHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/RoomDetailsStyles.js";
 
 const roomTypePhotos = {
-  "Single Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
-  "Double Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
-  "Double Superior": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
-  "Suite": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
+  "Single Bed": ["/radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "/caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "/kate-branch-G18uHzrihOE-unsplash.jpg"],
+  "Double Bed": ["/radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "/caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "/kate-branch-G18uHzrihOE-unsplash.jpg"],
+  "Double Superior": ["/radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "/caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "/kate-branch-G18uHzrihOE-unsplash.jpg"],
+  "Suite": ["/radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "/caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "/kate-branch-G18uHzrihOE-unsplash.jpg"],
 };
 
-const amenitiesList = [
-  "Air conditioner",
-  "High speed WiFi",
-  "Breakfast",
-  "Kitchen",
-  "Cleaning",
-  "Shower",
-  "Grocery",
-  "Single bed",
-  "Shop near",
-  "Towels",
-  "24/7 Online Support",
-  "Strong locker",
-  "Smart Security",
-  "Expert Team",
-];
+const amenitiesList = ["Air conditioner","High speed WiFi","Breakfast","Kitchen","Cleaning","Shower","Grocery","Single bed","Shop near","Towels","24/7 Online Support","Strong locker","Smart Security","Expert Team"];
 
 const cancellationPolicyText = `
 Standard Rate:
@@ -65,10 +50,15 @@ const RoomDetails = () => {
   useEffect(() => {
     if (location.state?.roomData) {
       const roomToEdit = location.state.roomData;
+      console.log("Room Data from State:", roomToEdit); 
+    console.log("Room Type from State:", roomToEdit.roomType);
+    console.log("Photos Array from RoomTypePhotos:", roomTypePhotos[roomToEdit.roomType]); 
       setRoomData({
         ...roomToEdit,
-        facilities: roomToEdit.facilities ? roomToEdit.facilities.split(",") : [], 
-        amenities: roomToEdit.amenities || [], 
+        facilities: roomToEdit.facilities
+          ? roomToEdit.facilities.split(",")
+          : [],
+        amenities: roomToEdit.amenities || [],
         photos: roomTypePhotos[roomToEdit.roomType] || [], 
       });
     }
@@ -102,7 +92,7 @@ const RoomDetails = () => {
     alert("Room updated successfully!");
     navigate("/rooms");
   };
-console.log(roomData)
+
   return (
     <RoomDetailsContainer>
       <RoomDetailsCard>
@@ -121,7 +111,7 @@ console.log(roomData)
               <option value="">Select Room Type</option>
               <option value="Single Bed">Single Bed</option>
               <option value="Double Bed">Double Bed</option>
-              <option value="Double Superior">Double Superior</option>
+              <option value="Double Bed Superior">Double Bed Superior</option>
               <option value="Suite">Suite</option>
             </select>
 
@@ -183,30 +173,31 @@ console.log(roomData)
 
             <label>Amenities</label>
             <AmenitiesContainer>
-              {roomData.facilities?.map((facility, index) => (
+              {amenitiesList.map((amenity, index) => (
                 <AmenityItem
                   key={index}
-                  onClick={() => handleAmenityToggle(facility)}
-                  $selected={roomData.amenities?.includes(facility)} 
+                  onClick={() => handleAmenityToggle(amenity)}
+                  $selected={roomData.amenities?.includes(amenity)}
                 >
-                  {facility}
+                  {amenity}
                 </AmenityItem>
               ))}
             </AmenitiesContainer>
-
             <ImageUploadSection>
-              <label>Room Photos</label>
-              <div>
-              {roomTypePhotos[roomData.bedType].photos === undefined ? <> </> :  roomTypePhotos[roomData.bedType].photos.map((photo, index) => (
-              
-                  <ImagePreview
-                    key={index}
-                    src={photo}
-                    alt={`Room Photo ${index + 1}`}
-                  />
-                ))}
-              </div>
-            </ImageUploadSection>
+  <label>Room Photos</label>
+  <div>
+    {roomTypePhotos[roomData.roomType]?.map((photo, index) => (
+      <ImagePreview
+        key={index}
+        src={photo}
+        alt={`Room Photo ${index + 1}`}
+      />
+    )) || (
+      <p>No photos available for the selected room type.</p>
+    )}
+  </div>
+</ImageUploadSection>
+
           </RoomDetailsSection>
 
           <SaveButton type="submit">Save Changes</SaveButton>

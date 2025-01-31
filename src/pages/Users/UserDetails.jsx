@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserById } from "../../redux/thunks/usersThunk.js"; 
-import { format } from "date-fns";
+import { fetchUserById } from "../../redux/thunks/usersThunks.js";
+import { format, parseISO, isValid } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
-import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,StatusBadge,Divider} from "../../styles/GuestDetailsStyles";
+import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,StatusBadge,Divider} from "../../styles/GuestDetailsStyles.js";
 
 const UserDetails = () => {
   const { userId } = useParams();
@@ -13,20 +13,30 @@ const UserDetails = () => {
   const { currentUser, loading, error } = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(fetchUserById(userId));
-  }, [dispatch, userId]);
+    if (!currentUser || currentUser.employeeId !== userId) {
+      dispatch(fetchUserById(userId));
+    }
+  }, [dispatch, userId, currentUser]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p>Loading user details...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!currentUser) return <p>User details not found.</p>;
 
-  const { name, description, contact, status, started } = currentUser;
+  const { name, description, contact, status, startDate, photo } = currentUser;
+
+  const formattedStartDate =
+    startDate && isValid(parseISO(startDate))
+      ? format(parseISO(startDate), "MMM dd, yyyy")
+      : "N/A";
 
   return (
     <GuestDetailsContainer>
       <GuestInfoCard>
         <GuestHeader>
-          <GuestImage src={currentUser.image || "default-user-image.png"} alt={name} />
+          <GuestImage
+            src={photo || "default-user-image.png"}
+            alt={name}
+          />
           <GuestNameDetails>
             <h2>{name}</h2>
             <p>ID: {userId}</p>
@@ -52,16 +62,30 @@ const UserDetails = () => {
         <Divider />
         <GuestInfoSection>
           <p>
-            <strong>Status:</strong> 
+            <strong>Status:</strong>
             <StatusBadge $status={status}>{status}</StatusBadge>
           </p>
           <p>
-            <strong>Started:</strong> {format(new Date(started), "MMM dd, yyyy")}
+            <strong>Started:</strong> {formattedStartDate}
           </p>
         </GuestInfoSection>
       </GuestInfoCard>
+      <button
+        style={{
+          marginTop: "1rem",
+          padding: "0.5rem 1rem",
+          backgroundColor: "#007BFF",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+        onClick={() => navigate(-1)}
+      >
+        Go Back
+      </button>
     </GuestDetailsContainer>
   );
 };
 
-export {UserDetails};
+export { UserDetails };

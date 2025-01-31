@@ -183,6 +183,7 @@ export const StatusButton = styled.button`
   background-color: ${({ $status }) => $status === "Available" ? "#E8FFEE" : "#FFEDEC"};
   color: ${({ $status }) => $status === "Available" ? "#135846" : "#E23428"};
   padding: ${({ theme }) => theme?.styles?.button?.padding || ".6rem 1.5rem"};
+  border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: bold;

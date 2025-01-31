@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchAllUsers, createUser, deleteUser, editUser, fetchUserById } from "../thunks/usersThunk.js";
+import { fetchAllUsers, createUser, deleteUser, editUser, fetchUserById } from "../thunks/usersThunks.js";
 
 const initialState = {
   users: [],
@@ -50,6 +50,9 @@ const usersSlice = createSlice({
         state.loading = false;
         state.users = action.payload;
         state.filteredUsers = filterUsers(state);
+        console.log("Users loaded", state.users);
+        console.log("Filtered users:", state.filteredUsers); 
+
       })
       .addCase(fetchAllUsers.rejected, (state, action) => {
         state.loading = false;
@@ -108,6 +111,7 @@ const usersSlice = createSlice({
       .addCase(fetchUserById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        console.log("Current User:", action.payload);
       });
   },
 });

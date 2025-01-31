@@ -17,6 +17,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     "/rooms": "Rooms",
     "/contact": "Contact",
     "/users": "Users",
+    "/user-details" : "User Details",
     "/new-booking": "New Booking",
     "/new-room": "New Room",
     "/new-user": "New User",
@@ -31,6 +32,9 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     if (basePath === "/room-details") {
       return "Room Details";
     }
+    if (basePath === "/user-details") {
+      return "User Details"; 
+    }
 
     return basePath === "/guest" ? "Bookings" : pageTitleMap[basePath] || "Unknown Page";
   };
@@ -38,17 +42,29 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const pageTitle = getPageTitle();
 
   const getBreadcrumbs = () => {
-    return location.pathname.startsWith("/guest") ? (
-      <Breadcrumb>
-        <Link to="/bookings">Bookings</Link> /{" "}
-        <span>{location.state?.guestName || "Guest Details"}</span>
-      </Breadcrumb>
-    ) : location.pathname.startsWith("/room-details") ? (
-      <Breadcrumb>
-        <Link to="/rooms">Rooms</Link> /{" "}
-        <span>{location.state?.roomNumber || "Room Details"}</span>
-      </Breadcrumb>
-    ) : null;
+    if (location.pathname.startsWith("/guest")) {
+      return (
+        <Breadcrumb>
+          <Link to="/bookings">Bookings</Link> /{" "}
+          <span>{location.state?.guestName || "Guest Details"}</span>
+        </Breadcrumb>
+      );
+    } else if (location.pathname.startsWith("/room-details")) {
+      return (
+        <Breadcrumb>
+          <Link to="/rooms">Rooms</Link> /{" "}
+          <span>{location.state?.roomNumber || "Room Details"}</span>
+        </Breadcrumb>
+      );
+    } else if (location.pathname.startsWith("/user-details")) {
+      return (
+        <Breadcrumb>
+          <Link to="/users">Users</Link> /{" "}
+          <span>{location.state?.userName || "User Details"}</span>
+        </Breadcrumb>
+      );
+    }
+    return null;
   };
 
   const breadcrumbs = getBreadcrumbs();

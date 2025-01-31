@@ -58,7 +58,7 @@ export const Rooms = () => {
   const headers = [
     { label: "Photo", key: null },
     { label: "Room Number", key: "roomNumber" },
-    { label: "Room Type", key: "bedType" },
+    { label: "Room Type", key: "roomType" },
     { label: "Amenities", key: "facilities" },
     {
       label: (
@@ -115,7 +115,7 @@ export const Rooms = () => {
           <RoomImage src={room.roomPhoto} alt={`Room ${room.roomNumber}`} />
         </td>
         <td>{room.roomNumber}</td>
-        <td>{room.bedType}</td>
+        <td>{room.roomType}</td>
         <td>{room.facilities}</td>
         <td>{room.rate}</td>
         <td>
@@ -180,13 +180,13 @@ export const Rooms = () => {
               $isActive={activeTab === "availableRooms"}
               onClick={() => handleTabChange("availableRooms")}
             >
-              Available Rooms
+              Available
             </Tab>
             <Tab
               $isActive={activeTab === "bookedRooms"}
               onClick={() => handleTabChange("bookedRooms")}
             >
-              Booked Rooms
+              Booked
             </Tab>
           </div>
         </div>

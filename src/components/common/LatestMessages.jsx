@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { useSwipeable } from "react-swipeable";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
-import { LatestMessagesContainer, MessageCard, NavigationButton, NavigationPlaceholder } from "../../styles/LatestMessagesStyles.js";
+import {LatestMessagesContainer,MessageCard,NavigationButton,NavigationPlaceholder,MessageDetail} from "../../styles/LatestMessagesStyles.js";
 import { GiCancel } from "react-icons/gi";
 import { FaRegCheckCircle } from "react-icons/fa";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import { Navigation } from "swiper/modules";
 
-const LatestMessages = ({ messages, showNavigationButtons = false }) => {
+const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedMessage, setSelectedMessage] = useState(null);
 
@@ -20,18 +23,6 @@ const LatestMessages = ({ messages, showNavigationButtons = false }) => {
     setCurrentPage((prevPage) => (prevPage === 0 ? totalPages - 1 : prevPage - 1));
   };
 
-  const handlers = useSwipeable({
-    onSwipedLeft: () => nextPage(), 
-    onSwipedRight: () => prevPage(), 
-    preventDefaultTouchmoveEvent: true, 
-    trackMouse: true, 
-  });
-
-  const paginatedMessages = messages.slice(
-    currentPage * itemsPerPage,
-    (currentPage + 1) * itemsPerPage
-  );
-
   const openPopup = (message) => {
     setSelectedMessage(message);
   };
@@ -40,49 +31,76 @@ const LatestMessages = ({ messages, showNavigationButtons = false }) => {
     setSelectedMessage(null);
   };
 
+  const paginatedMessages = messages.slice(
+    currentPage * itemsPerPage,
+    (currentPage + 1) * itemsPerPage
+  );
+
   return (
     <>
-      <LatestMessagesContainer {...handlers}>
-        {showNavigationButtons ? (
-          currentPage > 0 ? (
+      {!hideContainer && mode === "pagination" && (
+        <LatestMessagesContainer>
+          {currentPage > 0 ? (
             <NavigationButton onClick={prevPage}>&lt;</NavigationButton>
           ) : (
             <NavigationPlaceholder />
-          )
-        ) : null}
+          )}
 
-        {paginatedMessages.map((message, index) => (
-          <MessageCard key={index} onClick={() => openPopup(message)}>
-            <h4>{message.subject}</h4>
-            <p className="message-content">{message.comment}</p>
-            <p>Email: {message.email}</p>
-            <p>Phone: {message.phone}</p>
-            <div className="message-footer">
-              <img src={message.photo || "/placeholder-image.jpg"} alt={message.fullName} />
-              <span>{message.fullName}</span>
-            </div>
-            <div className="status-icons">
-              {message.status === "unread" ? (
-                <GiCancel className="unread" />
-              ) : (
-                <FaRegCheckCircle className="read" />
-              )}
-            </div>
-          </MessageCard>
-        ))}
+          {paginatedMessages.map((message, index) => (
+            <MessageCard key={message.messageId || index} onClick={() => openPopup(message)}>
+              <h4>{message.subject}</h4>
+              <h5>{message.comment}</h5>
+              <MessageDetail>Email: {message.email}</MessageDetail>
+              <MessageDetail>Phone: {message.phone}</MessageDetail>
+              <div className="message-footer">
+                <img src={message.photo || "/placeholder-image.jpg"} alt={message.fullName} />
+                <span>{message.fullName}</span>
+              </div>
+              <div className="status-icons">
+                {message.status === "unread" ? (
+                  <GiCancel className="unread" />
+                ) : (
+                  <FaRegCheckCircle className="read" />
+                )}
+              </div>
+            </MessageCard>
+          ))}
 
-        {showNavigationButtons && currentPage < totalPages - 1 && (
-          <NavigationButton onClick={nextPage}>&gt;</NavigationButton>
-        )}
-      </LatestMessagesContainer>
+          {currentPage < totalPages - 1 && (
+            <NavigationButton onClick={nextPage}>&gt;</NavigationButton>
+          )}
+        </LatestMessagesContainer>
+      )}
+
+      {mode === "slides" && (
+        <Swiper modules={[Navigation]} navigation={!hideContainer} spaceBetween={20} slidesPerView={4} loop={true}>
+          {messages.map((message) => (
+            <SwiperSlide key={message.messageId}>
+              <MessageCard onClick={() => openPopup(message)}>
+                <h4>{message.subject}</h4>
+                <h5>{message.comment}</h5>
+                <MessageDetail>Email: {message.email}</MessageDetail>
+                <MessageDetail>Phone: {message.phone}</MessageDetail>
+                <div className="message-footer">
+                  <img src={message.photo || "/placeholder-image.jpg"} alt={message.fullName} />
+                  <span>{message.fullName}</span>
+                </div>
+                <div className="status-icons">
+                  {message.status === "unread" ? <GiCancel className="unread" /> : <FaRegCheckCircle className="read" />}
+                </div>
+              </MessageCard>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
 
       {selectedMessage && (
         <Overlay>
           <Popup>
             <h3>{selectedMessage.subject}</h3>
-            <p>{selectedMessage.comment}</p>
-            <p>Email: {selectedMessage.email}</p>
-            <p>Phone: {selectedMessage.phone}</p>
+            <h4>{selectedMessage.comment}</h4>
+            <MessageDetail>Email: {selectedMessage.email}</MessageDetail>
+            <MessageDetail>Phone: {selectedMessage.phone}</MessageDetail>
             <CloseButton onClick={closePopup}>Cerrar</CloseButton>
           </Popup>
         </Overlay>

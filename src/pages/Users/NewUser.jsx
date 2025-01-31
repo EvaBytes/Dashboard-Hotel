@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux"; 
-import { createUser } from "../../redux/thunks/usersThunk.js";
+import { createUser } from "../../redux/thunks/usersThunks.js";
 import {FormContainer,FormGroup,Label,Input,SubmitButton,BackButton} from "../../styles/NewUserStyles.js";
 
 export const NewUser = () => {

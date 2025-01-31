@@ -125,3 +125,10 @@ export const NavigationPlaceholder = styled.div`
   height: 2.5rem;
   visibility: hidden;
 `;
+
+export const MessageDetail = styled.div`
+  font-size: 0.75rem;
+  color: #799283; 
+  font-weight: 400; 
+  padding: .5rem;
+`;
