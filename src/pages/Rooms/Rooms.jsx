@@ -114,7 +114,7 @@ export const Rooms = () => {
         <td>
           <RoomImage src={room.roomPhoto} alt={`Room ${room.roomNumber}`} />
         </td>
-        <td>{room.roomNumber}</td>
+        <td align="center">{room.roomNumber}</td>
         <td>{room.roomType}</td>
         <td>{room.facilities}</td>
         <td>{room.rate}</td>

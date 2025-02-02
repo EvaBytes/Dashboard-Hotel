@@ -59,8 +59,8 @@ export const SearchInput = styled.input`
 
 export const ActionButton = styled.button`
   padding: ${(props) => props.theme.styles.button.padding};
-  background-color: ${(props) => props.theme.palette.secondary.main};
-  color: ${(props) => props.theme.palette.primary.main};
+  background-color: #EEF9F2;
+  color: #212121;
   border: none;
   border-radius: ${(props) => props.theme.styles.button.borderRadius};
   font-size: 14px;
@@ -68,13 +68,9 @@ export const ActionButton = styled.button`
   transition: background-color 0.3s ease;
 
   &:hover {
-    background-color: ${(props) => props.theme.styles.button.hover.backgroundColor};
-    color: ${(props) => props.theme.styles.button.hover.color};
-  }
-
-  &:disabled {
-    background-color: ${(props) => props.theme.styles.button.disabled.backgroundColor};
-    color: ${(props) => props.theme.styles.button.disabled.color};
-    cursor: not-allowed;
+    background-color: white;
+    border: 1px solid #799283;
+    color: #799283;
+    font-weight: light;
   }
 `;
