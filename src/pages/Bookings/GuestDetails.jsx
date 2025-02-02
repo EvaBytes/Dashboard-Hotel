@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingById } from "../../redux/thunks/bookingsThunks.js"; 
 import { format } from "date-fns";
-import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
-import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper,CarouselItem, CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,Divider} from "../../styles/GuestDetailsStyles";
+import { MdOutlinePhone, MdOutlineMailOutline} from "react-icons/md";
+import { FaPencilAlt } from "react-icons/fa";
+import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper, CarouselItem, CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles.js";
 
 const GuestDetails = () => {
   const { reservationId } = useParams();
@@ -56,20 +57,26 @@ const GuestDetails = () => {
           </GuestNameDetails>
         </GuestHeader>
         <GuestActions>
-          <button>
+          <ActionButton onClick={() => alert("Calling...")}>
             <MdOutlinePhone /> Call
-          </button>
-          <button>
+          </ActionButton>
+          <ActionButton onClick={() => alert("Sending message...")}>
             <MdOutlineMailOutline /> Send Message
-          </button>
+          </ActionButton>
+          <ModifyButton onClick={() => navigate(`/edit/${reservationId}`)}>
+            <FaPencilAlt />
+            Edit
+          </ModifyButton>
         </GuestActions>
         <Divider />
         <GuestInfoSection>
           <p>
-            <strong>Check-In:</strong> {format(new Date(checkIn), "MMM dd, yyyy")}
+            <strong>Check-In:</strong>{" "}
+            {format(new Date(checkIn), "MMM dd, yyyy")}
           </p>
           <p>
-            <strong>Check-Out:</strong> {format(new Date(checkOut), "MMM dd, yyyy")}
+            <strong>Check-Out:</strong>{" "}
+            {format(new Date(checkOut), "MMM dd, yyyy")}
           </p>
         </GuestInfoSection>
         <Divider />

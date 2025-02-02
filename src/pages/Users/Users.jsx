@@ -6,7 +6,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
 import { FaPencilAlt, FaTrashAlt, FaUser} from "react-icons/fa";
 import { GenericTable } from "../../components/common/GenericTable.jsx";
-import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
+import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,AddButton} from "../../styles/TabsStyles.js";
 import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo,DescriptionText,ContactText,StatusText,DotsContainer,ActionMenu,ActionMenuItem} from "../../styles/UsersStyles.js";
 import {setActiveTab,setSearchText,setError} from "../../redux/slices/usersSlice.js";
 import { fetchAllUsers,fetchUserById,deleteUser} from "../../redux/thunks/usersThunks.js";
@@ -74,10 +74,10 @@ export const Users = () => {
     navigate("/new-user");
   };
 
-  const handleFetchUserById = (userId) => {
-    dispatch(fetchUserById(userId)).then((result) => {
+  const handleFetchUserById = (employeeId) => {
+    dispatch(fetchUserById(employeeId)).then((result) => {
       if (result.meta.requestStatus === "fulfilled") {
-        navigate(`/user-details/${userId}`);
+        navigate(`/user-details/${employeeId}`);
       } else {
         console.error("Failed to fetch user details:", result.payload);
       }
@@ -174,22 +174,13 @@ export const Users = () => {
       <TabsContainer>
         <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
           <div>
-            <Tab
-              $isActive={activeTab === "allEmployees"}
-              onClick={() => handleTabChange("allEmployees")}
-            >
+            <Tab $isActive={activeTab === "allEmployees"} onClick={() => handleTabChange("allEmployees")}>
               All Employees
             </Tab>
-            <Tab
-              $isActive={activeTab === "activeEmployees"}
-              onClick={() => handleTabChange("activeEmployees")}
-            >
+            <Tab $isActive={activeTab === "activeEmployees"} onClick={() => handleTabChange("activeEmployees")}>
               Active Employees
             </Tab>
-            <Tab
-              $isActive={activeTab === "inactiveEmployees"}
-              onClick={() => handleTabChange("inactiveEmployees")}
-            >
+            <Tab $isActive={activeTab === "inactiveEmployees"} onClick={() => handleTabChange("inactiveEmployees")}>
               Inactive Employees
             </Tab>
           </div>
@@ -197,18 +188,13 @@ export const Users = () => {
             <SearchIconWrapper>
               <LuUserRoundSearch size={20} color="#6E6E6E" />
             </SearchIconWrapper>
-            <SearchInput
-              type="text"
-              placeholder="Search by name"
-              value={searchText}
-              onChange={handleSearchChange}
-            />
+            <SearchInput type="text" placeholder="Search by name" value={searchText} onChange={handleSearchChange}/>
           </SearchContainer>
         </div>
       </TabsContainer>
 
       <div style={{ margin: "1rem 0", textAlign: "right" }}>
-        <ActionButton onClick={handleCreateUser}>+ New User</ActionButton>
+        <AddButton onClick={handleCreateUser}>+ New User</AddButton>
       </div>
 
       <GenericTable

@@ -3,45 +3,41 @@ import styled from "styled-components";
 export const FormContainer = styled.div`
   margin: 4rem auto;
   padding: 2rem;
-  background-color: ${({ theme }) => theme.palette.background.paper};
+  background-color: ${({ theme: $theme }) => $theme?.palette?.background?.paper || "#ffffff"};
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: ${({ theme: $theme }) => $theme?.typography?.fontFamily || "sans-serif"};
 `;
 
 export const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 `;
 
 export const Label = styled.label`
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   font-weight: bold;
-  color: ${({ theme }) => theme.palette.text.primary};
+  color: ${({ theme: $theme }) => $theme?.palette?.text?.primary || "#000000"};
+  font-size: ${({ theme: $theme }) => $theme?.typography?.body1?.fontSize || "16px"};
 `;
 
 export const Input = styled.input`
   width: 100%;
-  padding: 0.5rem;
+  padding: ${({ theme: $theme }) => $theme?.styles?.button?.padding || ".6rem 1rem"};
   border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
+  border-radius: ${({ theme: $theme }) => $theme?.styles?.button?.borderRadius || "6px"};
+  font-size: ${({ theme: $theme }) => $theme?.typography?.body1?.fontSize || "16px"};
+  color: ${({ theme: $theme }) => $theme?.palette?.text?.primary || "#000000"};
 `;
 
 export const TextArea = styled.textarea`
   width: 100%;
-  padding: 0.5rem;
+  padding: ${({ theme: $theme }) => $theme?.styles?.button?.padding || ".6rem 1rem"};
   border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
+  border-radius: ${({ theme: $theme }) => $theme?.styles?.button?.borderRadius || "6px"};
+  font-size: ${({ theme: $theme }) => $theme?.typography?.body1?.fontSize || "16px"};
+  color: ${({ theme: $theme }) => $theme?.palette?.text?.primary || "#000000"};
   resize: vertical;
-`;
-
-export const Select = styled.select`
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
 `;
 
 export const SubmitButton = styled.button`

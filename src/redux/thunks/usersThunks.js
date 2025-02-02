@@ -63,13 +63,13 @@ export const createUser = createAsyncThunk(
 
 export const deleteUser = createAsyncThunk(
   "users/deleteUser",
-  async (userId, thunkAPI) => {
+  async (employeeId, thunkAPI) => {
     try {
       await simulateApiCall();
       const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-      const updatedUsers = existingUsers.filter((user) => user.id !== userId);
+      const updatedUsers = existingUsers.filter((user) => user.id !== employeeId);
       localStorage.setItem("users", JSON.stringify(updatedUsers));
-      return userId;
+      return employeeId;
     } catch (error) {
       return thunkAPI.rejectWithValue("Failed to delete user");
     }

@@ -20,7 +20,6 @@ export const GuestInfoCard = styled.div`
   gap: 1.5rem;
 `;
 
-
 export const GuestImage = styled.img`
   width: 8rem;
   height: 8rem;
@@ -55,26 +54,47 @@ export const GuestActions = styled.div`
   display: flex;
   gap: 0.5rem; 
   margin: 1rem 0;
+`;
 
-  button {
-    display: flex;
-    align-items: center;
-    gap: 0.3rem; 
-    background: #135846;
-    color: #fff;
-    border: none;
-    padding: 0.3rem 0.7rem; 
-    border-radius: 5px;
-    font-size: 0.8rem; 
-    cursor: pointer;
+export const ActionButton = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.3rem; 
+  background: #135846;
+  color: #fff;
+  border: none;
+  padding: 0.3rem 0.7rem; 
+  border-radius: 5px;
+  font-size: 0.8rem; 
+  cursor: pointer;
 
-    svg {
-      font-size: 1rem; 
-    }
+  svg {
+    font-size: 1rem; 
+  }
 
-    &:hover {
-      background: #0f4a3c;
-    }
+  &:hover {
+    background: #0f4a3c;
+  }
+`;
+
+export const ModifyButton = styled.button`
+  padding: .4rem 1rem;
+  background-color: white;
+  border: 1px solid #799283;
+  color: #799283;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 100;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+
+  svg {
+    font-size: .7rem;
+  }
+
+  &:hover {
+    background-color: #00000014;
   }
 `;
 
@@ -86,11 +106,13 @@ export const GuestInfoSection = styled.div`
   p {
     margin: 0;
     font-size: 0.9rem;
+
     strong {
       color: #000;
     }
   }
 `;
+
 export const Divider = styled.hr`
   border: none;
   border-top: 1px solid #e0e0e0;
@@ -204,6 +226,7 @@ export const CarouselButton = styled.button`
     background: rgba(0, 0, 0, 0.7);
   }
 `;
+
 export const CarouselButtonLeft = styled(CarouselButton)`
   left: 10px;
 `;

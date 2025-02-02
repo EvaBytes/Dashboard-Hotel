@@ -1,17 +1,33 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";  
 import {NewRoomContainer,RoomInfoCard,RoomHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/NewRoomStyles.js";
-import { createRoom} from "../../redux/thunks/roomsThunks.js";
+import { createRoom } from "../../redux/thunks/roomsThunks.js";
 
 const roomTypePhotos = {
-  "Single Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
-  "Double Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
-  "Double Superior": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
-  "Suite": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "kate-branch-G18uHzrihOE-unsplash.jpg"],
+  "Single Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg","caroline-voelker-KVXxBwIu8Vw-unsplash.jpg","kate-branch-G18uHzrihOE-unsplash.jpg"],
+  "Double Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg","caroline-voelker-KVXxBwIu8Vw-unsplash.jpg","kate-branch-G18uHzrihOE-unsplash.jpg"],
+  "Double Superior": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg","caroline-voelker-KVXxBwIu8Vw-unsplash.jpg","kate-branch-G18uHzrihOE-unsplash.jpg"],
+  "Suite": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg","caroline-voelker-KVXxBwIu8Vw-unsplash.jpg","kate-branch-G18uHzrihOE-unsplash.jpg"],
 };
 
-const amenitiesList = ["Air conditioner","High speed WiFi","Breakfast","Kitchen","Cleaning","Shower","Grocery","Single bed","Shop near","Towels","24/7 Online Support","Strong locker","Smart Security","Expert Team"];
+const amenitiesList = [
+  "Air conditioner",
+  "High speed WiFi",
+  "Breakfast",
+  "Kitchen",
+  "Cleaning",
+  "Shower",
+  "Grocery",
+  "Single bed",
+  "Shop near",
+  "Towels",
+  "24/7 Online Support",
+  "Strong locker",
+  "Smart Security",
+  "Expert Team",
+];
 
 const cancellationPolicyText = `
 Standard Rate:
@@ -19,7 +35,6 @@ The cancellation is free of charge 7 days prior to the date of arrival, after th
 
 Non-Refundable Rate:
 For the non refundable bookings are no cancellation or changes possible. In case of a cancellation, 90% of the total amount will be charged as cancellation fee.
-
 `;
 
 const NewRoom = () => {
@@ -35,9 +50,19 @@ const NewRoom = () => {
     amenities: [],
   });
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const [errors, setErrors] = useState({
+    roomType: false,
+    roomNumber: false,
+    description: false,
+    price: false,
+    cancellationPolicy: false,
+  });
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.rooms); 
+  const { loading, error } = useSelector((state) => state.rooms);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -63,16 +88,36 @@ const NewRoom = () => {
   const handleSaveRoom = (e) => {
     e.preventDefault();
 
-    if (!roomData.roomNumber || !roomData.roomType || !roomData.price) {
-      Swal.fire("Error", "Please fill in all required fields.", "error");
+    const newErrors = {
+      roomType: !roomData.roomType.trim(),
+      roomNumber: !roomData.roomNumber.trim(),
+      description: !roomData.description.trim(),
+      price: !roomData.price, 
+      cancellationPolicy: !roomData.cancellationPolicy.trim(),
+    };
+
+    const hasErrors = Object.values(newErrors).some((value) => value === true);
+
+    if (hasErrors) {
+      setErrors(newErrors);
+      setErrorMessage("Please fill in all required fields before saving.");
       return;
     }
 
+    setErrors({
+      roomType: false,
+      roomNumber: false,
+      description: false,
+      price: false,
+      cancellationPolicy: false,
+    });
+    setErrorMessage("");
+
     dispatch(createRoom(roomData))
-      .unwrap() 
+      .unwrap()
       .then(() => {
         Swal.fire("Success", "Room created successfully!", "success");
-        navigate("/rooms"); 
+        navigate("/rooms");
       })
       .catch((error) => {
         Swal.fire("Error", error || "Failed to create room.", "error");
@@ -85,6 +130,12 @@ const NewRoom = () => {
         <RoomHeader>
           <h2>New Room</h2>
         </RoomHeader>
+        {errorMessage && (
+          <div style={{ color: "red", marginBottom: "1rem" }}>
+            {errorMessage}
+          </div>
+        )}
+
         <form onSubmit={handleSaveRoom}>
           <RoomDetailsSection>
             <label>Room Type</label>
@@ -92,7 +143,7 @@ const NewRoom = () => {
               name="roomType"
               value={roomData.roomType}
               onChange={handleInputChange}
-              required
+              style={{ border: errors.roomType ? "1px solid red" : undefined }}
             >
               <option value="">Select Room Type</option>
               <option value="Single Bed">Single Bed</option>
@@ -105,18 +156,22 @@ const NewRoom = () => {
             <input
               type="text"
               name="roomNumber"
-              value={roomData.roomNumber || ""}
+              value={roomData.roomNumber}
               onChange={handleInputChange}
-              required
+              style={{
+                border: errors.roomNumber ? "1px solid red" : undefined,
+              }}
             />
 
             <label>Description</label>
             <textarea
               rows="3"
               name="description"
-              value={roomData.description || ""}
+              value={roomData.description}
               onChange={handleInputChange}
-              required
+              style={{
+                border: errors.description ? "1px solid red" : undefined,
+              }}
             />
 
             <label>Offer</label>
@@ -133,16 +188,18 @@ const NewRoom = () => {
             <input
               type="number"
               name="price"
-              value={roomData.price || ""}
+              value={roomData.price}
               onChange={handleInputChange}
-              required
+              style={{
+                border: errors.price ? "1px solid red" : undefined,
+              }}
             />
 
             <label>Discount (%)</label>
             <input
               type="number"
               name="discount"
-              value={roomData.discount || ""}
+              value={roomData.discount}
               onChange={handleInputChange}
               min="0"
               max="100"
@@ -154,7 +211,9 @@ const NewRoom = () => {
               name="cancellationPolicy"
               value={roomData.cancellationPolicy}
               onChange={handleInputChange}
-              required
+              style={{
+                border: errors.cancellationPolicy ? "1px solid red" : undefined,
+              }}
             />
 
             <label>Amenities</label>

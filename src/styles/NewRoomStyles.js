@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const NewRoomContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 4rem 2rem;
+  margin: 4rem auto;
   background-color: ${({ theme }) => theme?.palette?.background?.default || "#f9f9f9"};
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);

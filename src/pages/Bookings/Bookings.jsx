@@ -5,9 +5,9 @@ import { format } from "date-fns";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaPencilAlt, FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
-import {setActiveTab,setSearchText,setSortBy,setCurrentPage} from "../../redux/slices/bookingsSlice.js";
+import {setActiveTab,setSearchText,setSortBy,setCurrentPage, setError} from "../../redux/slices/bookingsSlice.js";
 import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks.js";
-import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton} from "../../styles/TabsStyles.js";
+import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton, AddButton} from "../../styles/TabsStyles.js";
 import {Table,TableHeader,TableRow,TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge,PaginationContainer,PageButton,ActionMenu,ActionMenuItem} from "../../styles/TableStyles.js";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
 import Swal from "sweetalert2";
@@ -26,13 +26,13 @@ export const Bookings = () => {
   const sortOrder = useSelector((state) => state.bookings.sortOrder);
   const currentPage = useSelector((state) => state.bookings.currentPage);
   const itemsPerPage = useSelector((state) => state.bookings.itemsPerPage);
-  const filteredBookings = useSelector((state) => state.bookings.filteredBookings);
+  const filteredBookings = useSelector((state) => state.bookings.filteredBookings,(prev, next) => prev.length === next.length);
   const loading = useSelector((state) => state.bookings.loading); 
   const error = useSelector((state) => state.bookings.error); 
 
   useEffect(() => {
     dispatch(fetchAllBookings());
-  }, [dispatch]);
+  }, [dispatch, filteredBookings.length]);
 
   useEffect(() => {
     if (error) {
@@ -214,7 +214,7 @@ export const Bookings = () => {
       </TabsContainer>
 
       <div style={{ display: "flex", justifyContent: "flex-end", margin: "1rem 0" }}>
-        <ActionButton onClick={() => navigate("/new-booking")}>+ New Booking</ActionButton>
+        <AddButton onClick={() => navigate("/new-booking")}>+ New Booking</AddButton>
       </div>
 
       <Table>
@@ -258,15 +258,21 @@ export const Bookings = () => {
           </TableRow>
         </thead>
         <tbody>
-          {currentData && currentData.length > 0 ? (
+          {loading ? ( 
+            <TableRow>
+              <TableData>
+                Loading bookings...
+              </TableData>
+            </TableRow>
+          ) : currentData.length > 0 ? ( 
             currentData.map((booking) => (
               <TableRow key={booking.guest?.reservationNumber || Math.random()}>
                 {renderRow(booking)}
               </TableRow>
             ))
-          ) : (
+          ) : ( 
             <TableRow>
-              <TableData colSpan="8" style={{ textAlign: "center" }}>
+              <TableData>
                 No bookings found.
               </TableData>
             </TableRow>

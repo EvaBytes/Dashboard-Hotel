@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {createBooking,deleteBooking,fetchBookingById, editBooking,fetchAllBookings} from "../thunks/bookingsThunks.js";
+import {createBooking,deleteBooking,editBooking,fetchBookingById,fetchAllBookings} from "../thunks/bookingsThunks.js";
 
 const initialState = {
   bookings: [],
@@ -47,7 +47,6 @@ const bookingsSlice = createSlice({
       state.error = action.payload;
     },
   },
-  
   extraReducers: (builder) => {
     builder
       .addCase(createBooking.pending, (state) => {
@@ -57,7 +56,7 @@ const bookingsSlice = createSlice({
       .addCase(createBooking.fulfilled, (state, action) => {
         state.loading = false;
         state.bookings.push(action.payload);
-        state.filteredBookings = filterBookings(state); 
+        state.filteredBookings = filterBookings(state);
         localStorage.setItem("bookings", JSON.stringify(state.bookings));
       })
       .addCase(deleteBooking.pending, (state) => {
@@ -66,10 +65,11 @@ const bookingsSlice = createSlice({
       })
       .addCase(deleteBooking.fulfilled, (state, action) => {
         state.loading = false;
+        const reservationNumberToDelete = action.payload;
         state.bookings = state.bookings.filter(
-          (booking) => booking.guest.reservationNumber !== action.payload
+          (booking) => booking.guest.reservationNumber !== reservationNumberToDelete
         );
-        state.filteredBookings = filterBookings(state); 
+        state.filteredBookings = filterBookings(state);
         localStorage.setItem("bookings", JSON.stringify(state.bookings));
       })
       .addCase(editBooking.pending, (state) => {
@@ -78,13 +78,15 @@ const bookingsSlice = createSlice({
       })
       .addCase(editBooking.fulfilled, (state, action) => {
         state.loading = false;
+        const updatedBooking = action.payload;
+        const { reservationNumber } = updatedBooking.guest;
         const index = state.bookings.findIndex(
-          (b) => b.id === action.payload.id
+          (b) => b.guest.reservationNumber === reservationNumber
         );
         if (index !== -1) {
-          state.bookings[index] = action.payload;
-          state.filteredBookings = filterBookings(state); 
+          state.bookings[index] = updatedBooking;
         }
+        state.filteredBookings = filterBookings(state);
         localStorage.setItem("bookings", JSON.stringify(state.bookings));
       })
       .addCase(fetchBookingById.pending, (state) => {
@@ -95,6 +97,11 @@ const bookingsSlice = createSlice({
         state.loading = false;
         state.currentBooking = action.payload;
       })
+      .addCase(fetchBookingById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+
+      })
       .addCase(fetchAllBookings.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -102,8 +109,12 @@ const bookingsSlice = createSlice({
       .addCase(fetchAllBookings.fulfilled, (state, action) => {
         state.loading = false;
         state.bookings = action.payload;
-        state.filteredBookings = filterBookings(state); 
+        state.filteredBookings = filterBookings(state);
         localStorage.setItem("bookings", JSON.stringify(state.bookings));
+      })
+      .addCase(fetchAllBookings.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
@@ -115,8 +126,8 @@ function filterBookings(state) {
     if (activeTab === "checkOut" && booking.status !== "Check-Out") return false;
     if (activeTab === "inProgress" && booking.status !== "In Progress") return false;
 
-    if (searchText && booking.guest && booking.guest.fullName) {
-      return booking.guest.fullName.toLowerCase().includes(searchText.toLowerCase());
+    if (searchText && booking.guest?.fullName) {
+      return booking.guest.fullName.toLowerCase().includes(searchText);
     }
 
     return true;
@@ -125,11 +136,10 @@ function filterBookings(state) {
 
 function sortBookings(state) {
   const { filteredBookings, sortBy, sortOrder } = state;
+  if (!sortBy) return [...filteredBookings];
+
   return [...filteredBookings].sort((a, b) => {
-    if (!sortBy) return 0;
-
     let valueA, valueB;
-
     if (sortBy === "orderDate" || sortBy === "checkIn" || sortBy === "checkOut") {
       valueA = new Date(a[sortBy]);
       valueB = new Date(b[sortBy]);
@@ -141,15 +151,12 @@ function sortBookings(state) {
       valueB = b[sortBy];
     }
 
-    if (sortOrder === "asc") {
-      return valueA < valueB ? -1 : 1;
-    } else {
-      return valueA > valueB ? -1 : 1;
-    }
+    if (valueA === valueB) return 0;
+    if (sortOrder === "asc") return valueA < valueB ? -1 : 1;
+    return valueA > valueB ? -1 : 1;
   });
 }
 
-export const {setBookings,setActiveTab,setSearchText,setSortBy,setCurrentPage} = bookingsSlice.actions;
-export {createBooking,deleteBooking,editBooking,fetchBookingById,fetchAllBookings} from "../thunks/bookingsThunks.js";
-
+export const {setBookings,setActiveTab,setSearchText,setSortBy,setCurrentPage,setError} = bookingsSlice.actions;
+export {createBooking,deleteBooking,editBooking,fetchBookingById,fetchAllBookings} from "../thunks/bookingsThunks";
 export default bookingsSlice.reducer;

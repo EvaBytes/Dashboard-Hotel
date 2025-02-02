@@ -7,16 +7,16 @@ import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
 import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,StatusBadge,Divider} from "../../styles/GuestDetailsStyles.js";
 
 const UserDetails = () => {
-  const { userId } = useParams();
+  const { employeeId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { currentUser, loading, error } = useSelector((state) => state.users);
 
   useEffect(() => {
-    if (!currentUser || currentUser.employeeId !== userId) {
-      dispatch(fetchUserById(userId));
+    if (!currentUser || currentUser.employeeId !== employeeId) {
+      dispatch(fetchUserById(employeeId));
     }
-  }, [dispatch, userId, currentUser]);
+  }, [dispatch, employeeId, currentUser]);
 
   if (loading) return <p>Loading user details...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -39,7 +39,7 @@ const UserDetails = () => {
           />
           <GuestNameDetails>
             <h2>{name}</h2>
-            <p>ID: {userId}</p>
+            <p>ID: {employeeId}</p>
           </GuestNameDetails>
         </GuestHeader>
         <GuestActions>

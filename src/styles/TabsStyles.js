@@ -74,3 +74,22 @@ export const ActionButton = styled.button`
     font-weight: light;
   }
 `;
+
+export const AddButton = styled.button`
+  padding: ${(props) => props.theme.styles.button.padding};
+  background-color: #135846;
+  color: #FFFFFF;
+  border: none;
+  border-radius: ${(props) => props.theme.styles.button.borderRadius};
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: white;
+    border: 1px solid #799283;
+    color: #799283;
+    font-weight: light;
+  }
+`;
+

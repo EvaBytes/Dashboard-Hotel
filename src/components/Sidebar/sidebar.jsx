@@ -1,8 +1,9 @@
 import React from "react";
-import {SidebarContainer,SidebarTitle,SidebarTitleIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon} from "./SidebarStyles";
+import {SidebarContainer,SidebarTitle,SidebarTitleIcon,StarsIcon,HotelIcon,SidebarList,SidebarListItem,SidebarLink,SidebarFooter,SidebarIcon} from "./SidebarStyles";
 import { UserContainer } from "./UserContainer.jsx";
 import { LuLayoutDashboard, LuBedSingle } from "react-icons/lu";
 import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts } from "react-icons/ai";
+import { GiStarsStack } from "react-icons/gi";
 import { FaHotel } from "react-icons/fa";
 
 const Sidebar = () => {
@@ -24,9 +25,14 @@ const Sidebar = () => {
     <SidebarContainer>
       <SidebarTitle>
         <SidebarTitleIcon>
-          <FaHotel />
+          <StarsIcon>
+            <GiStarsStack />
+          </StarsIcon>
+          <HotelIcon>
+            <FaHotel />
+          </HotelIcon>
         </SidebarTitleIcon>
-        HOTEL MIRANDA
+        HOTEL <br/>MIRANDA
       </SidebarTitle>
 
       <SidebarList>

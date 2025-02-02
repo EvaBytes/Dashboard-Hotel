@@ -19,6 +19,7 @@ import { Users } from "./pages/Users/Users.jsx";
 import { NewUser } from "./pages/Users/NewUser.jsx";
 import { UserDetails } from "./pages/Users/UserDetails.jsx";
 import { GuestDetails } from "./pages/Bookings/GuestDetails.jsx";
+import { EditBooking } from "./pages/Bookings/EditGuestBooking.jsx";
 import { NewBooking } from "./pages/Bookings/NewBooking.jsx"; 
 import { PrivateRoute } from "./Authentication/PrivateRoute.jsx";
 
@@ -48,6 +49,7 @@ createRoot(document.getElementById("root")).render(
                 <Route path="new-user" element={<NewUser />} />
                 <Route path="user-details/:employeeId" element={<UserDetails />} />
                 <Route path="guest/:reservationId" element={<GuestDetails />} />
+                <Route path="edit/:reservationId" element={<EditBooking />} />
                 <Route path="new-booking" element={<NewBooking />} />
                 <Route path="new-room" element={<NewRoom />} />
               </Route>

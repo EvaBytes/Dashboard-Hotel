@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaSortUp, FaSortDown, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { TabsContainer, Tab, ActionButton } from "../../styles/TabsStyles.js";
+import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles.js";
 import { GenericTable } from "../../components/common/GenericTable.jsx";
 import { RoomImage, DiscountSpan, StatusButton, SortIcon, IconContainer, ActionMenu, ActionMenuItem } from "../../styles/TableStyles.js";
 import { setActiveTab, setSortBy } from "../../redux/slices/roomsSlice.js";
@@ -193,9 +193,7 @@ export const Rooms = () => {
       </TabsContainer>
 
       <div style={{ margin: "1rem 0", textAlign: "right" }}>
-        <ActionButton onClick={() => navigate("/new-room")}>
-          + New Room
-        </ActionButton>
+        <AddButton onClick={() => navigate("/new-room")}>+ New Room</AddButton>
       </div>
 
       {loading && <p>Loading...</p>}

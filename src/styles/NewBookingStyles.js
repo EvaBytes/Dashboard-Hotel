@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 export const FormContainer = styled.div`
-  max-width: 600px;
-  margin: 2rem auto;
+  margin: 4rem auto;
   padding: 2rem;
   background-color: ${({ theme: $theme }) => $theme.palette.background.paper};
   border-radius: 10px;

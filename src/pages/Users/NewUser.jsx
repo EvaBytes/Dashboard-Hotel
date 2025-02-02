@@ -1,20 +1,30 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux"; 
+import { useDispatch } from "react-redux";
 import { createUser } from "../../redux/thunks/usersThunks.js";
 import {FormContainer,FormGroup,Label,Input,SubmitButton,BackButton} from "../../styles/NewUserStyles.js";
 
 export const NewUser = () => {
-
   const [userData, setUserData] = useState({
     photo: "",
     fullName: "",
-    userId: "",
+    employeeId: "",
     email: "",
     startDate: "",
     description: "",
     contact: "",
     status: "ACTIVE",
+  });
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState({
+    photo: false,
+    fullName: false,
+    employeeId: false,
+    email: false,
+    startDate: false,
+    description: false,
+    contact: false,
   });
 
   const navigate = useNavigate();
@@ -36,23 +46,57 @@ export const NewUser = () => {
     }
   };
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const newErrors = {
+      photo: !userData.photo, 
+      fullName: !userData.fullName.trim(),
+      employeeId: !userData.employeeId.trim(),
+      email: !userData.email.trim(),
+      startDate: !userData.startDate.trim(),
+      description: !userData.description.trim(),
+      contact: !userData.contact.trim(),
+    };
+
+    const hasErrors = Object.values(newErrors).some((val) => val === true);
+
+    if (hasErrors) {
+      setErrors(newErrors);
+      setErrorMessage("Please fill in all required fields before saving.");
+      return;
+    }
+
+    setErrors({
+      photo: false,
+      fullName: false,
+      employeeId: false,
+      email: false,
+      startDate: false,
+      description: false,
+      contact: false,
+    });
+    setErrorMessage("");
+
     dispatch(createUser(userData))
-      .unwrap() 
+      .unwrap()
       .then(() => {
-        alert("New user added successfully!");
-        navigate("/users"); 
+        alert("¡Usuario creado con éxito!");
+        navigate("/users");
       })
       .catch((error) => {
-        alert(`Error: ${error}`); 
+        alert(`Error: ${error}`);
       });
   };
 
   return (
     <FormContainer>
       <h2>New User</h2>
+
+      {errorMessage && (
+        <div style={{ color: "red", marginBottom: "1rem" }}>{errorMessage}</div>
+      )}
+
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <Label>Upload Photo</Label>
@@ -61,6 +105,9 @@ export const NewUser = () => {
             name="photo"
             accept="image/*"
             onChange={handlePhotoChange}
+            style={{
+              border: errors.photo ? "1px solid red" : undefined,
+            }}
           />
         </FormGroup>
 
@@ -72,6 +119,9 @@ export const NewUser = () => {
             placeholder="Enter full name"
             value={userData.fullName}
             onChange={handleInputChange}
+            style={{
+              border: errors.fullName ? "1px solid red" : undefined,
+            }}
           />
         </FormGroup>
 
@@ -79,10 +129,13 @@ export const NewUser = () => {
           <Label>ID User</Label>
           <Input
             type="text"
-            name="userId"
+            name="employeeId"
             placeholder="Enter user ID"
-            value={userData.userId}
+            value={userData.employeeId}
             onChange={handleInputChange}
+            style={{
+              border: errors.employeeId ? "1px solid red" : undefined,
+            }}
           />
         </FormGroup>
 
@@ -94,6 +147,9 @@ export const NewUser = () => {
             placeholder="Enter email"
             value={userData.email}
             onChange={handleInputChange}
+            style={{
+              border: errors.email ? "1px solid red" : undefined,
+            }}
           />
         </FormGroup>
 
@@ -104,6 +160,9 @@ export const NewUser = () => {
             name="startDate"
             value={userData.startDate}
             onChange={handleInputChange}
+            style={{
+              border: errors.startDate ? "1px solid red" : undefined,
+            }}
           />
         </FormGroup>
 
@@ -115,6 +174,9 @@ export const NewUser = () => {
             placeholder="Enter job description"
             value={userData.description}
             onChange={handleInputChange}
+            style={{
+              border: errors.description ? "1px solid red" : undefined,
+            }}
           />
         </FormGroup>
 
@@ -126,6 +188,9 @@ export const NewUser = () => {
             placeholder="Enter phone number"
             value={userData.contact}
             onChange={handleInputChange}
+            style={{
+              border: errors.contact ? "1px solid red" : undefined,
+            }}
           />
         </FormGroup>
 

@@ -13,19 +13,29 @@ export const SidebarContainer = styled.aside`
   justify-content: space-between;
 `;
 
-export const SidebarTitleIcon = styled.span`
+export const SidebarTitleIcon = styled.div`
   display: flex;
-  color: darkgreen;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 38px;
-  margin-right: .7rem;
-  margin-left: 2rem;
+  margin: 0 .5rem .5rem 2rem;
+`;
+
+export const StarsIcon = styled.span`
+  font-size: 1.5rem; 
+  color: gold; 
+  margin-bottom: -5px; 
+`;
+
+export const HotelIcon = styled.span`
+  font-size: 2.6rem; 
+  color: darkgreen; 
 `;
 
 export const SidebarTitle = styled.h4`
   color: #212121;
   margin-bottom: 1.2rem;
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
 `;
