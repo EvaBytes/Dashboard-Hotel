@@ -44,7 +44,7 @@ export const EditBooking = () => {
     dispatch(editBooking(updatedData))
       .unwrap()
       .then(() => navigate(`/guest/${reservationId}`))
-      .catch((err) => console.error("Error actualizando booking: ", err));
+      .catch((err) => console.error("Update Error: ", err));
   };
 
   if (loading) return <p>Cargando...</p>;

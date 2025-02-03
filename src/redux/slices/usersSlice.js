@@ -50,9 +50,6 @@ const usersSlice = createSlice({
         state.loading = false;
         state.users = action.payload;
         state.filteredUsers = filterUsers(state);
-        console.log("Users loaded", state.users);
-        console.log("Filtered users:", state.filteredUsers); 
-
       })
       .addCase(fetchAllUsers.rejected, (state, action) => {
         state.loading = false;

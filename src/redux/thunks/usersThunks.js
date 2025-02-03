@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { parse, isValid } from "date-fns";
+import { parse, isValid} from "date-fns"; 
 
 const simulateApiCall = (data, delay = 200) =>
   new Promise((resolve) => setTimeout(() => resolve(data), delay));
@@ -10,16 +10,13 @@ export const fetchAllUsers = createAsyncThunk(
     try {
       const normalizedData = usersData.map((user) => ({
         ...user,
-        startDate: user.startDate
-          ? isValid(parse(user.startDate, "dd.MM.yyyy", new Date()))
-            ? parse(user.startDate, "dd.MM.yyyy", new Date()).toISOString()
-            : null
+        startDate: user.startDate && isValid(parse(user.startDate, "dd.MM.yyyy", new Date()))
+          ? parse(user.startDate, "dd.MM.yyyy", new Date()).toISOString() 
           : null,
-        id: user.employeeId,
       }));
-      
-      console.log("Normalized Data:", normalizedData); 
-      await simulateApiCall(normalizedData);
+
+      console.log("Normalized Data:", normalizedData);
+      localStorage.setItem("users", JSON.stringify(normalizedData));
       return normalizedData;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -32,14 +29,16 @@ export const fetchUserById = createAsyncThunk(
   async (employeeId, { rejectWithValue }) => {
     try {
       const users = JSON.parse(localStorage.getItem("users")) || [];
+      console.log("Usuarios cargados desde localStorage:", users); 
+
       const user = users.find((user) => user.employeeId === employeeId);
 
       if (!user) {
         return rejectWithValue(`User with employeeId ${employeeId} not found`);
       }
-
       return user;
     } catch (error) {
+      console.error("Error fetching user by ID:", error);
       return rejectWithValue("Failed to fetch user data");
     }
   }
@@ -51,7 +50,7 @@ export const createUser = createAsyncThunk(
     try {
       await simulateApiCall();
       const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-      const newUser = { ...userData, id: crypto.randomUUID() }; 
+      const newUser = { ...userData, id: crypto.randomUUID() };
       const updatedUsers = [...existingUsers, newUser];
       localStorage.setItem("users", JSON.stringify(updatedUsers));
       return newUser;
@@ -67,7 +66,7 @@ export const deleteUser = createAsyncThunk(
     try {
       await simulateApiCall();
       const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
-      const updatedUsers = existingUsers.filter((user) => user.id !== employeeId);
+      const updatedUsers = existingUsers.filter((user) => user.employeeId !== employeeId); 
       localStorage.setItem("users", JSON.stringify(updatedUsers));
       return employeeId;
     } catch (error) {
@@ -84,7 +83,7 @@ export const editUser = createAsyncThunk(
       const existingUsers = JSON.parse(localStorage.getItem("users")) || [];
       const index = existingUsers.findIndex((user) => user.id === updatedUser.id);
       if (index === -1) return thunkAPI.rejectWithValue("User not found");
-      
+
       existingUsers[index] = updatedUser;
       localStorage.setItem("users", JSON.stringify(existingUsers));
       return updatedUser;
@@ -93,6 +92,3 @@ export const editUser = createAsyncThunk(
     }
   }
 );
-
-
-

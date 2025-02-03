@@ -50,9 +50,6 @@ const RoomDetails = () => {
   useEffect(() => {
     if (location.state?.roomData) {
       const roomToEdit = location.state.roomData;
-      console.log("Room Data from State:", roomToEdit); 
-    console.log("Room Type from State:", roomToEdit.roomType);
-    console.log("Photos Array from RoomTypePhotos:", roomTypePhotos[roomToEdit.roomType]); 
       setRoomData({
         ...roomToEdit,
         facilities: roomToEdit.facilities

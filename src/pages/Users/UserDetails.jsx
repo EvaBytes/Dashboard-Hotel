@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserById } from "../../redux/thunks/usersThunks.js";
-import { format, parseISO, isValid } from "date-fns";
+import { format, parse } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
-import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,StatusBadge,Divider} from "../../styles/GuestDetailsStyles.js";
+import { FaPencilAlt } from "react-icons/fa";
+import {GuestDetailsContainer,UsersInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,StatusBadge,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles.js";
 
 const UserDetails = () => {
   const { employeeId } = useParams();
@@ -13,6 +14,9 @@ const UserDetails = () => {
   const { currentUser, loading, error } = useSelector((state) => state.users);
 
   useEffect(() => {
+    console.log("Employee ID desde URL:", employeeId);
+    console.log("Usuarios en localStorage:", JSON.parse(localStorage.getItem("users")));
+
     if (!currentUser || currentUser.employeeId !== employeeId) {
       dispatch(fetchUserById(employeeId));
     }
@@ -24,32 +28,33 @@ const UserDetails = () => {
 
   const { name, description, contact, status, startDate, photo } = currentUser;
 
-  const formattedStartDate =
-    startDate && isValid(parseISO(startDate))
-      ? format(parseISO(startDate), "MMM dd, yyyy")
-      : "N/A";
+  const formattedStartDate = startDate
+    ? format(parse(startDate, "dd.MM.yyyy", new Date()), "MMM dd, yyyy")
+    : "N/A";
 
   return (
     <GuestDetailsContainer>
-      <GuestInfoCard>
+      <UsersInfoCard>
         <GuestHeader>
-          <GuestImage
-            src={photo || "default-user-image.png"}
-            alt={name}
-          />
+          <GuestImage src={photo || "default-user-image.png"} alt={name} />
           <GuestNameDetails>
             <h2>{name}</h2>
             <p>ID: {employeeId}</p>
           </GuestNameDetails>
         </GuestHeader>
+
         <GuestActions>
-          <button>
+          <ActionButton>
             <MdOutlinePhone /> Call
-          </button>
-          <button>
+          </ActionButton>
+          <ActionButton>
             <MdOutlineMailOutline /> Send Message
-          </button>
+          </ActionButton>
+          <ModifyButton onClick={() => navigate(`/edit-user/${employeeId}`)}>
+            <FaPencilAlt /> Edit
+          </ModifyButton>
         </GuestActions>
+
         <Divider />
         <GuestInfoSection>
           <p>
@@ -62,28 +67,14 @@ const UserDetails = () => {
         <Divider />
         <GuestInfoSection>
           <p>
-            <strong>Status:</strong>
+            <strong>Status:</strong>{" "}
             <StatusBadge $status={status}>{status}</StatusBadge>
           </p>
           <p>
             <strong>Started:</strong> {formattedStartDate}
           </p>
         </GuestInfoSection>
-      </GuestInfoCard>
-      <button
-        style={{
-          marginTop: "1rem",
-          padding: "0.5rem 1rem",
-          backgroundColor: "#007BFF",
-          color: "#fff",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-        onClick={() => navigate(-1)}
-      >
-        Go Back
-      </button>
+      </UsersInfoCard>
     </GuestDetailsContainer>
   );
 };

@@ -20,6 +20,17 @@ export const GuestInfoCard = styled.div`
   gap: 1.5rem;
 `;
 
+export const UsersInfoCard = styled.div`
+  flex: 1;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`; 
+
 export const GuestImage = styled.img`
   width: 8rem;
   height: 8rem;

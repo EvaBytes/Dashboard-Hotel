@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import employeesData from "../../data/Workers.json"; 
+import employeesData from "../../data/Users.json";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
-import { FaPencilAlt, FaTrashAlt, FaUser} from "react-icons/fa";
+import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { GenericTable } from "../../components/common/GenericTable.jsx";
-import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,AddButton} from "../../styles/TabsStyles.js";
-import {TableData,EmployeeContainer,EmployeeImage,EmployeeInfo,DescriptionText,ContactText,StatusText,DotsContainer,ActionMenu,ActionMenuItem} from "../../styles/UsersStyles.js";
-import {setActiveTab,setSearchText,setError} from "../../redux/slices/usersSlice.js";
-import { fetchAllUsers,fetchUserById,deleteUser} from "../../redux/thunks/usersThunks.js";
+import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, AddButton } from "../../styles/TabsStyles.js";
+import { TableData, EmployeeContainer, EmployeeImage, EmployeeInfo, DescriptionText, ContactText, StatusText, DotsContainer, ActionMenu, ActionMenuItem } from "../../styles/UsersStyles.js";
+import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersSlice.js";
+import { fetchAllUsers, fetchUserById, deleteUser } from "../../redux/thunks/usersThunks.js";
+import { parseISO, format } from "date-fns";
 import Swal from "sweetalert2";
 
 export const Users = () => {
@@ -17,14 +18,12 @@ export const Users = () => {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(null);
 
-  const { filteredUsers, activeTab, searchText, loading, error, currentUser } =
+  const { filteredUsers, activeTab, searchText, loading, error } =
     useSelector((state) => state.users);
 
   useEffect(() => {
-    console.log("Verificando empleados", employeesData);
     if (filteredUsers.length === 0 && employeesData?.length > 0) {
       dispatch(fetchAllUsers(employeesData));
-      console.log("Data loaded:", employeesData);
     }
   }, [dispatch, filteredUsers]);
 
@@ -83,7 +82,6 @@ export const Users = () => {
       }
     });
   };
-  
 
   const headers = [
     { label: "Name", key: "name" },
@@ -92,10 +90,12 @@ export const Users = () => {
     { label: "Status", key: "status" },
     { label: "Actions", key: null },
   ];
-  console.log("Filtered Users:", filteredUsers);
 
   const renderRow = (employee) => {
-    console.log("Rendering employee:", employee);
+    const formattedStartDate = employee.startDate
+      ? format(parseISO(employee.startDate), "dd.MM.yyyy")
+      : "N/A";
+
     return (
       <>
         <TableData>
@@ -105,7 +105,7 @@ export const Users = () => {
               <h3>{employee.name}</h3>
               <h5>ID: {employee.employeeId}</h5>
               <p>{employee.email}</p>
-              <p>Started: {employee.startDate}</p>
+              <p>Started: {formattedStartDate}</p>
             </EmployeeInfo>
           </EmployeeContainer>
         </TableData>
@@ -134,28 +134,11 @@ export const Users = () => {
             />
             {menuOpen === employee.employeeId && (
               <ActionMenu>
-                <button
-                  onClick={() => {
-                    handleEdit(employee);
-                    setMenuOpen(null);
-                  }}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    width: "100%",
-                    padding: "0.5rem",
-                  }}
-                >
-                  <FaPencilAlt style={{ marginRight: "0.5rem" }} /> Edit
-                </button>
+                <ActionMenuItem onClick={() => navigate(`/user-details/${employee.employeeId}`)}>
+                  <FaPencilAlt style={{ marginRight: "0.5rem" }} /> Details
+                </ActionMenuItem>
                 <ActionMenuItem onClick={() => handleDelete(employee.employeeId)}>
                   <FaTrashAlt style={{ marginRight: "0.5rem" }} /> Delete
-                </ActionMenuItem>
-                <ActionMenuItem onClick={() => handleFetchUserById(employee.employeeId)}>
-                  <FaUser style={{ marginRight: "0.5rem" }} /> View Details
                 </ActionMenuItem>
               </ActionMenu>
             )}
@@ -164,7 +147,6 @@ export const Users = () => {
       </>
     );
   };
-  
 
   if (loading) return <p>Loading employees...</p>;
   if (!loading && filteredUsers.length === 0) return <p>No employees found.</p>;
@@ -188,7 +170,12 @@ export const Users = () => {
             <SearchIconWrapper>
               <LuUserRoundSearch size={20} color="#6E6E6E" />
             </SearchIconWrapper>
-            <SearchInput type="text" placeholder="Search by name" value={searchText} onChange={handleSearchChange}/>
+            <SearchInput
+              type="text"
+              placeholder="Search by name"
+              value={searchText}
+              onChange={handleSearchChange}
+            />
           </SearchContainer>
         </div>
       </TabsContainer>
@@ -197,12 +184,7 @@ export const Users = () => {
         <AddButton onClick={handleCreateUser}>+ New User</AddButton>
       </div>
 
-      <GenericTable
-        headers={headers}
-        data={filteredUsers}
-        renderRow={renderRow}
-        itemsPerPage={5}
-      />
+      <GenericTable headers={headers} data={filteredUsers} renderRow={renderRow} itemsPerPage={5} />
     </div>
   );
 };
