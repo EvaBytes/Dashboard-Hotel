@@ -105,5 +105,3 @@ export const EditUser = () => {
     </FormContainer>
   );
 };
-
-export default EditUser;

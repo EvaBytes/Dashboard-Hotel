@@ -5,8 +5,8 @@ import { IoIosLogIn, IoIosLogOut } from "react-icons/io";
 import {DashboardContainer,IconContainer,TextContainer,StyledCard,StyledTypographyTitle,StyledTypographyValue,StyledBookingButtonContainer,StyledBookingList,StyledBookingItem,StyledBookingInfo,StyledBookingButton} from "../styles/DashboardStyles.js";
 import { LatestMessages } from "../components/common/LatestMessages.jsx";
 import { StyledMessagesCard } from "../styles/LatestMessagesStyles.js";
-import bookingData from "../data/Bookings.json";
-import messagesData from "../data/Messages.json";
+import bookingData from "../../public/data/Bookings.json";
+import messagesData from "../../public/data/Messages.json";
 
 const calculateMetrics = (data) => {
   const totalBookings = data.length;

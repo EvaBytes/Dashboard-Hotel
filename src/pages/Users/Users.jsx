@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import employeesData from "../../data/Users.json";
+import employeesData from "../../../public/data/Users.json";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
@@ -45,10 +45,6 @@ export const Users = () => {
 
   const handleSearchChange = (event) => {
     dispatch(setSearchText(event.target.value));
-  };
-
-  const handleEdit = (employee) => {
-    navigate(`/edit-user/${employee.employeeId}`, { state: { employeeData: employee } });
   };
 
   const handleDelete = (employeeId) => {

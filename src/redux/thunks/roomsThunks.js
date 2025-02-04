@@ -4,7 +4,7 @@ export const fetchRooms = createAsyncThunk(
   'rooms/fetchRooms',
   async (_, thunkAPI) => {
     try {
-      const response = await fetch('src/data/rooms.json');
+      const response = await fetch('public/data/rooms.json');
       if (!response.ok) {
         throw new Error('Failed to fetch rooms');
       }

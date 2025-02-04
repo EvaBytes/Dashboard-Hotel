@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserById } from "../../redux/thunks/usersThunks.js";
-import { format, parse } from "date-fns";
+import { format, isValid } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
 import {GuestDetailsContainer,UsersInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,StatusBadge,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles.js";
@@ -27,10 +27,11 @@ const UserDetails = () => {
   if (!currentUser) return <p>User details not found.</p>;
 
   const { name, description, contact, status, startDate, photo } = currentUser;
+  console.log("Photo URL:", photo);
 
-  const formattedStartDate = startDate
-    ? format(parse(startDate, "dd.MM.yyyy", new Date()), "MMM dd, yyyy")
-    : "N/A";
+  const formattedStartDate = startDate && isValid(new Date(startDate))
+  ? format(new Date(startDate), "MMM dd, yyyy")
+  : "N/A";
 
   return (
     <GuestDetailsContainer>
@@ -39,7 +40,7 @@ const UserDetails = () => {
           <GuestImage src={photo || "default-user-image.png"} alt={name} />
           <GuestNameDetails>
             <h2>{name}</h2>
-            <p>ID: {employeeId}</p>
+            <h4>ID: {employeeId}</h4>
           </GuestNameDetails>
         </GuestHeader>
 

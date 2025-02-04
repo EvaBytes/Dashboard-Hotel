@@ -86,7 +86,7 @@ export const fetchAllBookings = createAsyncThunk(
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
-      const response = await fetch("src/data/bookings.json");
+      const response = await fetch("public/data/bookings.json");
       const data = await response.json();
 
       return data;

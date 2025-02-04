@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import messagesData from "../../data/Messages.json";
+import messagesData from "../../../public/data/Messages.json";
 
 const simulateApiDelay = (ms) =>
   new Promise((resolve) => setTimeout(resolve, ms));
