@@ -15,7 +15,7 @@ import { Rooms } from "./pages/Rooms/Rooms.jsx";
 import { NewRoom } from "./pages/Rooms/NewRoom.jsx";
 import { RoomDetails } from "./pages/Rooms/RoomDetails.jsx";
 import { Contact } from "./pages/Contact.jsx";
-import { Users } from "./pages/Users/Users.jsx";
+import { Users } from "./pages/Users/Users.tsx";
 import { NewUser } from "./pages/Users/NewUser.jsx";
 import { UserDetails } from "./pages/Users/UserDetails.jsx";
 import { EditUser } from "./pages/Users/EditUser.jsx";

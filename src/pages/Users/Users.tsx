@@ -12,6 +12,7 @@ import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersS
 import { fetchAllUsers, fetchUserById, deleteUser } from "../../redux/thunks/usersThunks.js";
 import { parseISO, format } from "date-fns";
 import Swal from "sweetalert2";
+import {User} from "../../interfaces/users.js"
 
 export const Users = () => {
   const dispatch = useDispatch();
