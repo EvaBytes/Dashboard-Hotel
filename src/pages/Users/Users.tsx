@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import employeesData from "../../../public/data/Users.json";
@@ -9,18 +9,20 @@ import { GenericTable } from "../../components/common/GenericTable.jsx";
 import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, AddButton } from "../../styles/TabsStyles.js";
 import { TableData, EmployeeContainer, EmployeeImage, EmployeeInfo, DescriptionText, ContactText, StatusText, DotsContainer, ActionMenu, ActionMenuItem } from "../../styles/UsersStyles.js";
 import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersSlice.js";
-import { fetchAllUsers, fetchUserById, deleteUser } from "../../redux/thunks/usersThunks.js";
+import { fetchAllUsers, fetchUserById, deleteUser } from "../../redux/thunks/usersThunks.ts";
 import { parseISO, format } from "date-fns";
 import Swal from "sweetalert2";
-import {User} from "../../interfaces/users.js"
+import { UsersState, User } from "../../interfaces/users/UsersState.ts"
+import { RootState } from "../../redux/store.js";
 
 export const Users = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(null);
+  const [menuOpen, setMenuOpen] = useState<number | null>(null);
 
-  const { filteredUsers, activeTab, searchText, loading, error } =
-    useSelector((state) => state.users);
+  const { filteredUsers, activeTab, searchText, loading, error } = useSelector(
+    (state: RootState) => state.users
+  );
 
   useEffect(() => {
     if (filteredUsers.length === 0 && employeesData?.length > 0) {
@@ -40,15 +42,15 @@ export const Users = () => {
     }
   }, [error, dispatch]);
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = (tab:string) => {
     dispatch(setActiveTab(tab));
   };
 
-  const handleSearchChange = (event) => {
-    dispatch(setSearchText(event.target.value));
+  const handleSearchChange = (event:ChangeEvent) => {
+    dispatch(setSearchText((event.target as HTMLInputElement).value));
   };
 
-  const handleDelete = (employeeId) => {
+  const handleDelete = (employeeId:string) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -70,7 +72,7 @@ export const Users = () => {
     navigate("/new-user");
   };
 
-  const handleFetchUserById = (employeeId) => {
+  const handleFetchUserById = (employeeId:string) => {
     dispatch(fetchUserById(employeeId)).then((result) => {
       if (result.meta.requestStatus === "fulfilled") {
         navigate(`/user-details/${employeeId}`);
@@ -88,7 +90,7 @@ export const Users = () => {
     { label: "Actions", key: null },
   ];
 
-  const renderRow = (employee) => {
+  const renderRow = (employee: User) => {
     const formattedStartDate = employee.startDate
       ? format(parseISO(employee.startDate), "dd.MM.yyyy")
       : "N/A";
