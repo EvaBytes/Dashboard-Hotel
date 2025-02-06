@@ -5,20 +5,20 @@ import employeesData from "../../../public/data/Users.json";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { GenericTable } from "../../components/common/GenericTable.jsx";
-import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, AddButton } from "../../styles/TabsStyles.js";
-import { TableData, EmployeeContainer, EmployeeImage, EmployeeInfo, DescriptionText, ContactText, StatusText, DotsContainer, ActionMenu, ActionMenuItem } from "../../styles/UsersStyles.js";
-import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersSlice.js";
-import { fetchAllUsers, fetchUserById, deleteUser } from "../../redux/thunks/usersThunks.ts";
+import { GenericTable } from "../../components/common/GenericTable.tsx";
+import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, AddButton } from "../../styles/TabsStyles.ts";
+import { TableData, EmployeeContainer, EmployeeImage, EmployeeInfo, DescriptionText, ContactText, StatusText, DotsContainer, ActionMenu, ActionMenuItem } from "../../styles/UsersStyles.ts";
+import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersSlice.ts";
+import { fetchAllUsers, deleteUser } from "../../redux/thunks/usersThunks.ts";
 import { parseISO, format } from "date-fns";
 import Swal from "sweetalert2";
-import { UsersState, User } from "../../interfaces/users/UsersState.ts"
-import { RootState } from "../../redux/store.js";
+import { User } from "../../interfaces/users/UsersState.ts"
+import { AppDispatch, RootState } from "../../redux/store.ts";
 
 export const Users = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState<number | null>(null);
+  const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
   const { filteredUsers, activeTab, searchText, loading, error } = useSelector(
     (state: RootState) => state.users
@@ -26,7 +26,7 @@ export const Users = () => {
 
   useEffect(() => {
     if (filteredUsers.length === 0 && employeesData?.length > 0) {
-      dispatch(fetchAllUsers(employeesData));
+      dispatch(fetchAllUsers());
     }
   }, [dispatch, filteredUsers]);
 
@@ -46,8 +46,8 @@ export const Users = () => {
     dispatch(setActiveTab(tab));
   };
 
-  const handleSearchChange = (event:ChangeEvent) => {
-    dispatch(setSearchText((event.target as HTMLInputElement).value));
+  const handleSearchChange = (event:ChangeEvent<HTMLInputElement>) => {
+    dispatch(setSearchText(event.target.value));
   };
 
   const handleDelete = (employeeId:string) => {
@@ -70,16 +70,6 @@ export const Users = () => {
 
   const handleCreateUser = () => {
     navigate("/new-user");
-  };
-
-  const handleFetchUserById = (employeeId:string) => {
-    dispatch(fetchUserById(employeeId)).then((result) => {
-      if (result.meta.requestStatus === "fulfilled") {
-        navigate(`/user-details/${employeeId}`);
-      } else {
-        console.error("Failed to fetch user details:", result.payload);
-      }
-    });
   };
 
   const headers = [

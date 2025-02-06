@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import {StatusTextProps} from "../interfaces/styles/UserProps.ts"
+import { ThemeType } from "../interfaces/styles/Themetypes.ts"
 
 export const TableData = styled.td`
   padding: 1rem;
@@ -70,16 +72,16 @@ export const ContactText = styled.div`
   color: #393939;
 `;
 
-export const StatusText = styled.span`
+export const StatusText = styled.span<StatusTextProps>`
   font-weight: bold;
   font-size: 12px;
   margin: 0 1rem 0 0;
-  color: ${({ $status, $theme }) =>
+  color: ${({ $status, theme }) =>
     $status === "ACTIVE"
       ? "green"
       : $status === "INACTIVE"
       ? "red"
-      : $theme.palette.text.primary};
+      : theme.palette.text.primary};
 `;
 
 export const DotsContainer = styled.div`

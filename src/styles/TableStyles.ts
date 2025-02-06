@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {TableHeaderProps, StatusBadgeProps, PageButtonProps, StatusButtonProps, SortIconProps} from "../interfaces/styles/GenericTableProps.ts"
 
 export const Table = styled.table`
   width: 100%;
@@ -7,13 +8,10 @@ export const Table = styled.table`
   font-size: 14px;
   text-align: left;
 
-  th,
-  td {
-    border-bottom: 1px solid ${(props) => props.theme.palette.background.paper};
-  }
+  th,td {border-bottom: 1px solid ${(props) => props.theme.palette.background.paper};}
 `;
 
-export const TableHeader = styled.th`
+export const TableHeader = styled.th<TableHeaderProps>`
   background-color: ${(props) => props.theme.palette.background.default};
   padding: .8rem;
   border-bottom: 2px solid ${(props) => props.theme.palette.background.paper};
@@ -84,7 +82,7 @@ export const GuestInfo = styled.div`
   }
 `;
 
-export const StatusBadge = styled.span`
+export const StatusBadge = styled.span<StatusBadgeProps>`
   display: inline-block;
   padding: 0.5rem 1rem;
   border-radius: 5px;
@@ -113,16 +111,14 @@ export const PaginationContainer = styled.div`
   margin: 20px 0;
 `;
 
-export const PageButton = styled.button.attrs((props) => ({
-  "data-active": props.$active,
-}))`
+export const PageButton = styled.button<PageButtonProps>`
   margin: 0 5px;
   padding: 5px 10px;
   border: 1px solid ${(props) => props.theme.palette.background.paper};
-  background-color: ${({ "data-active": isActive, theme }) =>
-    isActive ? theme.palette.secondary.main : theme.palette.background.default};
-  color: ${({ "data-active": isActive, theme }) =>
-    isActive ? theme.palette.primary.main : theme.palette.text.primary};
+  background-color: ${({ $active, theme }) =>
+    $active ? theme.palette.secondary.main : theme.palette.background.default};
+  color: ${({ $active, theme }) =>
+    $active ? theme.palette.primary.main : theme.palette.text.primary};
   border-radius: ${(props) => props.theme.styles.button.borderRadius};
   cursor: pointer;
 
@@ -152,7 +148,7 @@ export const ViewNotesButton = styled.button`
   }
 `;
 
-export const SortIcon = styled.span`
+export const SortIcon = styled.span<SortIconProps>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -179,7 +175,7 @@ export const DiscountSpan = styled.span`
   font-size: .7rem;
 `;
 
-export const StatusButton = styled.button`
+export const StatusButton = styled.button<StatusButtonProps>`
   background-color: ${({ $status }) => $status === "Available" ? "#E8FFEE" : "#FFEDEC"};
   color: ${({ $status }) => $status === "Available" ? "#135846" : "#E23428"};
   padding: ${({ theme }) => theme?.styles?.button?.padding || ".6rem 1.5rem"};

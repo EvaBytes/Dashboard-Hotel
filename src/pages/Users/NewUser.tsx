@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createUser } from "../../redux/thunks/usersThunks.js";
 import {FormContainer,FormGroup,Label,Input,SubmitButton,BackButton} from "../../styles/NewUserStyles.js";
+import { AppDispatch} from "../../redux/store.ts";
+import { NewUserPayload } from "../../interfaces/users/UsersState.ts"
+import Swal from "sweetalert2";
 
 export const NewUser = () => {
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<NewUserPayload>({
+    name: "",
     photo: "",
     fullName: "",
     employeeId: "",
@@ -28,42 +32,45 @@ export const NewUser = () => {
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePhotoChange = (e) => {
-    const file = e.target.files[0];
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUserData((prev) => ({ ...prev, photo: reader.result }));
+        if (typeof reader.result === "string") {
+          setUserData((prev) => ({ ...prev, photo: reader.result as string}));
+        }
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const newErrors = {
-      photo: !userData.photo, 
-      fullName: !userData.fullName.trim(),
-      employeeId: !userData.employeeId.trim(),
-      email: !userData.email.trim(),
-      startDate: !userData.startDate.trim(),
-      description: !userData.description.trim(),
-      contact: !userData.contact.trim(),
-    };
-
+  
+    const newErrors = Object.keys(userData).reduce((acc, key) => {
+      const value = userData[key as keyof NewUserPayload];
+      acc[key as keyof NewUserPayload] = !value || (typeof value === "string" && value.trim() === "");
+      return acc;
+    }, {} as Record<keyof NewUserPayload, boolean>);
+  
     const hasErrors = Object.values(newErrors).some((val) => val === true);
-
+  
     if (hasErrors) {
       setErrors(newErrors);
-      setErrorMessage("Please fill in all required fields before saving.");
+  
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please fill in all required fields before saving.",
+      });
       return;
     }
 
@@ -78,13 +85,13 @@ export const NewUser = () => {
     });
     setErrorMessage("");
 
-    dispatch(createUser(userData))
+    dispatch(createUser({...userData, name:userData.fullName}))
       .unwrap()
       .then(() => {
         alert("¡Usuario creado con éxito!");
         navigate("/users");
       })
-      .catch((error) => {
+      .catch((error:string) => {
         alert(`Error: ${error}`);
       });
   };

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Table, TableHeader, TableRow, TableData, PaginationContainer, PageButton, SortIcon } from "../../styles/TableStyles.js";
+import { Table, TableHeader, TableRow, TableData, PaginationContainer, PageButton, SortIcon } from "../../styles/TableStyles.ts";
+import {GenericTableProps} from "../../interfaces/styles/GenericTableProps.ts"
 
-export const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10, onSort, sortBy, sortOrder }) => {
+export function GenericTable ({ headers, data, renderRow, itemsPerPage = 10, onSort, sortBy, sortOrder }: GenericTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
@@ -10,7 +11,7 @@ export const GenericTable = ({ headers, data, renderRow, itemsPerPage = 10, onSo
   const endIndex = startIndex + itemsPerPage;
   const currentData = data.slice(startIndex, endIndex);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }

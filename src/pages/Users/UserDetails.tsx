@@ -1,23 +1,25 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserById } from "../../redux/thunks/usersThunks.js";
+import { fetchUserById } from "../../redux/thunks/usersThunks.ts";
+import { selectCurrentUser, selectUsersStatus, selectError } from "../../redux/slices/usersSlice.ts";
 import { format, isValid } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
-import {GuestDetailsContainer,UsersInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,StatusBadge,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles.js";
+import { GuestDetailsContainer, UsersInfoCard, GuestImage, GuestHeader, GuestNameDetails, GuestActions, GuestInfoSection, StatusBadge, Divider, ActionButton, ModifyButton } from "../../styles/GuestDetailsStyles.ts";
+import { AppDispatch } from "../../redux/store.ts";
 
 const UserDetails = () => {
-  const { employeeId } = useParams();
+  const { employeeId } = useParams<{ employeeId: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { currentUser, loading, error } = useSelector((state) => state.users);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const currentUser = useSelector(selectCurrentUser);
+  const loading = useSelector(selectUsersStatus) === "pending";
+  const error = useSelector(selectError);
 
   useEffect(() => {
-    console.log("Employee ID desde URL:", employeeId);
-    console.log("Usuarios en localStorage:", JSON.parse(localStorage.getItem("users")));
-
-    if (!currentUser || currentUser.employeeId !== employeeId) {
+    if (employeeId && (!currentUser || currentUser.employeeId !== employeeId)) {
       dispatch(fetchUserById(employeeId));
     }
   }, [dispatch, employeeId, currentUser]);
@@ -27,11 +29,10 @@ const UserDetails = () => {
   if (!currentUser) return <p>User details not found.</p>;
 
   const { name, description, contact, status, startDate, photo } = currentUser;
-  console.log("Photo URL:", photo);
 
   const formattedStartDate = startDate && isValid(new Date(startDate))
-  ? format(new Date(startDate), "MMM dd, yyyy")
-  : "N/A";
+    ? format(new Date(startDate), "MMM dd, yyyy")
+    : "N/A";
 
   return (
     <GuestDetailsContainer>

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import {StatusBadgeProps} from "../interfaces/styles/GenericTableProps.ts"
 
 export const GuestDetailsContainer = styled.div`
   display: flex;
@@ -130,7 +131,7 @@ export const Divider = styled.hr`
   margin: 1rem 0;
 `;
 
-export const StatusBadge = styled.div`
+export const StatusBadge = styled.div<StatusBadgeProps>`
   padding: 0.5rem 1rem;
   background-color: ${({ $status }) =>
     $status === "Check-In"

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { TabsProps } from "../interfaces/styles/TabsProps.ts";
 
 export const TabsContainer = styled.div`
   display: flex;
@@ -9,7 +10,7 @@ export const TabsContainer = styled.div`
   padding: 0 .5rem;
 `;
 
-export const Tab = styled.button`
+export const Tab = styled.button<TabsProps>`
   padding: 0.8rem 1.4rem;
   background: none;
   border: none;
@@ -25,7 +26,6 @@ export const Tab = styled.button`
   &:hover {
     color: ${(props) => props.theme.palette.secondary.main};
   }
-  
 `;
 
 export const SearchContainer = styled.div`
@@ -36,7 +36,7 @@ export const SearchContainer = styled.div`
   background-color: ${(props) => props.theme.palette.background.default};
   border-radius: 10px;
   padding: .5rem 1rem;
-  border: 1px solid lightgray;};
+  border: 1px solid lightgray;
 `;
 
 export const SearchIconWrapper = styled.span`
@@ -92,4 +92,3 @@ export const AddButton = styled.button`
     font-weight: light;
   }
 `;
-

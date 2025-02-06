@@ -1,4 +1,6 @@
-export const theme = {
+import { ThemeType } from "../interfaces/styles/Themetypes.ts"
+
+export const theme:ThemeType = {
   mode: "light", 
   palette: {
     primary: {
