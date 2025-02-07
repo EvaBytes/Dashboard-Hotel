@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import {SidebarProps} from "../interfaces/styles/sidebarOpenProps.ts"
 
 export const LayoutContainer = styled.div`
   display: flex;
@@ -6,7 +7,7 @@ export const LayoutContainer = styled.div`
   flex-direction: column;
 `;
 
-export const SidebarContainer = styled.div`
+export const SidebarContainer = styled.div<SidebarProps>`
   position: fixed;
   top: 0;
   left: 0;
@@ -18,7 +19,7 @@ export const SidebarContainer = styled.div`
   overflow: hidden; 
 `;
 
-export const MainContent = styled.div`
+export const MainContent = styled.div<SidebarProps>`
   margin-left: ${(props) => (props.$sidebarOpen ? "250px" : "0")};
   transition: margin-left 0.3s ease;
   flex-grow: 1;
