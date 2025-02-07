@@ -60,7 +60,7 @@ export const AmenitiesContainer = styled.div`
   gap: 0.5rem;
 `;
 
-export const AmenityItem = styled.div`
+export const AmenityItem = styled.div<{ $selected: boolean }>`
   padding: 0.5rem 1rem;
   border: 2px solid ${({ $selected, theme }) => ($selected ? theme?.palette?.secondary?.main : "#ccc")};
   border-radius: ${({ theme }) => theme?.styles?.button?.borderRadius || "8px"};

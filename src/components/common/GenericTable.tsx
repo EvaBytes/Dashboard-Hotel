@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, TableHeader, TableRow, TableData, PaginationContainer, PageButton, SortIcon } from "../../styles/TableStyles.ts";
+import { Table, TableHeader, TableRow, PaginationContainer, PageButton, SortIcon } from "../../styles/TableStyles.ts";
 import {GenericTableProps} from "../../interfaces/styles/GenericTableProps.ts"
 
 export function GenericTable ({ headers, data, renderRow, itemsPerPage = 10, onSort, sortBy, sortOrder }: GenericTableProps) {
@@ -31,13 +31,13 @@ export function GenericTable ({ headers, data, renderRow, itemsPerPage = 10, onS
               <TableHeader
                 key={index}
                 $sortable={!!header.key} 
-                onClick={() => header.key && onSort(header.key)}
+                onClick={() => header.key && onSort && onSort(header.key)}
                 $active={sortBy === header.key}
                 $sortOrder={sortOrder}
               >
                 {header.label} 
                 {header.key && (
-                  <SortIcon $active={sortBy === header.key} $sortOrder={sortOrder}>
+                  <SortIcon $active={sortBy === header.key} $sortOrder={sortOrder || "asc"}>
                     {sortBy === header.key && (sortOrder === "asc" ? "↑" : "↓")}
                   </SortIcon>
                 )}

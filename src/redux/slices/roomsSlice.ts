@@ -1,13 +1,15 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { fetchRooms, createRoom, deleteRoom, editRoom, fetchRoomById } from "../thunks/roomsThunks.js";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchRooms, createRoom, deleteRoom, editRoom, fetchRoomById } from "../thunks/roomsThunks.ts";
+import { Room, RoomState } from "../../interfaces/room/RoomState.ts";
+import { RootState } from "../../redux/store.ts";
 
-const initialState = {
+const initialState: RoomState = {
   rooms: [],
   filteredRooms: [],
   activeTab: "allRooms",
   sortBy: null,
   sortOrder: "asc",
-  loading: false,
+  loading: "idle",
   error: null,
   currentRoom: null,
 };
@@ -16,15 +18,15 @@ const roomsSlice = createSlice({
   name: 'rooms',
   initialState,
   reducers: {
-    setRooms: (state, action) => {
+    setRooms: (state, action: PayloadAction<Room[]>) => {
       state.rooms = action.payload;
       state.filteredRooms = filterRooms(state);
     },
-    setActiveTab: (state, action) => {
+    setActiveTab: (state, action: PayloadAction<string>) => {
       state.activeTab = action.payload;
       state.filteredRooms = filterRooms(state);
     },
-    setSortBy: (state, action) => {
+    setSortBy: (state, action: PayloadAction<string>) => {
       state.sortBy = action.payload;
       if (state.sortBy === action.payload) {
         state.sortOrder = state.sortOrder === "asc" ? "desc" : "asc";
@@ -33,57 +35,60 @@ const roomsSlice = createSlice({
       }
       state.filteredRooms = sortRooms(state);
     },
-    setError: (state, action) => {
+    setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchRooms.pending, (state) => {
-        state.loading = true;
+        state.loading = 'pending';
         state.error = null;
       })
-      .addCase(fetchRooms.fulfilled, (state, action) => {
-        state.loading = false;
+      .addCase(fetchRooms.fulfilled, (state, action: PayloadAction<Room[]>) => {
+        state.loading = 'fulfilled';
         state.rooms = action.payload;
         state.filteredRooms = filterRooms(state);
       })
       .addCase(fetchRooms.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loading = 'rejected';
+        state.error = action.payload || 'Failed to update room';
       })
+    builder
       .addCase(createRoom.pending, (state) => {
-        state.loading = true;
+        state.loading = 'pending';
         state.error = null;
       })
-      .addCase(createRoom.fulfilled, (state, action) => {
-        state.loading = false;
+      .addCase(createRoom.fulfilled, (state, action: PayloadAction<Room>) => {
+        state.loading = 'fulfilled';
         state.rooms.push(action.payload);
         state.filteredRooms = filterRooms(state);
       })
       .addCase(createRoom.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loading = 'rejected';
+        state.error = action.payload || 'Failed to create room';
       })
+      builder
       .addCase(deleteRoom.pending, (state) => {
-        state.loading = true;
+        state.loading = 'pending';
         state.error = null;
       })
-      .addCase(deleteRoom.fulfilled, (state, action) => {
-        state.loading = false;
+      .addCase(deleteRoom.fulfilled, (state, action: PayloadAction<string>) => {
+        state.loading = 'fulfilled';
         state.rooms = state.rooms.filter(room => room.roomNumber !== action.payload);
         state.filteredRooms = filterRooms(state);
       })
       .addCase(deleteRoom.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loading = 'rejected';
+        state.error = action.payload || 'Failed to delete room';
       })
+      builder
       .addCase(editRoom.pending, (state) => {
-        state.loading = true;
+        state.loading = 'pending';
         state.error = null;
       })
-      .addCase(editRoom.fulfilled, (state, action) => {
-        state.loading = false;
+      .addCase(editRoom.fulfilled, (state, action: PayloadAction<Room>) => {
+        state.loading = 'fulfilled';
         const index = state.rooms.findIndex(room => room.roomNumber === action.payload.roomNumber);
         if (index !== -1) {
           state.rooms[index] = action.payload;
@@ -91,25 +96,26 @@ const roomsSlice = createSlice({
         }
       })
       .addCase(editRoom.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loading = 'rejected';
+        state.error = action.payload || 'Failed to update room';
       })
+      builder
       .addCase(fetchRoomById.pending, (state) => {
-        state.loading = true;
+        state.loading = 'pending';
         state.error = null;
       })
-      .addCase(fetchRoomById.fulfilled, (state, action) => {
-        state.loading = false;
+      .addCase(fetchRoomById.fulfilled, (state, action: PayloadAction<Room>) => {
+        state.loading = 'fulfilled';
         state.currentRoom = action.payload;
       })
       .addCase(fetchRoomById.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+        state.loading = 'rejected';
+        state.error = action.payload || 'Failed to update room';
       });
   },
 });
 
-function filterRooms(state) {
+function filterRooms(state: RoomState): Room[] {
   const { rooms, activeTab } = state;
   return rooms.filter(room => {
     if (activeTab === "availableRooms" && room.status !== "Available") return false;
@@ -118,7 +124,7 @@ function filterRooms(state) {
   });
 }
 
-function sortRooms(state) {
+function sortRooms(state: RoomState): Room[] {
   const { filteredRooms, sortBy, sortOrder } = state;
   return [...filteredRooms].sort((a, b) => {
     if (!sortBy) return 0;
@@ -131,7 +137,7 @@ function sortRooms(state) {
     }
 
     if (sortBy === "status") {
-      const statusOrder = { Available: 1, Booked: 2, inProgress: 3 };
+      const statusOrder = { Available: 1, Booked: 2, "In Progress": 3 };
       return sortOrder === "asc" ? statusOrder[valueA] - statusOrder[valueB] : statusOrder[valueB] - statusOrder[valueA];
     }
 
@@ -139,5 +145,17 @@ function sortRooms(state) {
   });
 }
 
-export const { setRooms, setActiveTab, setSortBy } = roomsSlice.actions;
+export const {setRooms,setActiveTab,setSortBy,setError} = roomsSlice.actions;
+
+export const selectRoomsState = (state: RootState): RoomState => state.rooms;
+
+export const selectRooms = (state: RootState): Room[] => state.rooms.rooms;
+export const selectFilteredRooms = (state: RootState): Room[] => state.rooms.filteredRooms;
+export const selectActiveTab = (state: RootState): string => state.rooms.activeTab;
+export const selectSortBy = (state: RootState): string | null => state.rooms.sortBy;
+export const selectSortOrder = (state: RootState): "asc" | "desc" => state.rooms.sortOrder;
+export const selectLoading = (state: RootState): "idle" | "pending" | "fulfilled" | "rejected" => state.rooms.loading;
+export const selectError = (state: RootState): string | null => state.rooms.error;
+export const selectCurrentRoom = (state: RootState): Room | null => state.rooms.currentRoom;
+
 export default roomsSlice.reducer;

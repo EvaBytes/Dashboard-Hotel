@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { TabButtonProps, ArchiveButtonProps, PageButtonProps } from "../interfaces/styles/ContactProps.ts";
 
 export const ContactPageContainer = styled.div`
   display: flex;
@@ -21,7 +22,7 @@ export const TabsContainer = styled.div`
   margin-bottom: 1rem;
 `;
 
-export const TabButton = styled.button`
+export const TabButton = styled.button<TabButtonProps>`
   padding: 0.5rem 1rem;
   border: none;
   background: none;
@@ -82,7 +83,7 @@ export const Comment = styled.div`
   color: #555;
 `;
 
-export const ArchiveButton = styled.button`
+export const ArchiveButton = styled.button<ArchiveButtonProps>`
   padding: 0.5rem 1rem;
   background-color: ${(props) => (props.$isArchived ? "#ffefef" : "#eef9f1")};
   color: ${(props) => (props.$isArchived ? "#d9534f" : "#5cb85c")};
@@ -103,7 +104,7 @@ export const PaginationContainer = styled.div`
   margin-top: 1rem;
 `;
 
-export const PageButton = styled.button`
+export const PageButton = styled.button<PageButtonProps>`
   padding: 0.5rem 1rem;
   border: 1px solid #ddd;
   background-color: ${(props) => (props.$active ? "#135846" : "white")};

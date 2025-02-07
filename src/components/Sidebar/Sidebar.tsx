@@ -5,9 +5,10 @@ import { LuLayoutDashboard, LuBedSingle } from "react-icons/lu";
 import { AiOutlineUser, AiOutlineCalendar, AiOutlineContacts } from "react-icons/ai";
 import { GiStarsStack } from "react-icons/gi";
 import { FaHotel } from "react-icons/fa";
+import { User } from "../../interfaces/SidebarState.ts";
 
 const Sidebar = () => {
-  const user = {
+  const user: User = {
     name: "Eva Sevillano",
     email: "user@testing.com",
     image: "src/assets/img/profile.jpeg",

@@ -116,7 +116,7 @@ const usersSlice = createSlice({
       .addCase(editUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
-        state.status = "rejected"; // ← CORRECCIÓN
+        state.status = "rejected"; 
       });
 
     builder

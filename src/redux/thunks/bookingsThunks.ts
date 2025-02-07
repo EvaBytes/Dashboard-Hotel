@@ -33,7 +33,7 @@ export const editBooking = createAsyncThunk(
       const { reservationNumber, ...updatedFields } = updatedBookingData;
       const { bookings } = thunkAPI.getState().bookings;
       const bookingIndex = bookings.findIndex(
-        (b) => b.guest.reservationNumber === reservationNumber
+        (b: any) => b.guest.reservationNumber === reservationNumber
       );
 
       if (bookingIndex === -1) {
@@ -51,7 +51,7 @@ export const editBooking = createAsyncThunk(
         },
       };
       return updatedBooking;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -59,7 +59,7 @@ export const editBooking = createAsyncThunk(
 
 export const fetchBookingById = createAsyncThunk(
   "bookings/fetchBookingById",
-  async (reservationNumber, thunkAPI) => {
+  async (reservationNumber:string, thunkAPI) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
 

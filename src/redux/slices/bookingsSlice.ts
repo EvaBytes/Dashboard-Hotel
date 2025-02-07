@@ -158,5 +158,5 @@ function sortBookings(state) {
 }
 
 export const {setBookings,setActiveTab,setSearchText,setSortBy,setCurrentPage,setError} = bookingsSlice.actions;
-export {createBooking,deleteBooking,editBooking,fetchBookingById,fetchAllBookings} from "../thunks/bookingsThunks";
+export {createBooking,deleteBooking,editBooking,fetchBookingById,fetchAllBookings} from "../thunks/bookingsThunks.js";
 export default bookingsSlice.reducer;

@@ -1,20 +1,34 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { archiveMessage, unarchiveMessage, setActiveTab, setCurrentPage } from "../redux/slices/contactSlice.js";
-import { fetchMessages } from "../redux/thunks/contactThunks.js";
-import { LatestMessages } from "../components/common/LatestMessages.jsx";
-import { Table, TableHeader, TableRow, TableData, PaginationContainer, PageButton } from "../styles/TableStyles.js";
-import {ContactPageContainer,TabsContainer,TabButton,CustomerName,CustomerEmail,CustomerPhone,Subject,Comment,ArchiveButton} from "../styles/ContactStyles.js";
+import { archiveMessage, unarchiveMessage, setActiveTab, setCurrentPage, clearError } from "../redux/slices/contactSlice";
+import { fetchMessages } from "../redux/thunks/contactThunks";
+import { LatestMessages } from "../components/common/LatestMessages";
+import { Table, TableHeader, TableRow, TableData, PaginationContainer, PageButton } from "../styles/TableStyles";
+import { ContactPageContainer, TabsContainer, TabButton, CustomerName, CustomerEmail, CustomerPhone, Subject, Comment, ArchiveButton } from "../styles/ContactStyles";
+import { RootState, AppDispatch } from "../redux/store";
+import Swal from "sweetalert2";
 
 const Contact = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { allMessages, archivedMessages, activeTab, currentPage, itemsPerPage, error } = useSelector(
-    (state) => state.contact
+    (state: RootState) => state.contact
   );
 
   useEffect(() => {
     dispatch(fetchMessages());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      }).then(() => {
+        dispatch(clearError());
+      });
+    }
+  }, [error, dispatch]);
 
   const uniqueAllMessages = allMessages.map((message, index) => ({
     ...message,
@@ -28,19 +42,19 @@ const Contact = () => {
     { label: "Action", key: null },
   ];
 
-  const handleArchive = (messageId) => {
+  const handleArchive = (messageId: string) => {
     dispatch(archiveMessage(messageId));
   };
 
-  const handleUnarchive = (messageId) => {
+  const handleUnarchive = (messageId: string) => {
     dispatch(unarchiveMessage(messageId));
   };
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = (tab: string) => {
     dispatch(setActiveTab(tab));
   };
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     dispatch(setCurrentPage(page));
   };
 
@@ -59,10 +73,6 @@ const Contact = () => {
     { length: adjustedEndPage - adjustedStartPage + 1 },
     (_, index) => adjustedStartPage + index
   );
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <ContactPageContainer>
@@ -88,7 +98,9 @@ const Contact = () => {
           <thead>
             <TableRow>
               {tableHeaders.map((header, index) => (
-                <TableHeader key={index}>{header.label}</TableHeader>
+                <TableHeader key={index} $sortable={!!header.key}>
+                  {header.label}
+                </TableHeader>
               ))}
             </TableRow>
           </thead>

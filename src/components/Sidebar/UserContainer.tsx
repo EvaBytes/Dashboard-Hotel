@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import {UserContainer, UserAvatar,UserInfo,UserName,UserEmail,EditButton,SaveButton,CancelButton,InputField,ModalBackdrop,ModalContent,ModalTitle,ModalButtonContainer} from "./UserContainerStyles";
+import React, { useState, ChangeEvent } from "react";
+import { UserContainer, UserAvatar, UserInfo, UserName, UserEmail, EditButton, SaveButton, CancelButton, InputField, ModalBackdrop, ModalContent, ModalTitle, ModalButtonContainer } from "./UserContainerStyles";
+import { UserContainerProps } from "../../interfaces/SidebarState.ts";
 
-const UserContainerComponent = ({ user, onSave }) => {
+const UserContainerComponent = ({ user, onSave }: UserContainerProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState({
     name: user.name,
@@ -15,7 +16,7 @@ const UserContainerComponent = ({ user, onSave }) => {
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEditedUser((prevState) => ({
       ...prevState,

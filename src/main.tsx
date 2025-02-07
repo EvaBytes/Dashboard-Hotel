@@ -1,30 +1,35 @@
+import React from "react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
-import { AuthProvider } from "./Authentication/AuthContext.jsx";
+import { AuthProvider } from "./Authentication/AuthContext.tsx";
 import { Provider } from "react-redux"; 
 import { store } from "./redux/store.ts";
-import { GlobalStyles } from "./styles/globalStyles.js";
-import { Layout } from "./Layout.jsx";
-import { Login } from "./Authentication/Login.jsx";
-import { theme } from "./styles/theme.js";
-import { Dashboard } from "./pages/Dashboard.jsx";
-import { Bookings } from "./pages/Bookings/Bookings.jsx";
-import { Rooms } from "./pages/Rooms/Rooms.jsx";
-import { NewRoom } from "./pages/Rooms/NewRoom.jsx";
-import { RoomDetails } from "./pages/Rooms/RoomDetails.jsx";
-import { Contact } from "./pages/Contact.jsx";
+import { GlobalStyles } from "./styles/globalStyles.ts";
+import { Layout } from "./Layout.ts";
+import { Login } from "./Authentication/Login.tsx";
+import { theme } from "./styles/theme.ts";
+import { Dashboard } from "./pages/Dashboard.tsx";
+import { Bookings } from "./pages/Bookings/Bookings.tsx";
+import { Rooms } from "./pages/Rooms/Rooms.tsx";
+import { NewRoom } from "./pages/Rooms/NewRoom.tsx";
+import { RoomDetails } from "./pages/Rooms/RoomDetails.tsx";
+import { Contact } from "./pages/Contact.tsx";
 import { Users } from "./pages/Users/Users.tsx";
 import { NewUser } from "./pages/Users/NewUser.tsx";
 import { UserDetails } from "./pages/Users/UserDetails.tsx";
 import { EditUser } from "./pages/Users/EditUser.tsx";
-import { GuestDetails } from "./pages/Bookings/GuestDetails.jsx";
-import { EditBooking } from "./pages/Bookings/EditGuestBooking.jsx";
-import { NewBooking } from "./pages/Bookings/NewBooking.jsx"; 
-import { PrivateRoute } from "./Authentication/PrivateRoute.jsx";
+import { GuestDetails } from "./pages/Bookings/GuestDetails.tsx";
+import { EditBooking } from "./pages/Bookings/EditGuestBooking.tsx";
+import { NewBooking } from "./pages/Bookings/NewBooking.tsx"; 
+import { PrivateRoute } from "./Authentication/PrivateRoute.tsx";
 
-createRoot(document.getElementById("root")).render(
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  throw new Error("No se encontró el elemento con id 'root'");
+}
+createRoot(rootElement).render(
   <StrictMode>
     <AuthProvider>
       <Provider store={store}>

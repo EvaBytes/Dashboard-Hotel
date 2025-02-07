@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";  
-import {NewRoomContainer,RoomInfoCard,RoomHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/NewRoomStyles.js";
-import { createRoom } from "../../redux/thunks/roomsThunks.js";
+import {NewRoomContainer,RoomInfoCard,RoomHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/NewRoomStyles.ts";
+import { createRoom } from "../../redux/thunks/roomsThunks.ts";
+import { AppDispatch } from "../../redux/store.ts";
+import { NewRoomPayload } from "../../interfaces//room/RoomState.ts";
 
 const roomTypePhotos = {
   "Single Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg","caroline-voelker-KVXxBwIu8Vw-unsplash.jpg","kate-branch-G18uHzrihOE-unsplash.jpg"],
@@ -12,22 +14,7 @@ const roomTypePhotos = {
   "Suite": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg","caroline-voelker-KVXxBwIu8Vw-unsplash.jpg","kate-branch-G18uHzrihOE-unsplash.jpg"],
 };
 
-const amenitiesList = [
-  "Air conditioner",
-  "High speed WiFi",
-  "Breakfast",
-  "Kitchen",
-  "Cleaning",
-  "Shower",
-  "Grocery",
-  "Single bed",
-  "Shop near",
-  "Towels",
-  "24/7 Online Support",
-  "Strong locker",
-  "Smart Security",
-  "Expert Team",
-];
+const amenitiesList = ["Air conditioner","High speed WiFi","Breakfast","Kitchen","Cleaning","Shower","Grocery","Single bed","Shop near","Towels","24/7 Online Support","Strong locker","Smart Security","Expert Team"];
 
 const cancellationPolicyText = `
 Standard Rate:
@@ -38,31 +25,51 @@ For the non refundable bookings are no cancellation or changes possible. In case
 `;
 
 const NewRoom = () => {
-  const [roomData, setRoomData] = useState({
-    photos: [],
-    roomType: "",
+  const [roomData, setRoomData] = useState<NewRoomPayload>({
+    roomPhoto: "",
     roomNumber: "",
+    roomType: "",
+    facilities: "",
+    rate: "",
+    offerPrice: "",
+    status: "Available",
+    guest: {
+      fullName: "",
+      reservationNumber: "",
+      image: "",
+    },
+    orderDate: "",
+    checkIn: "",
+    checkOut: "",
     description: "",
     offer: "NO",
-    price: "",
     discount: "",
     cancellationPolicy: cancellationPolicyText,
     amenities: [],
+    photos: [],
   });
 
   const [errorMessage, setErrorMessage] = useState("");
 
   const [errors, setErrors] = useState({
-    roomType: false,
+    roomPhoto: false,
     roomNumber: false,
+    roomType: false,
+    rate: false,
+    offerPrice: false,
     description: false,
-    price: false,
     cancellationPolicy: false,
+    guestFullName: false,
+    guestReservationNumber: false,
+    guestImage: false,
+    orderDate: false,
+    checkIn: false,
+    checkOut: false,
   });
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.rooms);
+  const dispatch = useDispatch<AppDispatch>();
+  const { loading, error } = useSelector((state: any) => state.rooms);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -85,15 +92,23 @@ const NewRoom = () => {
     }));
   };
 
-  const handleSaveRoom = (e) => {
+  const handleSaveRoom = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const newErrors = {
-      roomType: !roomData.roomType.trim(),
+      roomPhoto: false,
       roomNumber: !roomData.roomNumber.trim(),
+      roomType: !roomData.roomType.trim(),
+      rate: !roomData.rate,
+      offerPrice: false,
       description: !roomData.description.trim(),
-      price: !roomData.price, 
       cancellationPolicy: !roomData.cancellationPolicy.trim(),
+      guestFullName: false,
+      guestReservationNumber: false,
+      guestImage: false,
+      orderDate: false,
+      checkIn: false,
+      checkOut: false,
     };
 
     const hasErrors = Object.values(newErrors).some((value) => value === true);
@@ -105,11 +120,19 @@ const NewRoom = () => {
     }
 
     setErrors({
-      roomType: false,
+      roomPhoto: false,
       roomNumber: false,
+      roomType: false,
+      rate: false,
+      offerPrice: false,
       description: false,
-      price: false,
       cancellationPolicy: false,
+      guestFullName: false,
+      guestReservationNumber: false,
+      guestImage: false,
+      orderDate: false,
+      checkIn: false,
+      checkOut: false,
     });
     setErrorMessage("");
 
@@ -165,7 +188,7 @@ const NewRoom = () => {
 
             <label>Description</label>
             <textarea
-              rows="3"
+              rows={3}
               name="description"
               value={roomData.description}
               onChange={handleInputChange}
@@ -188,10 +211,10 @@ const NewRoom = () => {
             <input
               type="number"
               name="price"
-              value={roomData.price}
+              value={roomData.rate}
               onChange={handleInputChange}
               style={{
-                border: errors.price ? "1px solid red" : undefined,
+                border: errors.rate ? "1px solid red" : undefined,
               }}
             />
 
@@ -206,15 +229,7 @@ const NewRoom = () => {
             />
 
             <label>Cancellation Policy</label>
-            <textarea
-              rows="6"
-              name="cancellationPolicy"
-              value={roomData.cancellationPolicy}
-              onChange={handleInputChange}
-              style={{
-                border: errors.cancellationPolicy ? "1px solid red" : undefined,
-              }}
-            />
+            <textarea rows={6} name="cancellationPolicy" value={roomData.cancellationPolicy} onChange={handleInputChange} style={{border: errors.cancellationPolicy ? "1px solid red" : undefined}}/>
 
             <label>Amenities</label>
             <AmenitiesContainer>
@@ -232,7 +247,7 @@ const NewRoom = () => {
             <ImageUploadSection>
               <label>Room Photos</label>
               <div>
-                {roomData.photos.map((photo, index) => (
+                {roomData.photos?.map((photo, index) => (
                   <ImagePreview
                     key={index}
                     src={photo}

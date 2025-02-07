@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {TableHeaderProps, StatusBadgeProps, PageButtonProps, StatusButtonProps, SortIconProps} from "../interfaces/styles/GenericTableProps.ts"
+import {TableHeaderProps, StatusBadgeProps, PageButtonProps,SortIconProps, StatusButtonRoomsProps} from "../interfaces/styles/GenericTableProps.ts"
 
 export const Table = styled.table`
   width: 100%;
@@ -175,7 +175,7 @@ export const DiscountSpan = styled.span`
   font-size: .7rem;
 `;
 
-export const StatusButton = styled.button<StatusButtonProps>`
+export const StatusButton = styled.button<StatusButtonRoomsProps>`
   background-color: ${({ $status }) => $status === "Available" ? "#E8FFEE" : "#FFEDEC"};
   color: ${({ $status }) => $status === "Available" ? "#135846" : "#E23428"};
   padding: ${({ theme }) => theme?.styles?.button?.padding || ".6rem 1.5rem"};

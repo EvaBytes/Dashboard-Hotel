@@ -1,13 +1,14 @@
-import React, { createContext, useReducer, useContext, useEffect, useState } from "react";
+import React, { createContext, useReducer, useContext, useEffect, useState} from "react";
+import { AuthState, AuthContextProps, AuthAction, AuthProviderProps} from "../interfaces/AuthState.ts";
 
-const AuthContext = createContext();
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 const initialState = {
   isAuthenticated: false,
   user: null,
 };
 
-const authReducer = (state, action) => {
+const authReducer = (state:AuthState, action:AuthAction): AuthState => {
   switch (action.type) {
     case "LOGIN":
       return { ...state, isAuthenticated: true, user: action.payload };
@@ -18,13 +19,13 @@ const authReducer = (state, action) => {
   }
 };
 
-export const AuthProvider = ({ children }) => {
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(localStorage.getItem("user") || "null");
     if (token && user) {
       dispatch({ type: "LOGIN", payload: user });
     }

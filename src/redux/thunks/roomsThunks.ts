@@ -1,6 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { NewRoomPayload, Room } from "../../interfaces/room/RoomState.ts"
 
-export const fetchRooms = createAsyncThunk(
+export const fetchRooms = createAsyncThunk<Room[], void, { rejectValue: string }>(
   'rooms/fetchRooms',
   async (_, thunkAPI) => {
     try {
@@ -16,7 +17,7 @@ export const fetchRooms = createAsyncThunk(
   }
 );
 
-export const createRoom = createAsyncThunk(
+export const createRoom = createAsyncThunk<Room, NewRoomPayload, { rejectValue: string }>(
   'rooms/createRoom',
   async (roomData, thunkAPI) => {
     try {
@@ -38,7 +39,7 @@ export const createRoom = createAsyncThunk(
   }
 );
 
-export const deleteRoom = createAsyncThunk(
+export const deleteRoom = createAsyncThunk<string, string, { rejectValue: string }>(
   'rooms/deleteRoom',
   async (roomNumber, thunkAPI) => {
     try {
@@ -55,7 +56,7 @@ export const deleteRoom = createAsyncThunk(
   }
 );
 
-export const editRoom = createAsyncThunk(
+export const editRoom = createAsyncThunk<Room, Room, { rejectValue: string }>(
   'rooms/editRoom',
   async (updatedRoomData, thunkAPI) => {
     try {
@@ -77,7 +78,7 @@ export const editRoom = createAsyncThunk(
   }
 );
 
-export const fetchRoomById = createAsyncThunk(
+export const fetchRoomById = createAsyncThunk<Room, string, { rejectValue: string }>(
   'rooms/fetchRoomById',
   async (roomNumber, thunkAPI) => {
     try {

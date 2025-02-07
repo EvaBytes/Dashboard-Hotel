@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import {RoomDetailsContainer,RoomDetailsCard,RoomDetailsHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/RoomDetailsStyles.js";
+import {RoomDetailsContainer,RoomDetailsCard,RoomDetailsHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/RoomDetailsStyles.ts";
+import { Room } from "../../interfaces/room/RoomState.ts";
 
 const roomTypePhotos = {
   "Single Bed": ["/radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "/caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "/kate-branch-G18uHzrihOE-unsplash.jpg"],
@@ -20,8 +21,8 @@ For the non refundable bookings are no cancellation or changes possible. In case
 `;
 
 const RoomDetails = () => {
-  const { roomNumber } = useParams();
-  const location = useLocation();
+  const { roomNumber } = useParams<{roomNumber:string}>();
+  const location = useLocation<{roomData: Room}>();
   const navigate = useNavigate();
 
   const [roomData, setRoomData] = useState({
@@ -44,7 +45,8 @@ const RoomDetails = () => {
     offer: "NO",
     discount: "",
     cancellationPolicy: cancellationPolicyText,
-    amenities: [], 
+    amenities: [],
+    photos: [], 
   });
 
   useEffect(() => {
@@ -61,7 +63,7 @@ const RoomDetails = () => {
     }
   }, [location.state]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setRoomData((prev) => ({
       ...prev,
@@ -81,7 +83,7 @@ const RoomDetails = () => {
 
   const handleSaveRoom = (e) => {
     e.preventDefault();
-    const existingRooms = JSON.parse(localStorage.getItem("rooms")) || [];
+    const existingRooms = JSON.parse(localStorage.getItem("rooms") || "[]") || [];
     const updatedRooms = existingRooms.map((room) =>
       room.roomNumber === roomNumber ? roomData : room
     );
@@ -123,7 +125,7 @@ const RoomDetails = () => {
 
             <label>Description</label>
             <textarea
-              rows="3"
+              rows={3}
               name="description"
               value={roomData.description || ""}
               onChange={handleInputChange}
@@ -161,7 +163,7 @@ const RoomDetails = () => {
 
             <label>Cancellation Policy</label>
             <textarea
-              rows="6"
+              rows={6}
               name="cancellationPolicy"
               value={roomData.cancellationPolicy || ""}
               onChange={handleInputChange}

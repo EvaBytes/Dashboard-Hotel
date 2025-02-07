@@ -5,8 +5,9 @@ import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useAuth } from "../../Authentication/AuthContext.jsx";
 import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,BreadcrumbSection,Breadcrumb} from "./NavbarStyles.js";
+import { NavbarProps} from "../../interfaces/SidebarState.ts"
 
-const Navbar = ({ toggleSidebar, sidebarOpen }) => {
+const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();

@@ -3,37 +3,40 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaSortUp, FaSortDown, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles.js";
-import { GenericTable } from "../../components/common/GenericTable.jsx";
-import { RoomImage, DiscountSpan, StatusButton, SortIcon, IconContainer, ActionMenu, ActionMenuItem } from "../../styles/TableStyles.js";
-import { setActiveTab, setSortBy } from "../../redux/slices/roomsSlice.js";
-import { fetchRooms, deleteRoom } from "../../redux/thunks/roomsThunks.js";
+import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles.ts";
+import { GenericTable } from "../../components/common/GenericTable.ts";
+import { RoomImage, DiscountSpan, StatusButton, SortIcon, IconContainer, ActionMenu, ActionMenuItem } from "../../styles/TableStyles.ts";
+import { setActiveTab, setSortBy } from "../../redux/slices/roomsSlice.ts";
+import { fetchRooms, deleteRoom } from "../../redux/thunks/roomsThunks.ts";
+import { Room } from "../../interfaces/room/RoomState.ts";
+import { AppDispatch, RootState } from "../../redux/store.ts";
 import Swal from "sweetalert2";
 
 export const Rooms = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { rooms, filteredRooms, activeTab, sortBy, sortOrder, loading, error } =
-    useSelector((state) => state.rooms);
-  const [menuOpen, setMenuOpen] = useState(null);
+    useSelector((state: RootState) => state.rooms);
+
+  const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchRooms());
   }, [dispatch]);
 
-  const handleTabChange = (tab) => {
+  const handleTabChange = (tab: string) => {
     dispatch(setActiveTab(tab));
   };
 
-  const handleSort = (column) => {
+  const handleSort = (column: string) => {
     dispatch(setSortBy(column));
   };
 
-  const handleEdit = (room) => {
+  const handleEdit = (room: Room) => {
     navigate(`/room-details/${room.roomNumber}`, { state: { roomData: room } });
   };
 
-  const handleDelete = (roomNumber) => {
+  const handleDelete = (roomNumber: string) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -48,7 +51,7 @@ export const Rooms = () => {
           .then(() => {
             Swal.fire("Deleted!", "The room has been deleted.", "success");
           })
-          .catch((error) => {
+          .catch(() => {
             Swal.fire("Error!", "Failed to delete the room.", "error");
           });
       }
@@ -62,17 +65,10 @@ export const Rooms = () => {
     { label: "Amenities", key: "facilities" },
     {
       label: (
-        <div
-          onClick={() => handleSort("rate")}
-          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-        >
+        <div onClick={() => handleSort("rate")} style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
           Rate
-          <SortIcon>
-            {sortBy === "rate" && sortOrder === "asc" ? (
-              <FaSortUp />
-            ) : (
-              <FaSortDown />
-            )}
+          <SortIcon $active={sortBy === "rate"} $sortOrder={sortOrder}>
+            {sortBy === "rate" && sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
           </SortIcon>
         </div>
       ),
@@ -82,17 +78,10 @@ export const Rooms = () => {
     { label: "Offer Price", key: "offerPrice" },
     {
       label: (
-        <div
-          onClick={() => handleSort("status")}
-          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-        >
+        <div onClick={() => handleSort("status")} style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
           Status
-          <SortIcon>
-            {sortBy === "status" && sortOrder === "asc" ? (
-              <FaSortUp />
-            ) : (
-              <FaSortDown />
-            )}
+          <SortIcon $active={sortBy === "status"} $sortOrder={sortOrder}>
+            {sortBy === "status" && sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
           </SortIcon>
         </div>
       ),
@@ -102,11 +91,9 @@ export const Rooms = () => {
     { label: "Actions", key: null },
   ];
 
-  const renderRow = (room) => {
+  const renderRow = (room: Room) => {
     const discountPercentage = Math.round(
-      ((parseFloat(room.rate) - parseFloat(room.offerPrice)) /
-        parseFloat(room.rate)) *
-        100
+      ((parseFloat(room.rate) - parseFloat(room.offerPrice)) / parseFloat(room.rate)) * 100
     );
 
     return (
@@ -119,8 +106,7 @@ export const Rooms = () => {
         <td>{room.facilities}</td>
         <td>{room.rate}</td>
         <td>
-          {room.offerPrice}{" "}
-          <DiscountSpan>({discountPercentage}% off)</DiscountSpan>
+          {room.offerPrice} <DiscountSpan>({discountPercentage}% off)</DiscountSpan>
         </td>
         <td>
           <StatusButton $status={room.status}>{room.status}</StatusButton>
@@ -170,22 +156,13 @@ export const Rooms = () => {
       <TabsContainer>
         <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
           <div>
-            <Tab
-              $isActive={activeTab === "allRooms"}
-              onClick={() => handleTabChange("allRooms")}
-            >
+            <Tab $isActive={activeTab === "allRooms"} onClick={() => handleTabChange("allRooms")}>
               All Rooms
             </Tab>
-            <Tab
-              $isActive={activeTab === "availableRooms"}
-              onClick={() => handleTabChange("availableRooms")}
-            >
+            <Tab $isActive={activeTab === "availableRooms"} onClick={() => handleTabChange("availableRooms")}>
               Available
             </Tab>
-            <Tab
-              $isActive={activeTab === "bookedRooms"}
-              onClick={() => handleTabChange("bookedRooms")}
-            >
+            <Tab $isActive={activeTab === "bookedRooms"} onClick={() => handleTabChange("bookedRooms")}>
               Booked
             </Tab>
           </div>
@@ -196,15 +173,10 @@ export const Rooms = () => {
         <AddButton onClick={() => navigate("/new-room")}>+ New Room</AddButton>
       </div>
 
-      {loading && <p>Loading...</p>}
+      {loading === "pending" && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
-      <GenericTable
-        headers={headers}
-        data={filteredRooms}
-        renderRow={renderRow}
-        itemsPerPage={10}
-      />
+      <GenericTable headers={headers} data={filteredRooms} renderRow={(item) => renderRow(item as Room)} itemsPerPage={10} onSort={handleSort} sortBy={sortBy} sortOrder={sortOrder} />
     </div>
   );
 };
