@@ -7,7 +7,7 @@ import { AuthProvider } from "./Authentication/AuthContext.tsx";
 import { Provider } from "react-redux"; 
 import { store } from "./redux/store.ts";
 import { GlobalStyles } from "./styles/globalStyles.ts";
-import { Layout } from "./Layout.ts";
+import { Layout } from "./Layout.tsx";
 import { Login } from "./Authentication/Login.tsx";
 import { theme } from "./styles/theme.ts";
 import { Dashboard } from "./pages/Dashboard.tsx";
@@ -27,7 +27,7 @@ import { PrivateRoute } from "./Authentication/PrivateRoute.tsx";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
-  throw new Error("No se encontró el elemento con id 'root'");
+  throw new Error("Could not finde the id 'root'");
 }
 createRoot(rootElement).render(
   <StrictMode>

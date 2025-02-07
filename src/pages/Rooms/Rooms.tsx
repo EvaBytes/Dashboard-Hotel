@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaSortUp, FaSortDown, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles.ts";
-import { GenericTable } from "../../components/common/GenericTable.ts";
+import { GenericTable } from "../../components/common/GenericTable.tsx";
 import { RoomImage, DiscountSpan, StatusButton, SortIcon, IconContainer, ActionMenu, ActionMenuItem } from "../../styles/TableStyles.ts";
 import { setActiveTab, setSortBy } from "../../redux/slices/roomsSlice.ts";
 import { fetchRooms, deleteRoom } from "../../redux/thunks/roomsThunks.ts";

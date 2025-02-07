@@ -14,7 +14,7 @@ export interface User {
     name: string;
     employeeId: string;
     email: string;
-    startDate: string;
+    startDate: number | string;
     description: string;
     contact: string;
     status: "ACTIVE" | "INACTIVE"; 
