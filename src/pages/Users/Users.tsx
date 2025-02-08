@@ -1,7 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import employeesData from "../../../public/data/Users.json";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
@@ -12,7 +11,7 @@ import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersS
 import { fetchAllUsers, deleteUser } from "../../redux/thunks/usersThunks.ts";
 import { parseISO, format } from "date-fns";
 import Swal from "sweetalert2";
-import { User } from "../../interfaces/users/UsersState.ts"
+import { User } from "../../interfaces/users/UsersState.ts";
 import { AppDispatch, RootState } from "../../redux/store.ts";
 
 export const Users = () => {
@@ -25,7 +24,7 @@ export const Users = () => {
   );
 
   useEffect(() => {
-    if (filteredUsers.length === 0 && employeesData?.length > 0) {
+    if (filteredUsers.length === 0) {
       dispatch(fetchAllUsers());
     }
   }, [dispatch, filteredUsers]);
@@ -42,15 +41,15 @@ export const Users = () => {
     }
   }, [error, dispatch]);
 
-  const handleTabChange = (tab:string) => {
+  const handleTabChange = (tab: string) => {
     dispatch(setActiveTab(tab));
   };
 
-  const handleSearchChange = (event:ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     dispatch(setSearchText(event.target.value));
   };
 
-  const handleDelete = (employeeId:string) => {
+  const handleDelete = (employeeId: string) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -82,7 +81,7 @@ export const Users = () => {
 
   const renderRow = (employee: User) => {
     const formattedStartDate = employee.startDate
-      ? format(parseISO(employee.startDate), "dd.MM.yyyy")
+      ? format(parseISO(employee.startDate.toString()), "dd.MM.yyyy")
       : "N/A";
 
     return (

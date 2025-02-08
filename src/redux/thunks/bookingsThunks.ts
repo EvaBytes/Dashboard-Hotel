@@ -1,39 +1,41 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { RootState } from "../../redux/store";
+import { Booking, BookingState } from "../../interfaces/bookings/BookingState";
 
-export const createBooking = createAsyncThunk(
+export const createBooking = createAsyncThunk<Booking, Booking, { state: RootState }>(
   "bookings/createBooking",
   async (bookingData, thunkAPI) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
       return bookingData;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-export const deleteBooking = createAsyncThunk(
+export const deleteBooking = createAsyncThunk<string, string, { state: RootState }>(
   "bookings/deleteBooking",
   async (reservationNumber, thunkAPI) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
       return reservationNumber;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-export const editBooking = createAsyncThunk(
+export const editBooking = createAsyncThunk<Booking, Booking, { state: RootState }>(
   "bookings/editBooking",
   async (updatedBookingData, thunkAPI) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
       const { reservationNumber, ...updatedFields } = updatedBookingData;
-      const { bookings } = thunkAPI.getState().bookings;
+      const { bookings } = thunkAPI.getState().bookings as BookingState;
       const bookingIndex = bookings.findIndex(
-        (b: any) => b.guest.reservationNumber === reservationNumber
+        (b: Booking) => b.guest.reservationNumber === reservationNumber
       );
 
       if (bookingIndex === -1) {
@@ -41,13 +43,13 @@ export const editBooking = createAsyncThunk(
       }
 
       const existingBooking = bookings[bookingIndex];
-      const updatedBooking = {
+      const updatedBooking: Booking = {
         ...existingBooking,
-        ...updatedFields, 
+        ...updatedFields,
         guest: {
           ...existingBooking.guest,
-          ...updatedFields.guest, 
-          reservationNumber,       
+          ...updatedFields.guest,
+          reservationNumber,
         },
       };
       return updatedBooking;
@@ -57,15 +59,15 @@ export const editBooking = createAsyncThunk(
   }
 );
 
-export const fetchBookingById = createAsyncThunk(
+export const fetchBookingById = createAsyncThunk<Booking, string, { state: RootState }>(
   "bookings/fetchBookingById",
-  async (reservationNumber:string, thunkAPI) => {
+  async (reservationNumber, thunkAPI) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
-      const { bookings } = thunkAPI.getState().bookings;
+      const { bookings } = thunkAPI.getState().bookings as BookingState;
       const booking = bookings.find(
-        (b) => b.guest.reservationNumber === reservationNumber
+        (b: Booking) => b.guest.reservationNumber === reservationNumber
       );
 
       if (!booking) {
@@ -73,24 +75,23 @@ export const fetchBookingById = createAsyncThunk(
       }
 
       return booking;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
 );
 
-
-export const fetchAllBookings = createAsyncThunk(
+export const fetchAllBookings = createAsyncThunk<Booking[], void, { state: RootState }>(
   "bookings/fetchAllBookings",
   async (_, thunkAPI) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
 
-      const response = await fetch("public/data/bookings.json");
-      const data = await response.json();
+      const response = await fetch("/data/bookings.json");
+      const data: Booking[] = await response.json();
 
       return data;
-    } catch (error) {
+    } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }

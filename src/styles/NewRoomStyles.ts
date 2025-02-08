@@ -25,7 +25,7 @@ export const RoomHeader = styled.div`
     font-size: ${({ theme }) => theme?.typography?.h2?.fontSize || "24px"};
     font-weight: ${({ theme }) => theme?.typography?.h2?.fontWeight || "600"};
     line-height: ${({ theme }) => theme?.typography?.h2?.lineHeight || "1.3"};
-    color: ${({ theme }) => theme?.text?.primary || "#262626"};
+    color: ${({ theme }) => theme?.palette?.text?.primary || "#262626"};
   }
 `;
 
@@ -133,5 +133,4 @@ export const BackButton = styled.button`
     background-color: red;
     color: white;
   }
-
 `;

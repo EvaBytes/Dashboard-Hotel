@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {TableHeaderProps, StatusBadgeProps, PageButtonProps,SortIconProps, StatusButtonRoomsProps} from "../interfaces/styles/GenericTableProps.ts"
+import { TableHeaderProps, StatusBadgeProps, PageButtonProps, SortIconProps, StatusButtonRoomsProps } from "../interfaces/styles/GenericTableProps";
 
 export const Table = styled.table`
   width: 100%;
@@ -8,19 +8,20 @@ export const Table = styled.table`
   font-size: 14px;
   text-align: left;
 
-  th,td {border-bottom: 1px solid ${(props) => props.theme.palette.background.paper};}
+  th, td {
+    border-bottom: 1px solid ${(props) => props.theme.palette.background.paper};
+  }
 `;
 
 export const TableHeader = styled.th<TableHeaderProps>`
   background-color: ${(props) => props.theme.palette.background.default};
-  padding: .8rem;
+  padding: 0.8rem;
   border-bottom: 2px solid ${(props) => props.theme.palette.background.paper};
   text-align: left;
   font-weight: bold;
-  color: #393939 ;
+  color: #393939;
   cursor: ${(props) => (props.$sortable ? "pointer" : "default")};
   user-select: none;
-
 
   &:first-child {
     border-top-left-radius: 10px;
@@ -135,7 +136,7 @@ export const PageButton = styled.button<PageButtonProps>`
 `;
 
 export const ViewNotesButton = styled.button`
-  padding: 0.3rem .8rem;
+  padding: 0.3rem 0.8rem;
   background-color: ${(props) => props.theme.palette.secondary.main};
   color: ${(props) => props.theme.palette.text.primary};
   border: none;
@@ -172,13 +173,13 @@ export const RoomImage = styled.img`
 
 export const DiscountSpan = styled.span`
   color: #e23428;
-  font-size: .7rem;
+  font-size: 0.7rem;
 `;
 
 export const StatusButton = styled.button<StatusButtonRoomsProps>`
   background-color: ${({ $status }) => $status === "Available" ? "#E8FFEE" : "#FFEDEC"};
   color: ${({ $status }) => $status === "Available" ? "#135846" : "#E23428"};
-  padding: ${({ theme }) => theme?.styles?.button?.padding || ".6rem 1.5rem"};
+  padding: ${({ theme }) => theme?.styles?.button?.padding || "0.6rem 1.5rem"};
   border-radius: 8px;
   border: none;
   cursor: pointer;
@@ -187,10 +188,10 @@ export const StatusButton = styled.button<StatusButtonRoomsProps>`
 
 export const IconContainer = styled.div`
   display: flex;
-  justify-content: center; 
-  align-items: center; 
-  width: 100%; 
-  height: 100%; 
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   position: relative;
 `;
 

@@ -52,9 +52,8 @@ const roomsSlice = createSlice({
       })
       .addCase(fetchRooms.rejected, (state, action) => {
         state.loading = 'rejected';
-        state.error = action.payload || 'Failed to update room';
+        state.error = typeof action.payload === 'string' ? action.payload : 'Failed to fetch rooms';
       })
-    builder
       .addCase(createRoom.pending, (state) => {
         state.loading = 'pending';
         state.error = null;
@@ -66,9 +65,8 @@ const roomsSlice = createSlice({
       })
       .addCase(createRoom.rejected, (state, action) => {
         state.loading = 'rejected';
-        state.error = action.payload || 'Failed to create room';
+        state.error = typeof action.payload === 'string' ? action.payload : 'Failed to create room';
       })
-      builder
       .addCase(deleteRoom.pending, (state) => {
         state.loading = 'pending';
         state.error = null;
@@ -80,9 +78,8 @@ const roomsSlice = createSlice({
       })
       .addCase(deleteRoom.rejected, (state, action) => {
         state.loading = 'rejected';
-        state.error = action.payload || 'Failed to delete room';
+        state.error = typeof action.payload === 'string' ? action.payload : 'Failed to delete room';
       })
-      builder
       .addCase(editRoom.pending, (state) => {
         state.loading = 'pending';
         state.error = null;
@@ -97,9 +94,8 @@ const roomsSlice = createSlice({
       })
       .addCase(editRoom.rejected, (state, action) => {
         state.loading = 'rejected';
-        state.error = action.payload || 'Failed to update room';
+        state.error = typeof action.payload === 'string' ? action.payload : 'Failed to update room';
       })
-      builder
       .addCase(fetchRoomById.pending, (state) => {
         state.loading = 'pending';
         state.error = null;
@@ -110,7 +106,7 @@ const roomsSlice = createSlice({
       })
       .addCase(fetchRoomById.rejected, (state, action) => {
         state.loading = 'rejected';
-        state.error = action.payload || 'Failed to update room';
+        state.error = typeof action.payload === 'string' ? action.payload : 'Failed to fetch room by ID';
       });
   },
 });
@@ -145,7 +141,7 @@ function sortRooms(state: RoomState): Room[] {
   });
 }
 
-export const {setRooms,setActiveTab,setSortBy,setError} = roomsSlice.actions;
+export const { setRooms, setActiveTab, setSortBy, setError } = roomsSlice.actions;
 
 export const selectRoomsState = (state: RootState): RoomState => state.rooms;
 

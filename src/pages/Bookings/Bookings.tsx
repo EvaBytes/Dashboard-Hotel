@@ -5,30 +5,25 @@ import { format } from "date-fns";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaPencilAlt, FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
-import {setActiveTab,setSearchText,setSortBy,setCurrentPage, setError} from "../../redux/slices/bookingsSlice.js";
-import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks.js";
-import {TabsContainer,Tab,SearchContainer,SearchInput,SearchIconWrapper,ActionButton, AddButton} from "../../styles/TabsStyles.js";
-import {Table,TableHeader,TableRow,TableData,GuestContainer,GuestImage,GuestInfo,StatusBadge,PaginationContainer,PageButton,ActionMenu,ActionMenuItem} from "../../styles/TableStyles.js";
-import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
+import { setActiveTab, setSearchText, setSortBy, setCurrentPage, setError } from "../../redux/slices/bookingsSlice";
+import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks";
+import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton, AddButton } from "../../styles/TabsStyles";
+import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem } from "../../styles/TableStyles";
+import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles";
 import Swal from "sweetalert2";
+import { RootState, AppDispatch } from "../../redux/store";
+import { Booking } from "../../interfaces/bookings/BookingState";
 
-export const Bookings = () => {
-  const dispatch = useDispatch();
+export const Bookings: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const [popupData, setPopupData] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(null);
+  const [popupData, setPopupData] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const [pageRange, setPageRange] = useState({ start: 1, end: 4 });
 
-  const activeTab = useSelector((state) => state.bookings.activeTab);
-  const searchText = useSelector((state) => state.bookings.searchText);
-  const sortBy = useSelector((state) => state.bookings.sortBy);
-  const sortOrder = useSelector((state) => state.bookings.sortOrder);
-  const currentPage = useSelector((state) => state.bookings.currentPage);
-  const itemsPerPage = useSelector((state) => state.bookings.itemsPerPage);
-  const filteredBookings = useSelector((state) => state.bookings.filteredBookings,(prev, next) => prev.length === next.length);
-  const loading = useSelector((state) => state.bookings.loading); 
-  const error = useSelector((state) => state.bookings.error); 
+  const { activeTab, searchText, sortBy, sortOrder, currentPage, itemsPerPage, filteredBookings, loading, error } 
+  = useSelector((state: RootState) => state.bookings);
 
   useEffect(() => {
     dispatch(fetchAllBookings());
@@ -47,8 +42,8 @@ export const Bookings = () => {
   }, [error, dispatch]);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuOpen && !e.target.closest(".action-menu")) {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuOpen && !(e.target as HTMLElement).closest(".action-menu")) {
         setMenuOpen(null);
       }
     };
@@ -62,11 +57,11 @@ export const Bookings = () => {
   );
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
 
-  const handleEdit = (reservationId) => {
+  const handleEdit = (reservationId: string) => {
     navigate(`/guest/${reservationId}`);
   };
 
-  const handleDelete = (reservationId) => {
+  const handleDelete = (reservationId: string) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -102,11 +97,11 @@ export const Bookings = () => {
     }));
   };
 
-  const handleSort = (field) => {
+  const handleSort = (field: string) => {
     dispatch(setSortBy(field));
   };
 
-  const renderRow = (booking) => (
+  const renderRow = (booking: Booking) => (
     <>
       <TableData>
         <GuestContainer>
@@ -114,7 +109,7 @@ export const Bookings = () => {
             src={booking.guest?.image || "/default-image.png"}
             alt="Guest"
             onError={(e) => {
-              e.target.src = "/default-image.png";
+              (e.currentTarget as HTMLImageElement).src = "/default-image.png";
             }}
           />
           <GuestInfo>
@@ -154,16 +149,16 @@ export const Bookings = () => {
             size={16}
             onClick={(e) => {
               e.stopPropagation();
-              setMenuOpen(menuOpen === booking.guest.reservationNumber ? null : booking.guest.reservationNumber);
+              setMenuOpen(menuOpen === booking.guest?.reservationNumber ? null : booking.guest?.reservationNumber);
             }}
             style={{ cursor: "pointer" }}
           />
-          {menuOpen === booking.guest.reservationNumber && (
+          {menuOpen === booking.guest?.reservationNumber && (
             <ActionMenu className="action-menu">
-              <ActionMenuItem onClick={() => handleEdit(booking.guest.reservationNumber)}>
+              <ActionMenuItem onClick={() => handleEdit(booking.guest?.reservationNumber)}>
                 <FaPencilAlt /> Details
               </ActionMenuItem>
-              <ActionMenuItem onClick={() => handleDelete(booking.guest.reservationNumber)}>
+              <ActionMenuItem onClick={() => handleDelete(booking.guest?.reservationNumber)}>
                 <FaTrashAlt /> Delete
               </ActionMenuItem>
             </ActionMenu>
@@ -258,7 +253,7 @@ export const Bookings = () => {
           </TableRow>
         </thead>
         <tbody>
-          {loading ? ( 
+          {loading === "pending" ? ( 
             <TableRow>
               <TableData>
                 Loading bookings...

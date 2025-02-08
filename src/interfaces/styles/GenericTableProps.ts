@@ -1,16 +1,13 @@
-import { User } from "../users/UsersState.ts";
-import { Room } from "../room/RoomState.ts"
-
 export interface Header {
   label: string | React.JSX.Element;
   key: string | null;
   sortable?: boolean;
 }
 
-export interface GenericTableProps {
+export interface GenericTableProps<T> {
   headers: Header[];
-  data: User[] | Room[];
-  renderRow: (item: User | Room) => React.JSX.Element;
+  data: T[];
+  renderRow: (item: T) => React.JSX.Element;
   itemsPerPage?: number;
   onSort?: (column: string) => void;
   sortBy?: string | null;
@@ -31,10 +28,9 @@ export interface PageButtonProps {
   $active?: boolean;
 }
 
-export interface StatusButtonRoomsProps{
+export interface StatusButtonRoomsProps {
   $status: "Available" | "Booked" | "In Progress";
 }
-
 
 export interface SortIconProps {
   $active: boolean;

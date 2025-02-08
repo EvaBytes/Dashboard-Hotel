@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import {RoomDetailsContainer,RoomDetailsCard,RoomDetailsHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/RoomDetailsStyles.ts";
+import { RoomDetailsContainer, RoomDetailsCard, RoomDetailsHeader, RoomDetailsSection, SaveButton, BackButton, ImageUploadSection, ImagePreview, AmenitiesContainer, AmenityItem } from "../../styles/RoomDetailsStyles.ts";
 import { Room } from "../../interfaces/room/RoomState.ts";
 
 const roomTypePhotos = {
@@ -10,7 +10,7 @@ const roomTypePhotos = {
   "Suite": ["/radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "/caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "/kate-branch-G18uHzrihOE-unsplash.jpg"],
 };
 
-const amenitiesList = ["Air conditioner","High speed WiFi","Breakfast","Kitchen","Cleaning","Shower","Grocery","Single bed","Shop near","Towels","24/7 Online Support","Strong locker","Smart Security","Expert Team"];
+const amenitiesList = ["Air conditioner", "WiFi", "Breakfast", "Shower", "Towels"];
 
 const cancellationPolicyText = `
 Standard Rate:
@@ -21,18 +21,18 @@ For the non refundable bookings are no cancellation or changes possible. In case
 `;
 
 const RoomDetails = () => {
-  const { roomNumber } = useParams<{roomNumber:string}>();
-  const location = useLocation<{roomData: Room}>();
+  const { roomNumber } = useParams<{ roomNumber: string }>();
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const [roomData, setRoomData] = useState({
+  const [roomData, setRoomData] = useState<Room>({
     roomPhoto: "",
     roomNumber: "",
     roomType: "",
-    facilities: [],
+    facilities: "",
     rate: "",
     offerPrice: "",
-    status: "",
+    status: "Available",
     guest: {
       fullName: "",
       reservationNumber: "",
@@ -46,19 +46,19 @@ const RoomDetails = () => {
     discount: "",
     cancellationPolicy: cancellationPolicyText,
     amenities: [],
-    photos: [], 
+    photos: [],
   });
 
   useEffect(() => {
     if (location.state?.roomData) {
-      const roomToEdit = location.state.roomData;
+      const roomToEdit = location.state.roomData as Room;
       setRoomData({
         ...roomToEdit,
-        facilities: roomToEdit.facilities
-          ? roomToEdit.facilities.split(",")
-          : [],
+        facilities: Array.isArray(roomToEdit.facilities)
+          ? roomToEdit.facilities.join(",")
+          : roomToEdit.facilities || "",
         amenities: roomToEdit.amenities || [],
-        photos: roomTypePhotos[roomToEdit.roomType] || [], 
+        photos: roomTypePhotos[roomToEdit.roomType] || [],
       });
     }
   }, [location.state]);
@@ -72,19 +72,19 @@ const RoomDetails = () => {
     }));
   };
 
-  const handleAmenityToggle = (amenity) => {
+  const handleAmenityToggle = (amenity: string) => {
     setRoomData((prev) => ({
       ...prev,
-      amenities: prev.amenities?.includes(amenity)
+      amenities: prev.amenities ? (prev.amenities.includes(amenity)
         ? prev.amenities.filter((item) => item !== amenity)
-        : [...(prev.amenities || []), amenity],
+        : [...prev.amenities, amenity]) : [amenity],
     }));
   };
 
-  const handleSaveRoom = (e) => {
+  const handleSaveRoom = (e: React.FormEvent) => {
     e.preventDefault();
     const existingRooms = JSON.parse(localStorage.getItem("rooms") || "[]") || [];
-    const updatedRooms = existingRooms.map((room) =>
+    const updatedRooms = existingRooms.map((room: Room) =>
       room.roomNumber === roomNumber ? roomData : room
     );
     localStorage.setItem("rooms", JSON.stringify(updatedRooms));
@@ -110,7 +110,7 @@ const RoomDetails = () => {
               <option value="">Select Room Type</option>
               <option value="Single Bed">Single Bed</option>
               <option value="Double Bed">Double Bed</option>
-              <option value="Double Bed Superior">Double Bed Superior</option>
+              <option value="Double Superior">Double Superior</option>
               <option value="Suite">Suite</option>
             </select>
 
@@ -176,27 +176,26 @@ const RoomDetails = () => {
                 <AmenityItem
                   key={index}
                   onClick={() => handleAmenityToggle(amenity)}
-                  $selected={roomData.amenities?.includes(amenity)}
+                  data-selected={roomData.amenities?.includes(amenity) || false}
                 >
                   {amenity}
                 </AmenityItem>
               ))}
             </AmenitiesContainer>
             <ImageUploadSection>
-  <label>Room Photos</label>
-  <div>
-    {roomTypePhotos[roomData.roomType]?.map((photo, index) => (
-      <ImagePreview
-        key={index}
-        src={photo}
-        alt={`Room Photo ${index + 1}`}
-      />
-    )) || (
-      <p>No photos available for the selected room type.</p>
-    )}
-  </div>
-</ImageUploadSection>
-
+              <label>Room Photos</label>
+              <div>
+                {roomData.photos && roomData.photos.length > 0 ? roomData.photos.map((photo, index) => (
+                  <ImagePreview
+                    key={index}
+                    src={photo}
+                    alt={`Room Photo ${index + 1}`}
+                  />
+                )) : (
+                  <p>No photos available for the selected room type.</p>
+                )}
+              </div>
+            </ImageUploadSection>
           </RoomDetailsSection>
 
           <SaveButton type="submit">Save Changes</SaveButton>

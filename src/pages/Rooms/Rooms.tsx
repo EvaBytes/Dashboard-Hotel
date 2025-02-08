@@ -6,7 +6,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles.ts";
 import { GenericTable } from "../../components/common/GenericTable.tsx";
 import { RoomImage, DiscountSpan, StatusButton, SortIcon, IconContainer, ActionMenu, ActionMenuItem } from "../../styles/TableStyles.ts";
-import { setActiveTab, setSortBy } from "../../redux/slices/roomsSlice.ts";
+import { setActiveTab, setSortBy, setError } from "../../redux/slices/roomsSlice.ts";
 import { fetchRooms, deleteRoom } from "../../redux/thunks/roomsThunks.ts";
 import { Room } from "../../interfaces/room/RoomState.ts";
 import { AppDispatch, RootState } from "../../redux/store.ts";
@@ -15,14 +15,25 @@ import Swal from "sweetalert2";
 export const Rooms = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { rooms, filteredRooms, activeTab, sortBy, sortOrder, loading, error } =
-    useSelector((state: RootState) => state.rooms);
+  const { rooms, filteredRooms, activeTab, sortBy, sortOrder, loading, error } = useSelector((state: RootState) => state.rooms);
 
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchRooms());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: error,
+      }).then(() => {
+        dispatch(setError(null));
+      });
+    }
+  }, [error, dispatch]);
 
   const handleTabChange = (tab: string) => {
     dispatch(setActiveTab(tab));
@@ -176,7 +187,7 @@ export const Rooms = () => {
       {loading === "pending" && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
-      <GenericTable headers={headers} data={filteredRooms} renderRow={(item) => renderRow(item as Room)} itemsPerPage={10} onSort={handleSort} sortBy={sortBy} sortOrder={sortOrder} />
+      <GenericTable headers={headers} data={filteredRooms} renderRow={renderRow} itemsPerPage={10} onSort={handleSort} sortBy={sortBy} sortOrder={sortOrder} />
     </div>
   );
 };

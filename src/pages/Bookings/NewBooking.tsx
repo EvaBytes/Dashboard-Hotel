@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
-import { createBooking } from "../../redux/slices/bookingsSlice.js";
-import {FormContainer,FormGroup,Label,Input,TextArea,SubmitButton,BackButton} from "../../styles/NewBookingStyles.js";
+import { createBooking } from "../../redux/thunks/bookingsThunks";
+import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/NewBookingStyles";
+import { AppDispatch } from "../../redux/store";
 
-const NewBooking = () => {
+const NewBooking: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -31,12 +32,12 @@ const NewBooking = () => {
     price: false,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     const newErrors = {
@@ -74,19 +75,33 @@ const NewBooking = () => {
     setIsLoading(true);
 
     const formattedData = {
-      ...formData,
+      guest: {
+        fullName: formData.fullName,
+        reservationNumber: formData.reservationId,
+        image: "/Profile2.png", 
+      },
+      orderDate: new Date().toISOString(),
       checkIn: new Date(formData.checkIn).toISOString(),
       checkOut: new Date(formData.checkOut).toISOString(),
+      roomType: formData.roomNumber, 
+      specialRequest: formData.specialRequest,
+      facilities: formData.amenities,
+      status: "In Progress", 
+      roomPhoto: [],
+      offerPrice: formData.price,
     };
 
     dispatch(createBooking(formattedData))
-      .unwrap()
-      .then(() => {
-        Swal.fire("Success", "New booking added successfully!", "success");
-        navigate("/bookings");
+      .then((result) => {
+        if (createBooking.fulfilled.match(result)) {
+          Swal.fire("Success", "New booking added successfully!", "success");
+          navigate("/bookings");
+        } else {
+          Swal.fire("Error", result.error?.message || "Failed to create booking", "error");
+        }
       })
       .catch((error) => {
-        Swal.fire("Error", error?.message || "Failed to create booking", "error");
+        Swal.fire("Error", error.message || "Failed to create booking", "error");
       })
       .finally(() => setIsLoading(false));
   };
