@@ -15,7 +15,7 @@ import Swal from "sweetalert2";
 export const Rooms = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { rooms, filteredRooms, activeTab, sortBy, sortOrder, loading, error } = useSelector((state: RootState) => state.rooms);
+  const { filteredRooms, activeTab, sortBy, sortOrder, loading, error } = useSelector((state: RootState) => state.rooms);
 
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
 
@@ -53,7 +53,7 @@ export const Rooms = () => {
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
+      confirmButtonColor: "#0e4636",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {

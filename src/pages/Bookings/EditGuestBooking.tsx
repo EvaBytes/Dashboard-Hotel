@@ -1,24 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingById, editBooking } from "../../redux/thunks/bookingsThunks.js";
-import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/EditBooking.js";
+import { fetchBookingById, editBooking } from "../../redux/thunks/bookingsThunks.ts";
+import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/EditBooking.ts";
+import { RootState, AppDispatch } from "../../redux/store.ts";
+import { Booking } from "../../interfaces/bookings/BookingState.ts";
 
 export const EditBooking = () => {
-  const { reservationId } = useParams();
+  const { reservationId } = useParams<{ reservationId: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   
-  const { currentBooking, loading, error } = useSelector((state) => state.bookings);
+  const { currentBooking, loading, error } = useSelector((state: RootState) => state.bookings);
 
-  const [fullName, setFullName] = useState("");
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [price, setPrice] = useState("");
-  const [specialRequest, setSpecialRequest] = useState("");
+  const [fullName, setFullName] = useState<string>("");
+  const [checkIn, setCheckIn] = useState<string>("");
+  const [checkOut, setCheckOut] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [specialRequest, setSpecialRequest] = useState<string>("");
 
   useEffect(() => {
-    dispatch(fetchBookingById(reservationId));
+    if (reservationId) {
+      dispatch(fetchBookingById(reservationId));
+    }
   }, [dispatch, reservationId]);
 
   useEffect(() => {
@@ -31,8 +35,10 @@ export const EditBooking = () => {
     }
   }, [currentBooking]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!reservationId || !currentBooking) return;
+
     const updatedData = {
       reservationId,
       guest: { ...currentBooking.guest, fullName },
@@ -47,7 +53,7 @@ export const EditBooking = () => {
       .catch((err) => console.error("Update Error: ", err));
   };
 
-  if (loading) return <p>Cargando...</p>;
+  if (loading === "pending") return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
 
   return (
@@ -55,27 +61,27 @@ export const EditBooking = () => {
       <h2>Edit Booking</h2>
       <form onSubmit={handleSubmit}>
         <FormGroup>
-            <Label htmlFor="fullName">Nombre completo</Label>
-            <Input id="fullName" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+          <Label htmlFor="fullName">Full Name</Label>
+          <Input id="fullName" type="text" value={fullName} onChange={(e) => setFullName(e.target.value)} />
         </FormGroup>
         <FormGroup>
-            <Label htmlFor="checkIn">Check-In</Label>
-            <Input id="checkIn" type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
+          <Label htmlFor="checkIn">Check-In</Label>
+          <Input id="checkIn" type="date" value={checkIn} onChange={(e) => setCheckIn(e.target.value)} />
         </FormGroup>
         <FormGroup>
-            <Label htmlFor="checkOut">Check-Out</Label>
-            <Input id="checkOut" type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
+          <Label htmlFor="checkOut">Check-Out</Label>
+          <Input id="checkOut" type="date" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} />
         </FormGroup>
         <FormGroup>
-            <Label htmlFor="price">Precio</Label>
-            <Input id="price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+          <Label htmlFor="price">Price</Label>
+          <Input id="price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
         </FormGroup>
         <FormGroup>
-            <Label htmlFor="specialRequest">Special Request</Label>
-            <TextArea id="specialRequest" rows="3" value={specialRequest} onChange={(e) => setSpecialRequest(e.target.value)} />
+          <Label htmlFor="specialRequest">Special Request</Label>
+          <TextArea id="specialRequest" rows={3} value={specialRequest} onChange={(e) => setSpecialRequest(e.target.value)} />
         </FormGroup>
-        <SubmitButton type="submit">Guardar</SubmitButton>
-        <BackButton onClick={() => navigate(-1)}>Cancelar</BackButton>
+        <SubmitButton type="submit">Save</SubmitButton>
+        <BackButton onClick={() => navigate(-1)}>Cancel</BackButton>
       </form>
     </FormContainer>
   );

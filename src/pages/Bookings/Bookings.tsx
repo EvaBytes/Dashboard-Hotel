@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { format } from "date-fns";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaPencilAlt, FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
-import { setActiveTab, setSearchText, setSortBy, setCurrentPage, setError } from "../../redux/slices/bookingsSlice";
-import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks";
-import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton, AddButton } from "../../styles/TabsStyles";
-import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem } from "../../styles/TableStyles";
-import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles";
+import { setActiveTab, setSearchText, setSortBy, setCurrentPage, setError } from "../../redux/slices/bookingsSlice.ts";
+import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks.ts";
+import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton, AddButton } from "../../styles/TabsStyles.ts";
+import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem } from "../../styles/TableStyles.ts";
+import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.ts";
+import { RootState, AppDispatch } from "../../redux/store.ts";
+import { Booking } from "../../interfaces/bookings/BookingState.ts";
 import Swal from "sweetalert2";
-import { RootState, AppDispatch } from "../../redux/store";
-import { Booking } from "../../interfaces/bookings/BookingState";
 
-export const Bookings: React.FC = () => {
+export const Bookings = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const [popupData, setPopupData] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
-  const [pageRange, setPageRange] = useState({ start: 1, end: 4 });
+  const [pageRange, setPageRange] = useState<{ start: number; end: number }>({ start: 1, end: 4 });
 
   const { activeTab, searchText, sortBy, sortOrder, currentPage, itemsPerPage, filteredBookings, loading, error } 
-  = useSelector((state: RootState) => state.bookings);
+    = useSelector((state: RootState) => state.bookings);
 
   useEffect(() => {
     dispatch(fetchAllBookings());
-  }, [dispatch, filteredBookings.length]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (error) {
@@ -42,13 +42,16 @@ export const Bookings: React.FC = () => {
   }, [error, dispatch]);
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e: globalThis.MouseEvent) => {
       if (menuOpen && !(e.target as HTMLElement).closest(".action-menu")) {
         setMenuOpen(null);
       }
     };
     document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
+  
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, [menuOpen]);
 
   const currentData = filteredBookings.slice(
@@ -67,7 +70,7 @@ export const Bookings: React.FC = () => {
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
+      confirmButtonColor: "#0e4636",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
@@ -76,7 +79,7 @@ export const Bookings: React.FC = () => {
           .then(() => {
             Swal.fire("Deleted!", "The booking has been deleted.", "success");
           })
-          .catch((error) => {
+          .catch(() => {
             Swal.fire("Error!", "Failed to delete the booking.", "error");
           });
       }
@@ -215,8 +218,8 @@ export const Bookings: React.FC = () => {
       <Table>
         <thead>
           <TableRow>
-            <TableHeader>Guest</TableHeader>
-            <TableHeader onClick={() => handleSort("orderDate")}>
+            <TableHeader $sortable={true}>Guest</TableHeader>
+            <TableHeader $sortable={true} onClick={() => handleSort("orderDate")}>
               Order Date
               <span style={{ marginLeft: "8px" }}>
                 {sortBy === "orderDate" && sortOrder === "asc" ? (
@@ -226,7 +229,7 @@ export const Bookings: React.FC = () => {
                 )}
               </span>
             </TableHeader>
-            <TableHeader onClick={() => handleSort("checkIn")}>
+            <TableHeader $sortable={true} onClick={() => handleSort("checkIn")}>
               Check In
               <span style={{ marginLeft: "8px" }}>
                 {sortBy === "checkIn" && sortOrder === "asc" ? (
@@ -236,7 +239,7 @@ export const Bookings: React.FC = () => {
                 )}
               </span>
             </TableHeader>
-            <TableHeader onClick={() => handleSort("checkOut")}>
+            <TableHeader $sortable={true}onClick={() => handleSort("checkOut")}>
               Check Out
               <span style={{ marginLeft: "8px" }}>
                 {sortBy === "checkOut" && sortOrder === "asc" ? (
@@ -246,10 +249,10 @@ export const Bookings: React.FC = () => {
                 )}
               </span>
             </TableHeader>
-            <TableHeader>Special Request</TableHeader>
-            <TableHeader>Room Type</TableHeader>
-            <TableHeader>Status</TableHeader>
-            <TableHeader>Actions</TableHeader>
+            <TableHeader $sortable={true}>Special Request</TableHeader>
+            <TableHeader $sortable={true}>Room Type</TableHeader>
+            <TableHeader $sortable={true}>Status</TableHeader>
+            <TableHeader $sortable={true}>Actions</TableHeader>
           </TableRow>
         </thead>
         <tbody>

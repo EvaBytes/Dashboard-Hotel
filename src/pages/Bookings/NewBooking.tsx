@@ -6,7 +6,7 @@ import { createBooking } from "../../redux/thunks/bookingsThunks";
 import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/NewBookingStyles";
 import { AppDispatch } from "../../redux/store";
 
-const NewBooking: React.FC = () => {
+const NewBooking = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 

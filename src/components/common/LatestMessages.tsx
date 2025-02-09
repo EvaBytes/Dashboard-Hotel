@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.js";
-import { LatestMessagesContainer, MessageCard, NavigationButton, NavigationPlaceholder, MessageDetail } from "../../styles/LatestMessagesStyles.js";
+import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.ts";
+import { LatestMessagesContainer, MessageCard, NavigationButton, NavigationPlaceholder, MessageDetail } from "../../styles/LatestMessagesStyles.ts";
 import { GiCancel } from "react-icons/gi";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";

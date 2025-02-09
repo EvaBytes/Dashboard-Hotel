@@ -1,9 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { EditUserPayload, User } from "../../interfaces/users/UsersState.ts";
+import { isValid, parse } from "date-fns";
 
 const USERS_LOCAL_STORAGE_KEY = "usersData";
 
-const simulateApiCall = (data: any, delay = 200) =>
+const simulateApiCall = (data: unknown, delay = 200) =>
   new Promise((resolve) => setTimeout(() => resolve(data), delay));
 
 export const fetchAllUsers = createAsyncThunk<User[]>(
@@ -13,23 +14,25 @@ export const fetchAllUsers = createAsyncThunk<User[]>(
       let users = JSON.parse(localStorage.getItem(USERS_LOCAL_STORAGE_KEY) || "[]");
 
       if (users.length === 0) {
-        const response = await fetch("/data/Users.json"); 
+        const response = await fetch("/data/Users.json");
         if (!response.ok) {
           throw new Error("Error loading Users.json");
         }
         users = await response.json();
       }
-
       const normalizedData = users.map((user: User) => ({
         ...user,
-        startDate: user.startDate ? new Date(user.startDate).getTime() : null,
+        startDate: user.startDate || null,
       }));
 
       localStorage.setItem(USERS_LOCAL_STORAGE_KEY, JSON.stringify(normalizedData));
 
       return normalizedData;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -46,7 +49,7 @@ export const fetchUserById = createAsyncThunk<User, string>(
       }
 
       return user;
-    } catch (error: any) {
+    } catch (error: unknown) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }
@@ -95,6 +98,11 @@ export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload>(
         throw new Error("Invalid user data provided");
       }
 
+      const parsedDate = parse(updatedUser.startDate, "dd/MM/yyyy", new Date());
+      if (!isValid(parsedDate)) {
+        throw new Error("Invalid startDate format. Expected format: dd/MM/yyyy");
+      }
+
       const existingUsers = JSON.parse(localStorage.getItem(USERS_LOCAL_STORAGE_KEY) || "[]");
       const index = existingUsers.findIndex((user) => user.employeeId === updatedUser.employeeId);
 
@@ -106,7 +114,7 @@ export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload>(
       localStorage.setItem(USERS_LOCAL_STORAGE_KEY, JSON.stringify(existingUsers));
 
       return updatedUser;
-    } catch (error: any) {
+    } catch (error: unknown) {
       return thunkAPI.rejectWithValue(error.message);
     }
   }

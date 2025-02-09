@@ -6,7 +6,7 @@ export const BackgroundContainer = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-image: url("src/assets/img/Login.png");
+  background-image: url("/Login.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

@@ -6,16 +6,23 @@ import { format } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline} from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
 import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper, CarouselItem, CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles.js";
+import { RootState, AppDispatch } from "../../redux/store.ts";
+import { Booking } from "../../interfaces/bookings/BookingState.ts";
 
 const GuestDetails = () => {
-  const { reservationId } = useParams();
+  const { reservationId } = useParams<{ reservationId: string }>();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { currentBooking, loading, error } = useSelector((state) => state.bookings);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const dispatch = useDispatch<AppDispatch>();
+  const { currentBooking, loading, error } = useSelector((state: RootState) => state.bookings);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const booking: Booking = currentBooking;
 
   useEffect(() => {
-    dispatch(fetchBookingById(reservationId));
+    if (reservationId) {
+      dispatch(fetchBookingById(reservationId));
+    } else {
+      console.error("reservationId is undefined");
+    }
   }, [dispatch, reservationId]);
 
   if (loading) return <p>Loading...</p>;

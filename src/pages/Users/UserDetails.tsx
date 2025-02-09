@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserById } from "../../redux/thunks/usersThunks.ts";
 import { selectCurrentUser, selectUsersStatus, selectError } from "../../redux/slices/usersSlice.ts";
-import { format, isValid } from "date-fns";
+import { format, isValid, parse } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
 import { GuestDetailsContainer, UsersInfoCard, GuestImage, GuestHeader, GuestNameDetails, GuestActions, GuestInfoSection, StatusBadge, Divider, ActionButton, ModifyButton } from "../../styles/GuestDetailsStyles.ts";
@@ -30,15 +30,23 @@ const UserDetails = () => {
 
   const { name, description, contact, status, startDate, photo } = currentUser;
 
-  const formattedStartDate = startDate && isValid(new Date(startDate))
-    ? format(new Date(startDate), "MMM dd, yyyy")
+  const parsedDate = startDate
+    ? parse(startDate, "dd/MM/yyyy", new Date()) 
+    : null;
+
+  const displayDate = parsedDate && isValid(parsedDate)
+    ? format(parsedDate, "MMM dd, yyyy") 
     : "N/A";
+
+  console.log("Fecha original:", startDate); // Depuración
+  console.log("Fecha parseada:", parsedDate); // Depuración
+  console.log("Fecha formateada:", displayDate); // Depuración
 
   return (
     <GuestDetailsContainer>
       <UsersInfoCard>
         <GuestHeader>
-          <GuestImage src={photo || "default-user-image.png"} alt={name} />
+          <GuestImage src={photo || "/Profile1.png"} alt={name} />
           <GuestNameDetails>
             <h2>{name}</h2>
             <h4>ID: {employeeId}</h4>
@@ -59,22 +67,22 @@ const UserDetails = () => {
 
         <Divider />
         <GuestInfoSection>
-          <p>
+          <h4>
             <strong>Description:</strong> {description}
-          </p>
-          <p>
+          </h4>
+          <h4>
             <strong>Contact:</strong> {contact}
-          </p>
+          </h4>
         </GuestInfoSection>
         <Divider />
         <GuestInfoSection>
-          <p>
+          <h4>
             <strong>Status:</strong>{" "}
             <StatusBadge $status={status}>{status}</StatusBadge>
-          </p>
-          <p>
-            <strong>Started:</strong> {formattedStartDate}
-          </p>
+          </h4>
+          <h4>
+            <strong>Started:</strong> {displayDate}
+          </h4>
         </GuestInfoSection>
       </UsersInfoCard>
     </GuestDetailsContainer>

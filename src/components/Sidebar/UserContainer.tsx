@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent } from "react";
-import { UserContainer, UserAvatar, UserInfo, UserName, UserEmail, EditButton, SaveButton, CancelButton, InputField, ModalBackdrop, ModalContent, ModalTitle, ModalButtonContainer } from "./UserContainerStyles";
+import { UserContainer, UserAvatar, UserInfo, UserName, UserEmail, EditButton, SaveButton, CancelButton, InputField, ModalBackdrop, ModalContent, ModalTitle, ModalButtonContainer } from "./UserContainerStyles.ts";
 import { UserContainerProps } from "../../interfaces/SidebarState.ts";
 
 const UserContainerComponent = ({ user, onSave }: UserContainerProps) => {

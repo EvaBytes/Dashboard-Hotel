@@ -3,8 +3,8 @@ import { AiOutlineMail, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useAuth } from "../../Authentication/AuthContext.jsx";
-import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,BreadcrumbSection,Breadcrumb} from "./NavbarStyles.js";
+import { useAuth } from "../../Authentication/AuthContext.tsx";
+import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,BreadcrumbSection,Breadcrumb} from "./NavbarStyles.ts";
 import { NavbarProps} from "../../interfaces/SidebarState.ts"
 
 const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {

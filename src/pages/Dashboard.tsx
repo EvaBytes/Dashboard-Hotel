@@ -2,13 +2,14 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { IoBedOutline, IoCalendarOutline } from "react-icons/io5";
 import { IoIosLogIn, IoIosLogOut } from "react-icons/io";
-import {DashboardContainer,IconContainer,TextContainer,StyledCard,StyledTypographyTitle,StyledTypographyValue,StyledBookingButtonContainer,StyledBookingList,StyledBookingItem,StyledBookingInfo,StyledBookingButton} from "../styles/DashboardStyles.js";
-import { LatestMessages } from "../components/common/LatestMessages.jsx";
-import { StyledMessagesCard } from "../styles/LatestMessagesStyles.js";
+import {DashboardContainer,IconContainer,TextContainer,StyledCard,StyledTypographyTitle,StyledTypographyValue,StyledBookingButtonContainer,StyledBookingList,StyledBookingItem,StyledBookingInfo,StyledBookingButton} from "../styles/DashboardStyles.ts";
+import { LatestMessages } from "../components/common/LatestMessages.tsx";
+import { StyledMessagesCard } from "../styles/LatestMessagesStyles.ts";
+import {Booking} from "../interfaces/dashboard/DashboardState.ts";
 import bookingData from "../../public/data/Bookings.json";
 import messagesData from "../../public/data/Messages.json";
 
-const calculateMetrics = (data) => {
+const calculateMetrics = (data: Booking[]): { totalBookings: number; checkIns: number; checkOuts: number; inProgress: number } => {
   const totalBookings = data.length;
   const checkIns = data.filter((booking) => booking.status === "Check-In").length;
   const checkOuts = data.filter((booking) => booking.status === "Check-Out").length;
@@ -38,7 +39,7 @@ const BookingList = () => {
         <StyledBookingItem key={index}>
           <div className="room-photo">
             <img
-              src={booking.photo || "src/assets/img/LUXURYcutre.jpg"}
+              src={booking.photo || "/LUXURYcutre.jpg"}
               alt={booking.roomType}
               className="large-photo"
             />
@@ -72,7 +73,7 @@ export const Dashboard = () => {
     <div>
       <DashboardContainer>
         <DashboardCard icon={IoBedOutline} title="Bookings" value={totalBookings} />
-        <DashboardCard icon={IoCalendarOutline} title="In Progress" value={inProgress} />
+        <DashboardCard icon={IoCalendarOutline} title="Scheluded Rooms" value={inProgress} />
         <DashboardCard icon={IoIosLogIn} title="Check In" value={checkIns} />
         <DashboardCard icon={IoIosLogOut} title="Check Out" value={checkOuts} />
       </DashboardContainer>

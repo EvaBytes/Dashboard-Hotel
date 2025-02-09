@@ -9,7 +9,7 @@ import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, Ad
 import { TableData, EmployeeContainer, EmployeeImage, EmployeeInfo, DescriptionText, ContactText, StatusText, DotsContainer, ActionMenu, ActionMenuItem } from "../../styles/UsersStyles.ts";
 import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersSlice.ts";
 import { fetchAllUsers, deleteUser } from "../../redux/thunks/usersThunks.ts";
-import { parseISO, format } from "date-fns";
+import { parse, format, isValid } from "date-fns";
 import Swal from "sweetalert2";
 import { User } from "../../interfaces/users/UsersState.ts";
 import { AppDispatch, RootState } from "../../redux/store.ts";
@@ -55,7 +55,7 @@ export const Users = () => {
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
+      confirmButtonColor: "#0e4636",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
@@ -80,8 +80,12 @@ export const Users = () => {
   ];
 
   const renderRow = (employee: User) => {
-    const formattedStartDate = employee.startDate
-      ? format(parseISO(employee.startDate.toString()), "dd.MM.yyyy")
+    const parsedDate = employee.startDate
+    ? format(parse(String(employee.startDate), "dd/MM/yyyy", new Date()), "dd.MM.yyyy")
+    : null;
+  
+    const formattedStartDate = parsedDate && isValid(parsedDate)
+      ? format(parsedDate, "dd.MM.yyyy") 
       : "N/A";
 
     return (

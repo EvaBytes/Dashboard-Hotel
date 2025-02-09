@@ -1,15 +1,22 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../redux/store";
-import { Booking, BookingState } from "../../interfaces/bookings/BookingState";
+import { Booking } from "../../interfaces/bookings/BookingState";
+
+const simulateRequest = async <T>(data: T, delay: number = 400): Promise<T> => {
+  return new Promise((resolve) => setTimeout(() => resolve(data), delay));
+};
 
 export const createBooking = createAsyncThunk<Booking, Booking, { state: RootState }>(
   "bookings/createBooking",
   async (bookingData, thunkAPI) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-      return bookingData;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+      const response = await simulateRequest(bookingData);
+      return response;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -18,10 +25,13 @@ export const deleteBooking = createAsyncThunk<string, string, { state: RootState
   "bookings/deleteBooking",
   async (reservationNumber, thunkAPI) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await simulateRequest(null);
       return reservationNumber;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -30,31 +40,13 @@ export const editBooking = createAsyncThunk<Booking, Booking, { state: RootState
   "bookings/editBooking",
   async (updatedBookingData, thunkAPI) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-
-      const { reservationNumber, ...updatedFields } = updatedBookingData;
-      const { bookings } = thunkAPI.getState().bookings as BookingState;
-      const bookingIndex = bookings.findIndex(
-        (b: Booking) => b.guest.reservationNumber === reservationNumber
-      );
-
-      if (bookingIndex === -1) {
-        return thunkAPI.rejectWithValue("Booking not found");
+      const response = await simulateRequest(updatedBookingData);
+      return response;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
       }
-
-      const existingBooking = bookings[bookingIndex];
-      const updatedBooking: Booking = {
-        ...existingBooking,
-        ...updatedFields,
-        guest: {
-          ...existingBooking.guest,
-          ...updatedFields.guest,
-          reservationNumber,
-        },
-      };
-      return updatedBooking;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -63,20 +55,22 @@ export const fetchBookingById = createAsyncThunk<Booking, string, { state: RootS
   "bookings/fetchBookingById",
   async (reservationNumber, thunkAPI) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-
-      const { bookings } = thunkAPI.getState().bookings as BookingState;
+      const { bookings } = thunkAPI.getState().bookings;
       const booking = bookings.find(
-        (b: Booking) => b.guest.reservationNumber === reservationNumber
+        (b) => b.guest.reservationNumber === reservationNumber
       );
 
       if (!booking) {
-        return thunkAPI.rejectWithValue("Booking not found");
+        throw new Error("Booking not found");
       }
 
-      return booking;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+      const response = await simulateRequest(booking);
+      return response;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -85,14 +79,17 @@ export const fetchAllBookings = createAsyncThunk<Booking[], void, { state: RootS
   "bookings/fetchAllBookings",
   async (_, thunkAPI) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 200));
-
-      const response = await fetch("/data/bookings.json");
+      const response = await fetch("/data/Bookings.json");
+      if (!response.ok) {
+        throw new Error("Failed to fetch bookings");
+      }
       const data: Booking[] = await response.json();
-
       return data;
-    } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
