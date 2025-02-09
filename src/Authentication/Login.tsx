@@ -37,7 +37,7 @@ const Login = () => {
         login({
           name: "Eva Sevillano",
           email: "user@testing.com",
-          image: "src/assets/img/profile.jpeg",
+          image: "/profile.jpeg",
         });
         navigate("/");
       } else {

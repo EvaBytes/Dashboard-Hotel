@@ -3,7 +3,7 @@ import { NewRoomPayload, Room } from "../../interfaces/room/RoomState.ts";
 
 const ROOMS_LOCAL_STORAGE_KEY = "roomsData";
 
-const simulateApiCall = (data: any, delay = 200) =>
+const simulateApiCall = (data: unknown, delay = 200) =>
   new Promise((resolve) => setTimeout(() => resolve(data), delay));
 
 const isValidStatus = (status: string): status is Room['status'] => {
@@ -69,13 +69,13 @@ export const createRoom = createAsyncThunk<Room, NewRoomPayload>(
       const newRoom: Room = {
         ...roomData,
         roomNumber: crypto.randomUUID(),
-        status: isValidStatus(roomData.status) ? roomData.status : "Available",  // Default to "Available" if status is invalid
+        status: isValidStatus(roomData.status) ? roomData.status : "Available", 
       };
 
       const updatedRooms = [...existingRooms, newRoom];
       localStorage.setItem(ROOMS_LOCAL_STORAGE_KEY, JSON.stringify(updatedRooms));
       return newRoom;
-    } catch (error) {
+    } catch {
       return thunkAPI.rejectWithValue("Failed to create room");
     }
   }
@@ -90,7 +90,7 @@ export const deleteRoom = createAsyncThunk<string, string>(
 
       localStorage.setItem(ROOMS_LOCAL_STORAGE_KEY, JSON.stringify(updatedRooms));
       return roomNumber;
-    } catch (error) {
+    } catch {
       return thunkAPI.rejectWithValue("Failed to delete room");
     }
   }
