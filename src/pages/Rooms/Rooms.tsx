@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaSortUp, FaSortDown, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles";
-import { GenericTable } from "../../components/common/GenericTable";
-import { RoomImage, DiscountSpan, StatusButton, SortIcon, IconContainer, ActionMenu, ActionMenuItem } from "../../styles/TableStyles";
-import { setActiveTab, setSortBy, setSortOrder, setError } from "../../redux/slices/roomsSlice";
-import { fetchRooms, deleteRoom } from "../../redux/thunks/roomsThunks";
-import { Room } from "../../interfaces/room/RoomState";
-import { AppDispatch, RootState } from "../../redux/store";
+import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles.ts";
+import { GenericTable } from "../../components/common/GenericTable.tsx";
+import { RoomImage, DiscountSpan, StatusButton, SortIcon, IconContainer, ActionMenu, ActionMenuItem } from "../../styles/TableStyles.ts";
+import { setActiveTab, setSortBy, setSortOrder, setError } from "../../redux/slices/roomsSlice.ts";
+import { fetchRooms, deleteRoom } from "../../redux/thunks/roomsThunks.ts";
+import { Room } from "../../interfaces/room/RoomState.ts";
+import { AppDispatch, RootState } from "../../redux/store.ts";
 import Swal from "sweetalert2";
 
 export const Rooms = () => {
