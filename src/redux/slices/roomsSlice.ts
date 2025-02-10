@@ -27,10 +27,10 @@ const roomsSlice = createSlice({
       state.filteredRooms = filterRooms(state);
     },
     setSortBy: (state, action: PayloadAction<string>) => {
-      state.sortBy = action.payload;
       if (state.sortBy === action.payload) {
         state.sortOrder = state.sortOrder === "asc" ? "desc" : "asc";
       } else {
+        state.sortBy = action.payload;
         state.sortOrder = "asc";
       }
       state.filteredRooms = sortRooms(state);

@@ -1,17 +1,17 @@
-import React, { useState, useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { format } from "date-fns";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaPencilAlt, FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
-import { setActiveTab, setSearchText, setSortBy, setCurrentPage, setError } from "../../redux/slices/bookingsSlice.ts";
-import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks.ts";
-import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton, AddButton } from "../../styles/TabsStyles.ts";
-import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem } from "../../styles/TableStyles.ts";
-import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.ts";
-import { RootState, AppDispatch } from "../../redux/store.ts";
-import { Booking } from "../../interfaces/bookings/BookingState.ts";
+import { setActiveTab, setSearchText, setSortBy, setCurrentPage, setError } from "../../redux/slices/bookingsSlice";
+import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks";
+import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton, AddButton } from "../../styles/TabsStyles";
+import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem } from "../../styles/TableStyles";
+import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles";
+import { RootState, AppDispatch } from "../../redux/store";
+import { Booking } from "../../interfaces/bookings/BookingState";
 import Swal from "sweetalert2";
 
 export const Bookings = () => {
@@ -42,7 +42,7 @@ export const Bookings = () => {
   }, [error, dispatch]);
 
   useEffect(() => {
-    const handleClickOutside = (e: globalThis.MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (menuOpen && !(e.target as HTMLElement).closest(".action-menu")) {
         setMenuOpen(null);
       }
@@ -105,7 +105,7 @@ export const Bookings = () => {
   };
 
   const renderRow = (booking: Booking) => (
-    <>
+    <TableRow key={booking.guest?.reservationNumber || Math.random()}>
       <TableData>
         <GuestContainer>
           <GuestImage
@@ -158,7 +158,7 @@ export const Bookings = () => {
           />
           {menuOpen === booking.guest?.reservationNumber && (
             <ActionMenu className="action-menu">
-              <ActionMenuItem onClick={() => handleEdit(booking.guest?.reservationNumber)}>
+              <ActionMenuItem onClick={() => navigate(`/guest/${booking.guest?.reservationNumber}`)}>
                 <FaPencilAlt /> Details
               </ActionMenuItem>
               <ActionMenuItem onClick={() => handleDelete(booking.guest?.reservationNumber)}>
@@ -168,7 +168,7 @@ export const Bookings = () => {
           )}
         </div>
       </TableData>
-    </>
+    </TableRow>
   );
 
   return (
@@ -239,7 +239,7 @@ export const Bookings = () => {
                 )}
               </span>
             </TableHeader>
-            <TableHeader $sortable={true}onClick={() => handleSort("checkOut")}>
+            <TableHeader $sortable={true} onClick={() => handleSort("checkOut")}>
               Check Out
               <span style={{ marginLeft: "8px" }}>
                 {sortBy === "checkOut" && sortOrder === "asc" ? (
@@ -263,11 +263,7 @@ export const Bookings = () => {
               </TableData>
             </TableRow>
           ) : currentData.length > 0 ? ( 
-            currentData.map((booking) => (
-              <TableRow key={booking.guest?.reservationNumber || Math.random()}>
-                {renderRow(booking)}
-              </TableRow>
-            ))
+            currentData.map((booking) => renderRow(booking))
           ) : ( 
             <TableRow>
               <TableData>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext.js";
-import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField} from "../styles/loginStyles.js";
+import { useAuth } from "./AuthContext.tsx";
+import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField} from "../styles/loginStyles.ts";
 
 const Login = () => {
   const [email, setEmail] = useState("user@testing.com");

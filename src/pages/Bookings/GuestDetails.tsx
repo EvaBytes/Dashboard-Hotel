@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingById } from "../../redux/thunks/bookingsThunks.js"; 
+import { fetchBookingById } from "../../redux/thunks/bookingsThunks"; 
 import { format } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline} from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
-import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper, CarouselItem, CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles.js";
-import { RootState, AppDispatch } from "../../redux/store.ts";
-import { Booking } from "../../interfaces/bookings/BookingState.ts";
+import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper, CarouselItem, CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles";
+import { RootState, AppDispatch } from "../../redux/store";
 
 const GuestDetails = () => {
   const { reservationId } = useParams<{ reservationId: string }>();
@@ -15,7 +14,6 @@ const GuestDetails = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { currentBooking, loading, error } = useSelector((state: RootState) => state.bookings);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-  const booking: Booking = currentBooking;
 
   useEffect(() => {
     if (reservationId) {
@@ -25,7 +23,7 @@ const GuestDetails = () => {
     }
   }, [dispatch, reservationId]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading === "pending") return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!currentBooking) return <p>Guest details not found.</p>;
 

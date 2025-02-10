@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingById, editBooking } from "../../redux/thunks/bookingsThunks.ts";
 import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/EditBooking.ts";
 import { RootState, AppDispatch } from "../../redux/store.ts";
-import { Booking } from "../../interfaces/bookings/BookingState.ts";
 
 export const EditBooking = () => {
   const { reservationId } = useParams<{ reservationId: string }>();
@@ -40,6 +39,7 @@ export const EditBooking = () => {
     if (!reservationId || !currentBooking) return;
 
     const updatedData = {
+      ...currentBooking,
       reservationId,
       guest: { ...currentBooking.guest, fullName },
       checkIn,

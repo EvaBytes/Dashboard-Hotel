@@ -41,6 +41,11 @@ export const Rooms = () => {
 
   const handleSort = (column: string) => {
     dispatch(setSortBy(column));
+    if (sortBy === column) {
+      dispatch(setSortBy(sortOrder === "asc" ? "desc" : "asc"));
+    } else {
+      dispatch(setSortBy("asc"));
+    }
   };
 
   const handleEdit = (room: Room) => {
@@ -76,28 +81,40 @@ export const Rooms = () => {
     { label: "Amenities", key: "facilities" },
     {
       label: (
-        <div onClick={() => handleSort("rate")} style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+        <div
+          onClick={() => handleSort("rate")}
+          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+        >
           Rate
           <SortIcon $active={sortBy === "rate"} $sortOrder={sortOrder}>
-            {sortBy === "rate" && sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+            {sortBy === "rate" && sortOrder === "asc" ? (
+              <FaSortUp />
+            ) : (
+              <FaSortDown />
+            )}
           </SortIcon>
         </div>
       ),
       key: "rate",
-      sortable: true,
     },
     { label: "Offer Price", key: "offerPrice" },
     {
       label: (
-        <div onClick={() => handleSort("status")} style={{ display: "flex", alignItems: "center", cursor: "pointer" }}>
+        <div
+          onClick={() => handleSort("status")}
+          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+        >
           Status
           <SortIcon $active={sortBy === "status"} $sortOrder={sortOrder}>
-            {sortBy === "status" && sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+            {sortBy === "status" && sortOrder === "asc" ? (
+              <FaSortUp />
+            ) : (
+              <FaSortDown />
+            )}
           </SortIcon>
         </div>
       ),
       key: "status",
-      sortable: true,
     },
     { label: "Actions", key: null },
   ];
@@ -187,7 +204,14 @@ export const Rooms = () => {
       {loading === "pending" && <p>Loading...</p>}
       {error && <p style={{ color: "red" }}>Error: {error}</p>}
 
-      <GenericTable headers={headers} data={filteredRooms} renderRow={renderRow} itemsPerPage={10} onSort={handleSort} sortBy={sortBy} sortOrder={sortOrder} />
+      <GenericTable
+        headers={headers}
+        data={filteredRooms}
+        renderRow={renderRow}
+        itemsPerPage={10}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+      />
     </div>
   );
 };
