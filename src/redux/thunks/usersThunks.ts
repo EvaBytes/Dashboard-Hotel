@@ -1,31 +1,25 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { EditUserPayload, User } from "../../interfaces/users/UsersState.ts";
+import { RootState } from "../../redux/store";
+import { EditUserPayload, User } from "../../interfaces/users/UsersState";
 import { isValid, parse } from "date-fns";
 
-const USERS_LOCAL_STORAGE_KEY = "usersData";
+const simulateRequest = async <T>(data: T, delay: number = 400): Promise<T> => {
+  return new Promise((resolve) => setTimeout(() => resolve(data), delay));
+};
 
-const simulateApiCall = (data: unknown, delay = 200) =>
-  new Promise((resolve) => setTimeout(() => resolve(data), delay));
-
-export const fetchAllUsers = createAsyncThunk<User[]>(
+export const fetchAllUsers = createAsyncThunk<User[], void, { state: RootState }>(
   "users/fetchAllUsers",
   async (_, thunkAPI) => {
     try {
-      let users = JSON.parse(localStorage.getItem(USERS_LOCAL_STORAGE_KEY) || "[]");
-
-      if (users.length === 0) {
-        const response = await fetch("/data/Users.json");
-        if (!response.ok) {
-          throw new Error("Error loading Users.json");
-        }
-        users = await response.json();
+      const response = await fetch("/data/Users.json");
+      if (!response.ok) {
+        throw new Error("Error loading Users.json");
       }
+      const users: User[] = await response.json();
       const normalizedData = users.map((user: User) => ({
         ...user,
         startDate: user.startDate || null,
       }));
-
-      localStorage.setItem(USERS_LOCAL_STORAGE_KEY, JSON.stringify(normalizedData));
 
       return normalizedData;
     } catch (error: unknown) {
@@ -37,60 +31,64 @@ export const fetchAllUsers = createAsyncThunk<User[]>(
   }
 );
 
-export const fetchUserById = createAsyncThunk<User, string>(
+export const fetchUserById = createAsyncThunk<User, string, { state: RootState }>(
   "users/fetchUserById",
   async (employeeId, thunkAPI) => {
     try {
-      const users = JSON.parse(localStorage.getItem(USERS_LOCAL_STORAGE_KEY) || "[]");
+      const { users } = thunkAPI.getState().users;
       const user = users.find((u) => u.employeeId === employeeId);
 
       if (!user) {
         throw new Error(`User with employeeId ${employeeId} not found`);
       }
 
-      return user;
+      const responseUser = await simulateRequest(user);
+      return responseUser;
     } catch (error: unknown) {
-      return thunkAPI.rejectWithValue(error.message);
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
 
-export const createUser = createAsyncThunk<User, User>(
+export const createUser = createAsyncThunk<User, User, { state: RootState }>(
   "users/createUser",
   async (userData, thunkAPI) => {
     try {
-      await simulateApiCall(null);
-      const existingUsers = JSON.parse(localStorage.getItem(USERS_LOCAL_STORAGE_KEY) || "[]");
       const newUser: User = {
         ...userData,
         employeeId: crypto.randomUUID(),
       };
 
-      const updatedUsers = [...existingUsers, newUser];
-      localStorage.setItem(USERS_LOCAL_STORAGE_KEY, JSON.stringify(updatedUsers));
-      return newUser;
-    } catch (error) {
-      return thunkAPI.rejectWithValue("Failed to create user");
+      const responseUser = await simulateRequest(newUser);
+      return responseUser;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
 
-export const deleteUser = createAsyncThunk<string, string>(
+export const deleteUser = createAsyncThunk<string, string, { state: RootState }>(
   "users/deleteUser",
   async (employeeId, thunkAPI) => {
     try {
-      const existingUsers = JSON.parse(localStorage.getItem(USERS_LOCAL_STORAGE_KEY) || "[]");
-      const updatedUsers = existingUsers.filter((user) => user.employeeId !== employeeId);
-
-      localStorage.setItem(USERS_LOCAL_STORAGE_KEY, JSON.stringify(updatedUsers));
+      await simulateRequest(null);
       return employeeId;
-    } catch (error) {
-      return thunkAPI.rejectWithValue("Failed to delete user");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
 
-export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload>(
+export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload, { state: RootState }>(
   "users/editUser",
   async (updatedUser, thunkAPI) => {
     try {
@@ -103,19 +101,13 @@ export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload>(
         throw new Error("Invalid startDate format. Expected format: dd/MM/yyyy");
       }
 
-      const existingUsers = JSON.parse(localStorage.getItem(USERS_LOCAL_STORAGE_KEY) || "[]");
-      const index = existingUsers.findIndex((user) => user.employeeId === updatedUser.employeeId);
-
-      if (index === -1) {
-        throw new Error("User not found");
-      }
-
-      existingUsers[index] = updatedUser;
-      localStorage.setItem(USERS_LOCAL_STORAGE_KEY, JSON.stringify(existingUsers));
-
-      return updatedUser;
+      const responseUser = await simulateRequest(updatedUser);
+      return responseUser;
     } catch (error: unknown) {
-      return thunkAPI.rejectWithValue(error.message);
+      if (error instanceof Error) {
+        return thunkAPI.rejectWithValue(error.message);
+      }
+      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
