@@ -28,17 +28,39 @@ export const NavbarRight = styled.div`
 `;
 
 export const IconButton = styled.button`
+  position: relative; 
   background: none;
   border: none;
   color: #135846;
   margin: 0 0.8rem;
   cursor: pointer;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     opacity: 0.5;
   }
 `;
+
+export const NotificationBadge = styled.span`
+  position: absolute;
+  bottom: .8rem;
+  left: .9rem;
+  background-color: #E23428;
+  border: 1px solid white;
+  color: white;
+  font-size: 10px;
+  font-weight: 400;
+  border-radius: 6px;
+  width: 1.2rem;
+  height: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 
 export const TitleContainer = styled.div`
   display: flex;
@@ -79,3 +101,4 @@ export const Breadcrumb = styled.div`
     color: #6c757d; 
   }
 `;
+

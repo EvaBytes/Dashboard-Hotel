@@ -5,10 +5,10 @@ import { format } from "date-fns";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { FaPencilAlt, FaTrashAlt, FaSortUp, FaSortDown } from "react-icons/fa";
 import { LuUserRoundSearch } from "react-icons/lu";
-import { setActiveTab, setSearchText, setSortBy, setCurrentPage, setError } from "../../redux/slices/bookingsSlice";
+import { setActiveTab, setSearchText, setSortBy, setSortOrder, setCurrentPage, setError } from "../../redux/slices/bookingsSlice";
 import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks";
 import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton, AddButton } from "../../styles/TabsStyles";
-import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem } from "../../styles/TableStyles";
+import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem, SortIcon } from "../../styles/TableStyles";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles";
 import { RootState, AppDispatch } from "../../redux/store";
 import { Booking } from "../../interfaces/bookings/BookingState";
@@ -60,10 +60,6 @@ export const Bookings = () => {
   );
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
 
-  const handleEdit = (reservationId: string) => {
-    navigate(`/guest/${reservationId}`);
-  };
-
   const handleDelete = (reservationId: string) => {
     Swal.fire({
       title: "Are you sure?",
@@ -85,6 +81,14 @@ export const Bookings = () => {
       }
     });
   };
+  const handleSort = (field: string) => {
+    if (sortBy === field) {
+      dispatch(setSortOrder(sortOrder === "asc" ? "desc" : "asc"));
+    } else {
+      dispatch(setSortBy(field));
+      dispatch(setSortOrder("asc"));
+    }
+  };
 
   const handleNextRange = () => {
     setPageRange((prev) => ({
@@ -100,19 +104,15 @@ export const Bookings = () => {
     }));
   };
 
-  const handleSort = (field: string) => {
-    dispatch(setSortBy(field));
-  };
-
   const renderRow = (booking: Booking) => (
     <TableRow key={booking.guest?.reservationNumber || Math.random()}>
       <TableData>
         <GuestContainer>
           <GuestImage
-            src={booking.guest?.image || "/default-image.png"}
+            src={booking.guest?.image || "/Profile1.png"}
             alt="Guest"
             onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = "/default-image.png";
+              (e.currentTarget as HTMLImageElement).src = "/Profile1.png";
             }}
           />
           <GuestInfo>
@@ -218,37 +218,37 @@ export const Bookings = () => {
       <Table>
         <thead>
           <TableRow>
-            <TableHeader $sortable={true}>Guest</TableHeader>
-            <TableHeader $sortable={true} onClick={() => handleSort("orderDate")}>
-              Order Date
-              <span style={{ marginLeft: "8px" }}>
-                {sortBy === "orderDate" && sortOrder === "asc" ? (
-                  <FaSortUp style={{ opacity: 1, transition: "opacity 0.2s" }} />
-                ) : (
-                  <FaSortDown style={{ opacity: 1, transition: "opacity 0.2s" }} />
-                )}
-              </span>
-            </TableHeader>
-            <TableHeader $sortable={true} onClick={() => handleSort("checkIn")}>
-              Check In
-              <span style={{ marginLeft: "8px" }}>
-                {sortBy === "checkIn" && sortOrder === "asc" ? (
-                  <FaSortUp style={{ opacity: 1, transition: "opacity 0.2s" }} />
-                ) : (
-                  <FaSortDown style={{ opacity: 1, transition: "opacity 0.2s" }} />
-                )}
-              </span>
-            </TableHeader>
-            <TableHeader $sortable={true} onClick={() => handleSort("checkOut")}>
-              Check Out
-              <span style={{ marginLeft: "8px" }}>
-                {sortBy === "checkOut" && sortOrder === "asc" ? (
-                  <FaSortUp style={{ opacity: 1, transition: "opacity 0.2s" }} />
-                ) : (
-                  <FaSortDown style={{ opacity: 1, transition: "opacity 0.2s" }} />
-                )}
-              </span>
-            </TableHeader>
+          <TableHeader $sortable={true}>Guest</TableHeader>
+          <TableHeader 
+            $sortable={true} 
+            $active={sortBy === "orderDate"}
+            onClick={() => handleSort("orderDate")}
+          >
+            Order Date
+            <SortIcon $active={sortBy === "orderDate"} $sortOrder={sortOrder}>
+              {sortBy === "orderDate" && sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+            </SortIcon>
+          </TableHeader>
+          <TableHeader 
+            $sortable={true} 
+            $active={sortBy === "checkIn"}
+            onClick={() => handleSort("checkIn")}
+          >
+            Check In
+            <SortIcon $active={sortBy === "checkIn"} $sortOrder={sortOrder}>
+              {sortBy === "checkIn" && sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+            </SortIcon>
+          </TableHeader>
+          <TableHeader 
+            $sortable={true} 
+            $active={sortBy === "checkOut"}
+            onClick={() => handleSort("checkOut")}
+          >
+            Check Out
+            <SortIcon $active={sortBy === "checkOut"} $sortOrder={sortOrder}>
+              {sortBy === "checkOut" && sortOrder === "asc" ? <FaSortUp /> : <FaSortDown />}
+            </SortIcon>
+          </TableHeader>
             <TableHeader $sortable={true}>Special Request</TableHeader>
             <TableHeader $sortable={true}>Room Type</TableHeader>
             <TableHeader $sortable={true}>Status</TableHeader>

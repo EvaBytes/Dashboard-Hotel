@@ -62,7 +62,6 @@ export const BackButton = styled.button`
   color: red;
   padding: ${({ theme }) => theme?.styles?.button?.padding || ".6rem 1.5rem"};
   font-size: ${({ theme }) => theme?.typography?.body1?.fontSize || "16px"};
-  margin-left: 1rem;
   border: none;
   border-radius: ${({ theme }) => theme?.styles?.button?.borderRadius || "8px"};
   cursor: pointer;
@@ -71,5 +70,29 @@ export const BackButton = styled.button`
   &:hover {
     background-color: red;
     color: white;
+  }
+`;
+
+export const AmenitiesContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
+export const AmenityItem = styled.div<{ $selected: boolean }>`
+  padding: 0.5rem 1rem;
+  border: 2px solid ${({ $selected, theme }) => ($selected ? theme?.palette?.secondary?.main : "#ccc")};
+  border-radius: ${({ theme }) => theme?.styles?.button?.borderRadius || "8px"};
+  cursor: pointer;
+  background-color: ${({ $selected, theme }) =>
+    $selected ? theme?.palette?.secondary?.main : "transparent"};
+  color: ${({ $selected, theme }) =>
+    $selected ? theme?.palette?.primary?.main : theme?.palette?.text?.secondary};
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: ${({ theme }) => theme?.palette?.secondary?.main};
+    background-color: ${({ theme }) => theme?.palette?.secondary?.main};
+    color: ${({ theme }) => theme?.palette?.primary?.main};
   }
 `;

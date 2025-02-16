@@ -33,6 +33,8 @@ export interface RoomState {
   loading: "idle" | "pending" | "fulfilled" | "rejected";
   error: string | null;
   currentRoom: Room | null;
+  currentPage: number;
+  itemsPerPage: number;
 }
 
 export interface NewRoomPayload {

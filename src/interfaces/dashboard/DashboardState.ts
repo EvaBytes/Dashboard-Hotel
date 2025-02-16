@@ -1,4 +1,4 @@
-export interface DashboardCardProps {
+export interface NavbarCardProps {
     icon: React.ComponentType;
     title: string;
     value: number;
@@ -16,3 +16,13 @@ export interface DashboardCardProps {
     photo?: string;
     status: string;
   }
+
+  export interface NavbarProps {
+    toggleSidebar: () => void;
+    sidebarOpen: boolean;
+  }
+  
+  export interface Message {
+    status: string;
+  }
+  

@@ -12,6 +12,8 @@ const initialState: RoomState = {
   loading: "idle",
   error: null,
   currentRoom: null,
+  currentPage: 1,
+  itemsPerPage: 10,
 };
 
 const roomsSlice = createSlice({
@@ -34,6 +36,10 @@ const roomsSlice = createSlice({
       state.sortOrder = action.payload;
       state.filteredRooms = sortRooms(state);
     },
+    setCurrentPage: (state, action: PayloadAction<number>) => {
+      state.currentPage = action.payload;
+    },
+
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
@@ -140,7 +146,7 @@ function sortRooms(state: RoomState): Room[] {
   });
 }
 
-export const { setRooms, setActiveTab, setSortBy, setSortOrder, setError } = roomsSlice.actions;
+export const { setRooms, setActiveTab, setSortBy, setSortOrder, setCurrentPage, setError } = roomsSlice.actions;
 
 export const selectRoomsState = (state: RootState): RoomState => state.rooms;
 

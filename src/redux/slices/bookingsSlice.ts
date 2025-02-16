@@ -27,20 +27,26 @@ const bookingsSlice = createSlice({
     },
     setActiveTab: (state, action: PayloadAction<string>) => {
       state.activeTab = action.payload;
-      state.filteredBookings = filterBookings(state);
+      state.sortBy = null; 
+      state.sortOrder = "asc"; 
+      state.filteredBookings = filterBookings(state); 
     },
     setSearchText: (state, action: PayloadAction<string>) => {
       state.searchText = action.payload.toLowerCase();
       state.filteredBookings = filterBookings(state);
     },
     setSortBy: (state, action: PayloadAction<string>) => {
-      state.sortBy = action.payload;
       if (state.sortBy === action.payload) {
         state.sortOrder = state.sortOrder === "asc" ? "desc" : "asc";
       } else {
-        state.sortOrder = "asc";
+        state.sortBy = action.payload;
+        state.sortOrder = "desc";
       }
-      state.filteredBookings = sortBookings(state);
+      state.filteredBookings = sortBookings(state); 
+    },
+    setSortOrder: (state, action: PayloadAction<"asc" | "desc">) => {
+      state.sortOrder = action.payload;
+      state.filteredBookings = sortBookings(state); 
     },
     setCurrentPage: (state, action: PayloadAction<number>) => {
       state.currentPage = action.payload;
@@ -49,6 +55,7 @@ const bookingsSlice = createSlice({
       state.error = action.payload;
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(createBooking.pending, (state) => {
@@ -152,14 +159,19 @@ function sortBookings(state: BookingState): Booking[] {
   if (!sortBy) return [...filteredBookings];
 
   return [...filteredBookings].sort((a, b) => {
-    let valueA, valueB;
+    let valueA: any, valueB: any;
+
     if (sortBy === "orderDate" || sortBy === "checkIn" || sortBy === "checkOut") {
       valueA = new Date(a[sortBy]);
       valueB = new Date(b[sortBy]);
-    } else if (sortBy === "guest.fullName") {
-      valueA = a.guest.fullName.toLowerCase();
-      valueB = b.guest.fullName.toLowerCase();
-    } else {
+      if (isNaN(valueA.getTime())) valueA = new Date(0); 
+      if (isNaN(valueB.getTime())) valueB = new Date(0); 
+    }
+    else if (sortBy === "guest.fullName") {
+      valueA = a.guest?.fullName?.toLowerCase() || "";
+      valueB = b.guest?.fullName?.toLowerCase() || "";
+    }
+    else {
       valueA = a[sortBy];
       valueB = b[sortBy];
     }
@@ -170,7 +182,7 @@ function sortBookings(state: BookingState): Booking[] {
   });
 }
 
-export const { setBookings, setActiveTab, setSearchText, setSortBy, setCurrentPage, setError } = bookingsSlice.actions;
+export const { setBookings, setActiveTab, setSearchText, setSortBy, setSortOrder, setCurrentPage, setError } = bookingsSlice.actions;
 
 export const selectBookingsState = (state: RootState): BookingState => state.bookings;
 export const selectBookings = (state: RootState): Booking[] => state.bookings.bookings;

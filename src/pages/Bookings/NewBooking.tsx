@@ -3,8 +3,26 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { createBooking } from "../../redux/thunks/bookingsThunks";
-import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/NewBookingStyles";
+import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton, AmenitiesContainer, AmenityItem } from "../../styles/NewBookingStyles";
 import { AppDispatch } from "../../redux/store";
+import { Booking } from "../../interfaces/bookings/BookingState"; // Asegúrate de importar la interfaz
+
+const amenitiesList = [
+  "Air conditioner",
+  "High speed WiFi",
+  "Breakfast",
+  "Kitchen",
+  "Cleaning",
+  "Shower",
+  "Grocery",
+  "Single bed",
+  "Shop near",
+  "Towels",
+  "24/7 Online Support",
+  "Strong locker",
+  "Smart Security",
+  "Expert Team"
+];
 
 const NewBooking = () => {
   const navigate = useNavigate();
@@ -18,7 +36,7 @@ const NewBooking = () => {
     roomNumber: "",
     price: "",
     specialRequest: "",
-    amenities: "",
+    amenities: [] as string[], 
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +53,15 @@ const NewBooking = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAmenityToggle = (amenity: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter((item) => item !== amenity)
+        : [...prev.amenities, amenity],
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -74,10 +101,10 @@ const NewBooking = () => {
 
     setIsLoading(true);
 
-    const formattedData = {
+    const formattedData: Booking = {
       guest: {
         fullName: formData.fullName,
-        reservationNumber: formData.reservationId,
+        reservationNumber: formData.reservationId, 
         image: "/Profile2.png", 
       },
       orderDate: new Date().toISOString(),
@@ -85,10 +112,14 @@ const NewBooking = () => {
       checkOut: new Date(formData.checkOut).toISOString(),
       roomType: formData.roomNumber, 
       specialRequest: formData.specialRequest,
-      facilities: formData.amenities,
+      facilities: formData.amenities, 
       status: "In Progress", 
-      roomPhoto: [],
+      roomPhoto: [], 
       offerPrice: formData.price,
+      reservationNumber: formData.reservationId, 
+      photo: "/Profile2.png", 
+      roomNumber: formData.roomNumber, 
+      rate: formData.price, 
     };
 
     dispatch(createBooking(formattedData))
@@ -152,7 +183,17 @@ const NewBooking = () => {
 
         <FormGroup>
           <Label>Amenities</Label>
-          <Input type="text" name="amenities" value={formData.amenities}onChange={handleChange}placeholder="E.g., WiFi, Pool, Gym"/>
+          <AmenitiesContainer>
+            {amenitiesList.map((amenity) => (
+              <AmenityItem
+                key={amenity}
+                onClick={() => handleAmenityToggle(amenity)}
+                $selected={formData.amenities.includes(amenity)}
+              >
+                {amenity}
+              </AmenityItem>
+            ))}
+          </AmenitiesContainer>
         </FormGroup>
 
         <div style={{ display: "flex", gap: "1rem" }}>

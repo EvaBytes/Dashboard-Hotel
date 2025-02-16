@@ -259,7 +259,7 @@ const NewRoom = () => {
           </RoomDetailsSection>
 
           <SaveButton type="submit" disabled={loading}>
-            {loading ? "Saving..." : "Save Room"}
+            {loading ? "Save" : "Save Room"}
           </SaveButton>
           <BackButton type="button" onClick={() => navigate("/rooms")}>
             Cancel

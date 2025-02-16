@@ -19,7 +19,7 @@ export const TableHeader = styled.th<TableHeaderProps>`
   border-bottom: 2px solid ${(props) => props.theme.palette.background.paper};
   text-align: left;
   font-weight: bold;
-  color: #393939;
+  color: ${(props) => (props.$active ? props.theme.palette.text.primary : "#393939")};
   cursor: ${(props) => (props.$sortable ? "pointer" : "default")};
   user-select: none;
 
@@ -92,6 +92,8 @@ export const StatusBadge = styled.span<StatusBadgeProps>`
 
   background-color: ${({ $status }) =>
     ({
+      "Available": "#E8FFEE",
+      "Booked": "#FFEDEC",
       "Check-In": "#E8FFEE",
       "Check-Out": "#FFEDEC",
       "In Progress": "#FFFAE5",
@@ -99,6 +101,8 @@ export const StatusBadge = styled.span<StatusBadgeProps>`
 
   color: ${({ $status }) =>
     ({
+      "Available": "#135846",
+      "Booked": "#E23428",
       "Check-In": "#135846",
       "Check-Out": "#E23428",
       "In Progress": "#e0bc00",
@@ -155,6 +159,7 @@ export const SortIcon = styled.span<SortIconProps>`
   justify-content: center;
   font-size: 1rem;
   margin-left: 0.5rem;
+  width: 16px; 
   color: ${(props) => (props.$active ? props.theme.palette.text.primary : "#ccc")};
   transition: color 0.2s ease, transform 0.2s ease;
 
@@ -166,8 +171,8 @@ export const SortIcon = styled.span<SortIconProps>`
 `;
 
 export const RoomImage = styled.img`
-  width: 5rem;
-  height: 3rem;
+  width: 6rem;
+  height: 4rem;
   border-radius: 8px;
 `;
 

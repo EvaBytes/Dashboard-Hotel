@@ -34,3 +34,8 @@ export interface Booking {
     error: string | null;
     currentBooking: Booking | null;
   }
+
+  export interface SortIconProps {
+    $active: boolean;
+    $sortOrder: "asc" | "desc";
+  }

@@ -2,23 +2,34 @@ import React from "react";
 import { AiOutlineMail, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../Authentication/AuthContext.tsx";
-import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,BreadcrumbSection,Breadcrumb} from "./NavbarStyles.ts";
-import { NavbarProps} from "../../interfaces/SidebarState.ts"
+import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,NotificationBadge} from "./NavbarStyles.ts";
+import { NavbarProps, Message} from "../../interfaces/dashboard/DashboardState.ts"
+import { Booking } from "../../interfaces/bookings/BookingState.ts";
+import messagesData from "../../../public/data/Messages.json";
+import bookingData from "../../../public/data/Bookings.json";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
 
-  const pageTitleMap = {
+const getCurrentMonthBookings = (bookings: Booking[]) => {
+    const currentMonth = new Date().getMonth() + 1;
+    return bookings.filter(booking => new Date(booking.checkIn).getMonth() + 1 === currentMonth).length;
+  };
+
+  const unreadMessages = (messagesData as Message[]).filter(msg => msg.status !== "read").length;
+  const currentMonthBookingsCount = getCurrentMonthBookings(bookingData as Booking[]);
+    
+  const pageTitleMap: Record<string, string> = {
     "/": "Dashboard",
     "/bookings": "Bookings",
     "/rooms": "Rooms",
     "/contact": "Contact",
     "/users": "Users",
-    "/user-details" : "User Details",
+    "/user-details": "User Details",
     "/new-booking": "New Booking",
     "/new-room": "New Room",
     "/new-user": "New User",
@@ -26,49 +37,16 @@ const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
     "/room-details": "Room Details", 
   };
 
-  const getPageTitle = () => {
+  const getPageTitle = (): string => {
     const pathSegments = location.pathname.split("/");
     const basePath = `/${pathSegments[1]}`;
 
-    if (basePath === "/room-details") {
-      return "Room Details";
-    }
-    if (basePath === "/user-details") {
-      return "User Details"; 
-    }
-
+    if (basePath === "/room-details") return "Room Details";
+    if (basePath === "/user-details") return "User Details";
     return basePath === "/guest" ? "Bookings" : pageTitleMap[basePath] || "Unknown Page";
   };
 
   const pageTitle = getPageTitle();
-
-  const getBreadcrumbs = () => {
-    if (location.pathname.startsWith("/guest")) {
-      return (
-        <Breadcrumb>
-          <Link to="/bookings">Bookings</Link> /{" "}
-          <span>{location.state?.guestName || "Guest Details"}</span>
-        </Breadcrumb>
-      );
-    } else if (location.pathname.startsWith("/room-details")) {
-      return (
-        <Breadcrumb>
-          <Link to="/rooms">Rooms</Link> /{" "}
-          <span>{location.state?.roomNumber || "Room Details"}</span>
-        </Breadcrumb>
-      );
-    } else if (location.pathname.startsWith("/user-details")) {
-      return (
-        <Breadcrumb>
-          <Link to="/users">Users</Link> /{" "}
-          <span>{location.state?.userName || "User Details"}</span>
-        </Breadcrumb>
-      );
-    }
-    return null;
-  };
-
-  const breadcrumbs = getBreadcrumbs();
 
   const handleLogout = () => {
     logout();
@@ -80,22 +58,19 @@ const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
       <NavbarLeft>
         <TitleContainer>
           <IconButton onClick={toggleSidebar}>
-            {sidebarOpen ? (
-              <LuCircleArrowLeft size={24} color="black" />
-            ) : (
-              <LuCircleArrowRight size={24} color="black" />
-            )}
+            {sidebarOpen ? <LuCircleArrowLeft size={24} color="black" /> : <LuCircleArrowRight size={24} color="black" />}
           </IconButton>
           <TitleSection>{pageTitle}</TitleSection>
         </TitleContainer>
-        {breadcrumbs ? <BreadcrumbSection>{breadcrumbs}</BreadcrumbSection> : null}
       </NavbarLeft>
       <NavbarRight>
-        <IconButton>
+        <IconButton onClick={() => navigate("/contact")}>
           <AiOutlineMail size={24} />
+          {unreadMessages > 0 && <NotificationBadge>{unreadMessages}</NotificationBadge>}
         </IconButton>
-        <IconButton>
+        <IconButton onClick={() => navigate("/bookings")}>
           <AiOutlineBell size={24} />
+          {currentMonthBookingsCount > 0 && <NotificationBadge>{currentMonthBookingsCount}</NotificationBadge>}
         </IconButton>
         <IconButton onClick={handleLogout}>
           <FiLogOut size={24} />
