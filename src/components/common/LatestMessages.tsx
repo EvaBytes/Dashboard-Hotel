@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles.ts";
-import { LatestMessagesContainer, MessageCard, NavigationButton, NavigationPlaceholder, MessageDetail } from "../../styles/LatestMessagesStyles.ts";
+import {LatestMessagesContainer,MessageCard,NavigationButton,NavigationPlaceholder,MessageDetail} from "../../styles/LatestMessagesStyles.ts";
 import { GiCancel } from "react-icons/gi";
 import { FaRegCheckCircle } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,6 +13,17 @@ import { Navigation, FreeMode, Mousewheel } from "swiper/modules";
 const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedMessage, setSelectedMessage] = useState(null);
+
+  const [readMessages, setReadMessages] = useState([]);
+
+  useEffect(() => {
+    const savedReadMessages = JSON.parse(localStorage.getItem("readMessages") || "[]");
+    setReadMessages(savedReadMessages);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("readMessages", JSON.stringify(readMessages));
+  }, [readMessages]);
 
   const itemsPerPage = 3;
   const totalPages = Math.ceil(messages.length / itemsPerPage);
@@ -27,6 +38,10 @@ const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }
 
   const openPopup = (message) => {
     setSelectedMessage(message);
+
+    if (!readMessages.includes(message.messageId)) {
+      setReadMessages((prev) => [...prev, message.messageId]);
+    }
   };
 
   const closePopup = () => {
@@ -39,31 +54,15 @@ const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }
     <>
       {!hideContainer && mode === "pagination" && (
         <LatestMessagesContainer>
-          {currentPage > 0 ? <NavigationButton onClick={prevPage}>&lt;</NavigationButton> : <NavigationPlaceholder />}
-          {paginatedMessages.map((message, index) => (
-            <MessageCard key={message.messageId || index} onClick={() => openPopup(message)}>
-              <h4>{message.subject}</h4>
-              <h5>{message.comment}</h5>
-              <MessageDetail>Email: {message.email}</MessageDetail>
-              <MessageDetail>Phone: {message.phone}</MessageDetail>
-              <div className="message-footer">
-                <img src={message.photo || "/placeholder-image.jpg"} alt={message.fullName} />
-                <span>{message.fullName}</span>
-              </div>
-              <div className="status-icons">
-                {message.status === "unread" ? <GiCancel className="unread" /> : <FaRegCheckCircle className="read" />}
-              </div>
-            </MessageCard>
-          ))}
-          {currentPage < totalPages - 1 && <NavigationButton onClick={nextPage}>&gt;</NavigationButton>}
-        </LatestMessagesContainer>
-      )}
-
-      {mode === "slides" && (
-        <Swiper modules={[Navigation]} navigation={!hideContainer} spaceBetween={20} slidesPerView={4} loop={true}>
-          {messages.map((message) => (
-            <SwiperSlide key={message.messageId}>
-              <MessageCard onClick={() => openPopup(message)}>
+          {currentPage > 0 ? (
+            <NavigationButton onClick={prevPage}>&lt;</NavigationButton>
+          ) : (
+            <NavigationPlaceholder />
+          )}
+          {paginatedMessages.map((message, index) => {
+            const isRead = readMessages.includes(message.messageId) || message.status === "read";
+            return (
+              <MessageCard key={message.messageId || index} onClick={() => openPopup(message)}>
                 <h4>{message.subject}</h4>
                 <h5>{message.comment}</h5>
                 <MessageDetail>Email: {message.email}</MessageDetail>
@@ -73,11 +72,45 @@ const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }
                   <span>{message.fullName}</span>
                 </div>
                 <div className="status-icons">
-                  {message.status === "unread" ? <GiCancel className="unread" /> : <FaRegCheckCircle className="read" />}
+                  {isRead ? (
+                    <FaRegCheckCircle className="read text-green-500 text-2xl" />
+                  ) : (
+                    <GiCancel className="unread text-red-500 text-2xl" />
+                  )}
                 </div>
               </MessageCard>
-            </SwiperSlide>
-          ))}
+            );
+          })}
+          {currentPage < totalPages - 1 && <NavigationButton onClick={nextPage}>&gt;</NavigationButton>}
+        </LatestMessagesContainer>
+      )}
+
+      {mode === "slides" && (
+        <Swiper modules={[Navigation]} navigation={!hideContainer} spaceBetween={20} slidesPerView={4} loop={true}>
+          {messages.map((message) => {
+            const isRead = readMessages.includes(message.messageId) || message.status === "read";
+            return (
+              <SwiperSlide key={message.messageId}>
+                <MessageCard onClick={() => openPopup(message)}>
+                  <h4>{message.subject}</h4>
+                  <h5>{message.comment}</h5>
+                  <MessageDetail>Email: {message.email}</MessageDetail>
+                  <MessageDetail>Phone: {message.phone}</MessageDetail>
+                  <div className="message-footer">
+                    <img src={message.photo || "/placeholder-image.jpg"} alt={message.fullName} />
+                    <span>{message.fullName}</span>
+                  </div>
+                  <div className="status-icons">
+                    {isRead ? (
+                      <FaRegCheckCircle className="read text-green-500 text-2xl" />
+                    ) : (
+                      <GiCancel className="unread text-red-500 text-2xl" />
+                    )}
+                  </div>
+                </MessageCard>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       )}
 
@@ -91,23 +124,30 @@ const LatestMessages = ({ messages, mode = "pagination", hideContainer = false }
           loop={true}
           style={{ paddingBottom: "10px" }}
         >
-          {messages.map((message) => (
-            <SwiperSlide key={message.messageId} style={{ width: "300px" }}>
-              <MessageCard onClick={() => openPopup(message)}>
-                <h4>{message.subject}</h4>
-                <h5>{message.comment}</h5>
-                <MessageDetail>Email: {message.email}</MessageDetail>
-                <MessageDetail>Phone: {message.phone}</MessageDetail>
-                <div className="message-footer">
-                  <img src={message.photo || "/placeholder-image.jpg"} alt={message.fullName} />
-                  <span>{message.fullName}</span>
-                </div>
-                <div className="status-icons">
-                  {message.status === "unread" ? <GiCancel className="unread" /> : <FaRegCheckCircle className="read" />}
-                </div>
-              </MessageCard>
-            </SwiperSlide>
-          ))}
+          {messages.map((message) => {
+            const isRead = readMessages.includes(message.messageId) || message.status === "read";
+            return (
+              <SwiperSlide key={message.messageId} style={{ width: "300px" }}>
+                <MessageCard onClick={() => openPopup(message)}>
+                  <h4>{message.subject}</h4>
+                  <h5>{message.comment}</h5>
+                  <MessageDetail>Email: {message.email}</MessageDetail>
+                  <MessageDetail>Phone: {message.phone}</MessageDetail>
+                  <div className="message-footer">
+                    <img src={message.photo || "/placeholder-image.jpg"} alt={message.fullName} />
+                    <span>{message.fullName}</span>
+                  </div>
+                  <div className="status-icons">
+                    {isRead ? (
+                      <FaRegCheckCircle className="read text-green-500 text-2xl" />
+                    ) : (
+                      <GiCancel className="unread text-red-500 text-2xl" />
+                    )}
+                  </div>
+                </MessageCard>
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       )}
 

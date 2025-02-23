@@ -103,7 +103,7 @@ export const NavigationButton = styled.button`
   border-radius: ${(props) => props.theme.styles.button.borderRadius};
   width: 2.5rem;
   height: 2.5rem;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   cursor: pointer;
   display: flex;
   align-items: center;

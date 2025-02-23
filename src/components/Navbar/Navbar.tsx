@@ -1,28 +1,47 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { AiOutlineMail, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../Authentication/AuthContext.tsx";
 import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,NotificationBadge} from "./NavbarStyles.ts";
-import { NavbarProps, Message} from "../../interfaces/dashboard/DashboardState.ts"
+import { NavbarProps, Message } from "../../interfaces/dashboard/DashboardState.ts";
 import { Booking } from "../../interfaces/bookings/BookingState.ts";
-import messagesData from "../../../public/data/Messages.json";
 import bookingData from "../../../public/data/Bookings.json";
+import messagesData from "../../../public/data/Messages.json";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { logout } = useAuth();
 
-const getCurrentMonthBookings = (bookings: Booking[]) => {
-    const currentMonth = new Date().getMonth() + 1;
-    return bookings.filter(booking => new Date(booking.checkIn).getMonth() + 1 === currentMonth).length;
+  const [unreadMessages, setUnreadMessages] = useState<number>(0);
+
+  useEffect(() => {
+    const savedReadMessages = JSON.parse(localStorage.getItem("readMessages") || "[]");
+    const unreadCount = (messagesData as Message[]).filter(
+      (msg) => !savedReadMessages.includes(msg.messageId)
+    ).length;
+    setUnreadMessages(unreadCount);
+  }, []);
+
+  const updateUnreadMessages = () => {
+    const savedReadMessages = JSON.parse(localStorage.getItem("readMessages") || "[]");
+    const unreadCount = (messagesData as Message[]).filter(
+      (msg) => !savedReadMessages.includes(msg.messageId)
+    ).length;
+    setUnreadMessages(unreadCount);
   };
 
-  const unreadMessages = (messagesData as Message[]).filter(msg => msg.status !== "read").length;
+  const getCurrentMonthBookings = (bookings: Booking[]) => {
+    const currentMonth = new Date().getMonth() + 1;
+    return bookings.filter(
+      (booking) => new Date(booking.checkIn).getMonth() + 1 === currentMonth
+    ).length;
+  };
+
   const currentMonthBookingsCount = getCurrentMonthBookings(bookingData as Booking[]);
-    
+
   const pageTitleMap: Record<string, string> = {
     "/": "Dashboard",
     "/bookings": "Bookings",
@@ -34,7 +53,7 @@ const getCurrentMonthBookings = (bookings: Booking[]) => {
     "/new-room": "New Room",
     "/new-user": "New User",
     "/guest": "Guest Details",
-    "/room-details": "Room Details", 
+    "/room-details": "Room Details",
   };
 
   const getPageTitle = (): string => {
@@ -58,7 +77,11 @@ const getCurrentMonthBookings = (bookings: Booking[]) => {
       <NavbarLeft>
         <TitleContainer>
           <IconButton onClick={toggleSidebar}>
-            {sidebarOpen ? <LuCircleArrowLeft size={24} color="black" /> : <LuCircleArrowRight size={24} color="black" />}
+            {sidebarOpen ? (
+              <LuCircleArrowLeft size={24} color="black" />
+            ) : (
+              <LuCircleArrowRight size={24} color="black" />
+            )}
           </IconButton>
           <TitleSection>{pageTitle}</TitleSection>
         </TitleContainer>
@@ -66,11 +89,15 @@ const getCurrentMonthBookings = (bookings: Booking[]) => {
       <NavbarRight>
         <IconButton onClick={() => navigate("/contact")}>
           <AiOutlineMail size={24} />
-          {unreadMessages > 0 && <NotificationBadge>{unreadMessages}</NotificationBadge>}
+          {unreadMessages > 0 && (
+            <NotificationBadge>{unreadMessages}</NotificationBadge>
+          )}
         </IconButton>
         <IconButton onClick={() => navigate("/bookings")}>
           <AiOutlineBell size={24} />
-          {currentMonthBookingsCount > 0 && <NotificationBadge>{currentMonthBookingsCount}</NotificationBadge>}
+          {currentMonthBookingsCount > 0 && (
+            <NotificationBadge>{currentMonthBookingsCount}</NotificationBadge>
+          )}
         </IconButton>
         <IconButton onClick={handleLogout}>
           <FiLogOut size={24} />
