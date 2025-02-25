@@ -3,30 +3,36 @@ import { RootState } from "../../redux/store";
 import { EditUserPayload, User } from "../../interfaces/users/UsersState";
 import { isValid, parse } from "date-fns";
 
-const simulateRequest = async <T>(data: T, delay: number = 400): Promise<T> => {
-  return new Promise((resolve) => setTimeout(() => resolve(data), delay));
-};
 
 export const fetchAllUsers = createAsyncThunk<User[], void, { state: RootState }>(
   "users/fetchAllUsers",
   async (_, thunkAPI) => {
     try {
-      const response = await fetch("/data/Users.json");
-      if (!response.ok) {
-        throw new Error("Error loading Users.json");
-      }
-      const users: User[] = await response.json();
-      const normalizedData = users.map((user: User) => ({
-        ...user,
-        startDate: user.startDate || null,
-      }));
+      const token = localStorage.getItem("authToken"); 
 
-      return normalizedData;
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Error fetching users from the server");
+      }
+
+      const { data } = await response.json();
+      return data;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message);
+        return thunkAPI.rejectWithValue(error.message || "An unknown error occurred");
       }
-      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -35,20 +41,31 @@ export const fetchUserById = createAsyncThunk<User, string, { state: RootState }
   "users/fetchUserById",
   async (employeeId, thunkAPI) => {
     try {
-      const { users } = thunkAPI.getState().users;
-      const user = users.find((u) => u.employeeId === employeeId);
+      const token = localStorage.getItem("authToken"); 
 
-      if (!user) {
-        throw new Error(`User with employeeId ${employeeId} not found`);
+      if (!token) {
+        throw new Error("No authentication token found");
       }
 
-      const responseUser = await simulateRequest(user);
-      return responseUser;
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/${employeeId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || `User with employeeId ${employeeId} not found`);
+      }
+
+      const { data } = await response.json();
+      return data;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message);
+        return thunkAPI.rejectWithValue(error.message || "An unknown error occurred");
       }
-      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -57,18 +74,32 @@ export const createUser = createAsyncThunk<User, User, { state: RootState }>(
   "users/createUser",
   async (userData, thunkAPI) => {
     try {
-      const newUser: User = {
-        ...userData,
-        employeeId: crypto.randomUUID(),
-      };
+      const token = localStorage.getItem("authToken"); 
 
-      const responseUser = await simulateRequest(newUser);
-      return responseUser;
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Error creating user");
+      }
+
+      const { data } = await response.json();
+      return data;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message);
+        return thunkAPI.rejectWithValue(error.message || "An unknown error occurred");
       }
-      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -77,13 +108,30 @@ export const deleteUser = createAsyncThunk<string, string, { state: RootState }>
   "users/deleteUser",
   async (employeeId, thunkAPI) => {
     try {
-      await simulateRequest(null);
-      return employeeId;
+      const token = localStorage.getItem("authToken"); 
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/${employeeId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Error deleting user");
+      }
+
+      return employeeId; 
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message);
+        return thunkAPI.rejectWithValue(error.message || "An unknown error occurred");
       }
-      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );
@@ -92,6 +140,12 @@ export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload, { sta
   "users/editUser",
   async (updatedUser, thunkAPI) => {
     try {
+      const token = localStorage.getItem("authToken"); 
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       if (!updatedUser.employeeId || !updatedUser.name || !updatedUser.startDate) {
         throw new Error("Invalid user data provided");
       }
@@ -101,13 +155,26 @@ export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload, { sta
         throw new Error("Invalid startDate format. Expected format: dd/MM/yyyy");
       }
 
-      const responseUser = await simulateRequest(updatedUser);
-      return responseUser;
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/${updatedUser.employeeId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
+        body: JSON.stringify(updatedUser),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Error updating user");
+      }
+
+      const { data } = await response.json();
+      return data;
     } catch (error: unknown) {
       if (error instanceof Error) {
-        return thunkAPI.rejectWithValue(error.message);
+        return thunkAPI.rejectWithValue(error.message || "An unknown error occurred");
       }
-      return thunkAPI.rejectWithValue("An unknown error occurred");
     }
   }
 );

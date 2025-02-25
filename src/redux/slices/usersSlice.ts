@@ -58,7 +58,7 @@ const usersSlice = createSlice({
       })
       .addCase(fetchAllUsers.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = (typeof action.payload === "string") ? action.payload : "Unknown error occurred";
         state.status = "rejected";
       });
 
@@ -76,7 +76,7 @@ const usersSlice = createSlice({
       })
       .addCase(createUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = (typeof action.payload === "string") ? action.payload : "Unknown error occurred";
         state.status = "rejected";
       });
 
@@ -94,7 +94,7 @@ const usersSlice = createSlice({
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = (typeof action.payload === "string") ? action.payload : "Unknown error occurred";
         state.status = "rejected"; 
       });
 
@@ -115,7 +115,7 @@ const usersSlice = createSlice({
       })
       .addCase(editUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = (typeof action.payload === "string") ? action.payload : "Unknown error occurred";
         state.status = "rejected"; 
       });
 
@@ -132,7 +132,7 @@ const usersSlice = createSlice({
       })
       .addCase(fetchUserById.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = (typeof action.payload === "string") ? action.payload : "Unknown error occurred";
         state.status = "rejected"; 
       });
   },

@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "styled-components";
 import { AuthProvider } from "./Authentication/AuthContext.tsx";
-import { Provider } from "react-redux"; 
+import { Provider } from "react-redux";
 import { store } from "./redux/store.ts";
 import { GlobalStyles } from "./styles/globalStyles.ts";
 import { Layout } from "./Layout.tsx";
@@ -22,12 +22,12 @@ import { UserDetails } from "./pages/Users/UserDetails.tsx";
 import { EditUser } from "./pages/Users/EditUser.tsx";
 import { GuestDetails } from "./pages/Bookings/GuestDetails.tsx";
 import { EditBooking } from "./pages/Bookings/EditGuestBooking.tsx";
-import { NewBooking } from "./pages/Bookings/NewBooking.tsx"; 
+import { NewBooking } from "./pages/Bookings/NewBooking.tsx";
 import { PrivateRoute } from "./Authentication/PrivateRoute.tsx";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
-  throw new Error("Could not finde the id 'root'");
+  throw new Error("Could not find the id 'root'");
 }
 createRoot(rootElement).render(
   <StrictMode>
@@ -42,7 +42,7 @@ createRoot(rootElement).render(
                 path="/*"
                 element={
                   <PrivateRoute>
-                    <Layout />
+                    <Layout /> 
                   </PrivateRoute>
                 }
               >
