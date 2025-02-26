@@ -13,7 +13,11 @@ export const fetchAllUsers = createAsyncThunk<User[], void, { state: RootState }
       if (!token) {
         throw new Error("No authentication token found");
       }
-
+      console.log("Headers:", {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      });
+      
       const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user`, {
         method: "GET",
         headers: {
