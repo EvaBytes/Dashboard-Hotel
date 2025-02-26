@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../redux/store";
 import { EditUserPayload, User } from "../../interfaces/users/UsersState";
 import { isValid, parse } from "date-fns";
-
+import { API_URL } from "../../config"; 
 
 export const fetchAllUsers = createAsyncThunk<User[], void, { state: RootState }>(
   "users/fetchAllUsers",
@@ -18,14 +18,14 @@ export const fetchAllUsers = createAsyncThunk<User[], void, { state: RootState }
         Authorization: `Bearer ${token}`,
       });
       
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user`, {
+      const response = await fetch(`${API_URL}/api/v1/users`, {  
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-
+      console.log(response);
       if (!response.ok) {
         const errorResponse = await response.json();
         throw new Error(errorResponse.error || "Error fetching users from the server");
@@ -51,7 +51,7 @@ export const fetchUserById = createAsyncThunk<User, string, { state: RootState }
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/${employeeId}`, {
+      const response = await fetch(`${API_URL}/api/v1/users/${employeeId}`, { 
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +84,7 @@ export const createUser = createAsyncThunk<User, User, { state: RootState }>(
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user`, {
+      const response = await fetch(`${API_URL}/api/v1/users`, { 
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,7 +118,7 @@ export const deleteUser = createAsyncThunk<string, string, { state: RootState }>
         throw new Error("No authentication token found");
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/${employeeId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/${employeeId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -131,14 +131,16 @@ export const deleteUser = createAsyncThunk<string, string, { state: RootState }>
         throw new Error(errorResponse.error || "Error deleting user");
       }
 
-      return employeeId; 
+      return employeeId;
     } catch (error: unknown) {
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(error.message || "An unknown error occurred");
       }
+      return thunkAPI.rejectWithValue("An unexpected error occurred");
     }
   }
 );
+
 
 export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload, { state: RootState }>(
   "users/editUser",
@@ -159,7 +161,7 @@ export const editUser = createAsyncThunk<EditUserPayload, EditUserPayload, { sta
         throw new Error("Invalid startDate format. Expected format: dd/MM/yyyy");
       }
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/user/${updatedUser.employeeId}`, {
+      const response = await fetch(`${API_URL}/api/v1/users/${updatedUser.employeeId}`, { 
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
