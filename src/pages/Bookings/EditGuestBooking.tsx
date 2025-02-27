@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBookingById, editBooking } from "../../redux/thunks/bookingsThunks.ts";
-import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/EditBooking.ts";
-import { RootState, AppDispatch } from "../../redux/store.ts";
+import { fetchBookingById, editBooking } from "../../redux/thunks/bookingsThunks";
+import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/EditBooking";
+import { RootState, AppDispatch } from "../../redux/store";
 
 export const EditBooking = () => {
-  const { reservationId } = useParams<{ reservationId: string }>();
+  const { reservationNumber } = useParams<{ reservationNumber: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   
@@ -19,10 +19,10 @@ export const EditBooking = () => {
   const [specialRequest, setSpecialRequest] = useState<string>("");
 
   useEffect(() => {
-    if (reservationId) {
-      dispatch(fetchBookingById(reservationId));
+    if (reservationNumber) {
+      dispatch(fetchBookingById(reservationNumber));
     }
-  }, [dispatch, reservationId]);
+  }, [dispatch, reservationNumber]);
 
   useEffect(() => {
     if (currentBooking) {
@@ -36,11 +36,11 @@ export const EditBooking = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!reservationId || !currentBooking) return;
+    if (!reservationNumber || !currentBooking) return;
 
     const updatedData = {
       ...currentBooking,
-      reservationId,
+      reservationNumber,
       guest: { ...currentBooking.guest, fullName },
       checkIn,
       checkOut,
@@ -49,7 +49,7 @@ export const EditBooking = () => {
     };
     dispatch(editBooking(updatedData))
       .unwrap()
-      .then(() => navigate(`/guest/${reservationId}`))
+      .then(() => navigate(`/guest/${reservationNumber}`))
       .catch((err) => console.error("Update Error: ", err));
   };
 

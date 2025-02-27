@@ -9,19 +9,19 @@ import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDeta
 import { RootState, AppDispatch } from "../../redux/store";
 
 const GuestDetails = () => {
-  const { reservationId } = useParams<{ reservationId: string }>();
+  const { reservationNumber } = useParams<{ reservationNumber: string }>();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { currentBooking, loading, error } = useSelector((state: RootState) => state.bookings);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   useEffect(() => {
-    if (reservationId) {
-      dispatch(fetchBookingById(reservationId));
+    if (reservationNumber) {
+      dispatch(fetchBookingById(reservationNumber));
     } else {
-      console.error("reservationId is undefined");
+      console.error("reservationNumber is undefined");
     }
-  }, [dispatch, reservationId]);
+  }, [dispatch, reservationNumber]);
 
   if (loading === "pending") return <p>Loading...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -68,7 +68,7 @@ const GuestDetails = () => {
           <ActionButton onClick={() => alert("Sending message...")}>
             <MdOutlineMailOutline /> Send Message
           </ActionButton>
-          <ModifyButton onClick={() => navigate(`/edit/${reservationId}`)}>
+          <ModifyButton onClick={() => navigate(`/edit/${reservationNumber}`)}>
             <FaPencilAlt />
             Edit
           </ModifyButton>

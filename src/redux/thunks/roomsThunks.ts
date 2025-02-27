@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../redux/store";
 import { NewRoomPayload, Room } from "../../interfaces/room/RoomState";
-import { API_URL } from "../../config"; 
+import { API_URL } from "../../config/index";
 
 export const isValidStatus = (status: string): status is Room['status'] => {
   return ["Available", "Booked", "In Progress"].includes(status);

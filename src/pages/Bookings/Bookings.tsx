@@ -8,7 +8,7 @@ import { LuUserRoundSearch } from "react-icons/lu";
 import { setActiveTab, setSearchText, setSortBy, setSortOrder, setCurrentPage, setError } from "../../redux/slices/bookingsSlice";
 import { deleteBooking, fetchAllBookings } from "../../redux/thunks/bookingsThunks";
 import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, ActionButton, AddButton } from "../../styles/TabsStyles";
-import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem, SortIcon } from "../../styles/TableStyles";
+import { Table, TableHeader, TableRow, TableData, GuestContainer, GuestImage1, GuestInfo, StatusBadge, PaginationContainer, PageButton, ActionMenu, ActionMenuItem, SortIcon} from "../../styles/TableStyles";
 import { Overlay, Popup, CloseButton } from "../../styles/PopupStyles";
 import { RootState, AppDispatch } from "../../redux/store";
 import { Booking } from "../../interfaces/bookings/BookingState";
@@ -60,7 +60,7 @@ export const Bookings = () => {
   );
   const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
 
-  const handleDelete = (reservationId: string) => {
+  const handleDelete = (reservationNumber: string) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -71,7 +71,7 @@ export const Bookings = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        dispatch(deleteBooking(reservationId))
+        dispatch(deleteBooking(reservationNumber))
           .then(() => {
             Swal.fire("Deleted!", "The booking has been deleted.", "success");
           })
@@ -108,7 +108,7 @@ export const Bookings = () => {
     <TableRow key={booking.guest?.reservationNumber || Math.random()}>
       <TableData>
         <GuestContainer>
-          <GuestImage
+          <GuestImage1
             src={booking.guest?.image || "/Profile1.png"}
             alt="Guest"
             onError={(e) => {

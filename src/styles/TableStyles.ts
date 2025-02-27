@@ -63,6 +63,13 @@ export const GuestContainer = styled.div`
   align-items: center;
 `;
 
+export const GuestImage1 = styled.img`
+  width: 4.5rem;
+  height: 4.5rem;
+  border-radius: 10px;
+  margin-right: 1rem;
+`;
+
 export const GuestImage = styled.img`
   width: 4.7rem;
   height: 3.5rem;
@@ -169,16 +176,16 @@ export const SortIcon = styled.span<SortIconProps>`
     transform: ${(props) => (props.$sortOrder === "desc" ? "rotate(180deg)" : "none")};
   }
 `;
-
 export const RoomImage = styled.img`
-  width: 6rem;
+  width: 6.5rem;
   height: 4rem;
   border-radius: 8px;
 `;
-
 export const DiscountSpan = styled.span`
+  display: block;
   color: #e23428;
-  font-size: 0.7rem;
+  font-size: .7rem;
+  margin-top: 2px;
 `;
 
 export const StatusButton = styled.button<StatusButtonRoomsProps>`

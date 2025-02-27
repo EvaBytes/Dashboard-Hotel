@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../redux/store";
 import { EditUserPayload, User } from "../../interfaces/users/UsersState";
 import { isValid, parse } from "date-fns";
-import { API_URL } from "../../config"; 
+import { API_URL } from "../../config/index";
 
 export const fetchAllUsers = createAsyncThunk<User[], void, { state: RootState }>(
   "users/fetchAllUsers",

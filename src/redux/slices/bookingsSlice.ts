@@ -128,10 +128,12 @@ const bookingsSlice = createSlice({
       })
       .addCase(fetchAllBookings.fulfilled, (state, action: PayloadAction<Booking[]>) => {
         state.loading = "idle";
-        state.bookings = action.payload;
+        state.bookings = action.payload; 
         state.filteredBookings = filterBookings(state);
+        console.log("Bookings stored in Redux state:", state.bookings);
         localStorage.setItem("bookings", JSON.stringify(state.bookings));
       })
+      
       .addCase(fetchAllBookings.rejected, (state, action) => {
         state.loading = "idle";
         state.error = typeof action.payload === 'string' ? action.payload : "Failed to fetch bookings.";
@@ -141,6 +143,11 @@ const bookingsSlice = createSlice({
 
 function filterBookings(state: BookingState): Booking[] {
   const { bookings, activeTab, searchText } = state;
+  if (!Array.isArray(bookings)) {
+    console.error("Expected bookings to be an array, but got:", bookings);
+    return []; 
+  }
+
   return bookings.filter((booking) => {
     if (activeTab === "checkIn" && booking.status !== "Check-In") return false;
     if (activeTab === "checkOut" && booking.status !== "Check-Out") return false;

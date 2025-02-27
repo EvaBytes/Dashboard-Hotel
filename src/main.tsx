@@ -55,8 +55,8 @@ createRoot(rootElement).render(
                 <Route path="new-user" element={<NewUser />} />
                 <Route path="user-details/:employeeId" element={<UserDetails />} />
                 <Route path="edit-user/:employeeId" element={<EditUser />} />
-                <Route path="guest/:reservationId" element={<GuestDetails />} />
-                <Route path="edit/:reservationId" element={<EditBooking />} />
+                <Route path="guest/:reservationNumber" element={<GuestDetails />} />
+                <Route path="edit/:reservationNumber" element={<EditBooking />} />
                 <Route path="new-booking" element={<NewBooking />} />
                 <Route path="new-room" element={<NewRoom />} />
               </Route>

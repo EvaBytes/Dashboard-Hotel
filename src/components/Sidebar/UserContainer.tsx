@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from "react";
 import { UserContainer, UserAvatar, UserInfo, UserName, UserEmail, EditButton, SaveButton, CancelButton, InputField, ModalBackdrop, ModalContent, ModalTitle, ModalButtonContainer } from "./UserContainerStyles.ts";
-import { UserContainerProps } from "../../interfaces/SidebarState.ts";
+import { UserContainerProps } from "../../interfaces/SidebarState";
 
 const UserContainerComponent = ({ user, onSave }: UserContainerProps) => {
   const [isEditing, setIsEditing] = useState(false);

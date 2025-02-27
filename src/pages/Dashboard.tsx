@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { IoBedOutline, IoCalendarOutline } from "react-icons/io5";
 import { IoIosLogIn, IoIosLogOut } from "react-icons/io";
 import {DashboardContainer,IconContainer,TextContainer,StyledCard,StyledTypographyTitle,StyledTypographyValue,StyledBookingButtonContainer,StyledBookingList,StyledBookingItem,StyledBookingInfo,StyledBookingButton} from "../styles/DashboardStyles.ts";
-import { LatestMessages } from "../components/common/LatestMessages.tsx";
-import { StyledMessagesCard } from "../styles/LatestMessagesStyles.ts";
-import {Booking} from "../interfaces/dashboard/DashboardState.ts";
+import { LatestMessages } from "../components/common/LatestMessages";
+import { StyledMessagesCard } from "../styles/LatestMessagesStyles";
+import {Booking} from "../interfaces/dashboard/DashboardState";
 import bookingData from "../../public/data/Bookings.json";
 import messagesData from "../../public/data/Messages.json";
 

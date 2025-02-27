@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { createBooking } from "../../redux/thunks/bookingsThunks";
 import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton, AmenitiesContainer, AmenityItem } from "../../styles/NewBookingStyles";
 import { AppDispatch } from "../../redux/store";
-import { Booking } from "../../interfaces/bookings/BookingState"; // Asegúrate de importar la interfaz
+import { Booking } from "../../interfaces/bookings/BookingState"; 
 
 const amenitiesList = [
   "Air conditioner",
@@ -30,7 +30,7 @@ const NewBooking = () => {
 
   const [formData, setFormData] = useState({
     fullName: "",
-    reservationId: "",
+    reservationNumber: "",
     checkIn: "",
     checkOut: "",
     roomNumber: "",
@@ -43,7 +43,7 @@ const NewBooking = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState({
     fullName: false,
-    reservationId: false,
+    reservationNumber: false,
     checkIn: false,
     checkOut: false,
     roomNumber: false,
@@ -69,7 +69,7 @@ const NewBooking = () => {
 
     const newErrors = {
       fullName: !formData.fullName.trim(),
-      reservationId: !formData.reservationId.trim(),
+      reservationNumber: !formData.reservationNumber.trim(),
       checkIn: !formData.checkIn.trim(),
       checkOut: !formData.checkOut.trim(),
       roomNumber: !formData.roomNumber.trim(),
@@ -91,7 +91,7 @@ const NewBooking = () => {
 
     setErrors({
       fullName: false,
-      reservationId: false,
+      reservationNumber: false,
       checkIn: false,
       checkOut: false,
       roomNumber: false,
@@ -104,7 +104,7 @@ const NewBooking = () => {
     const formattedData: Booking = {
       guest: {
         fullName: formData.fullName,
-        reservationNumber: formData.reservationId, 
+        reservationNumber: formData.reservationNumber, 
         image: "/Profile2.png", 
       },
       orderDate: new Date().toISOString(),
@@ -116,7 +116,7 @@ const NewBooking = () => {
       status: "In Progress", 
       roomPhoto: [], 
       offerPrice: formData.price,
-      reservationNumber: formData.reservationId, 
+      reservationNumber: formData.reservationNumber, 
       photo: "/Profile2.png", 
       roomNumber: formData.roomNumber, 
       rate: formData.price, 
@@ -153,7 +153,7 @@ const NewBooking = () => {
 
         <FormGroup>
           <Label>Reservation ID</Label>
-          <Input type="text" name="reservationId" value={formData.reservationId} onChange={handleChange}style={{border: errors.reservationId ? "1px solid red" : undefined}}/>
+          <Input type="text" name="reservationNumber" value={formData.reservationNumber} onChange={handleChange}style={{border: errors.reservationNumber ? "1px solid red" : undefined}}/>
         </FormGroup>
 
         <FormGroup>

@@ -136,7 +136,12 @@ export const Rooms = () => {
         </TableData>
         <TableData>{room.rate}</TableData>
         <TableData>
-          {room.offerPrice} <DiscountSpan>({discountPercentage}% off)</DiscountSpan>
+          <div>
+            {room.offerPrice}
+            {discountPercentage > 0 && (
+              <DiscountSpan>{discountPercentage}% off</DiscountSpan>
+            )}
+          </div>
         </TableData>
         <TableData>
           <StatusBadge $status={room.status}>{room.status}</StatusBadge>

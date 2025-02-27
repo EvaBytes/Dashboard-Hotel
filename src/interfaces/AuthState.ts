@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 
 export interface User {
-    username: string;
+    email: string;
     password: string;  
   }
   
@@ -12,9 +12,9 @@ export interface User {
   
   export interface AuthContextProps {
     state: AuthState;
-    login: (user: User) => void;
+    login: (user: User, token: string) => void;
     logout: () => void;
-  }
+  }  
   
   export type AuthAction = 
     | { type: "LOGIN"; payload: User }

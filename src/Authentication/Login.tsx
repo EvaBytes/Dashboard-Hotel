@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext.tsx";
-import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField} from "../styles/loginStyles.ts";
+import { useAuth } from "./AuthContext";
+import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,Typography,Alert,CircularProgress,StyledTextField} from "../styles/loginStyles";
+import { API_URL } from "../config/index";
 
 const Login = () => {
-  const [email, setEmail] = useState("user@testing.com");
+  const [email, setEmail] = useState("user1@example.com");
   const [password, setPassword] = useState("123456");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
-  const handleLogin = () => {
-    const newErrors = {};
+  const handleLogin = async () => {
+    const newErrors: { email?: string; password?: string } = {};
     setErrors({});
 
     if (!validateEmail(email)) {
@@ -31,21 +32,37 @@ const Login = () => {
 
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
-      if (email === "user@testing.com" && password === "123456") {
-        login({
-          name: "Eva Sevillano",
-          email: "user@testing.com",
-          image: "/profile.jpeg",
-        });
-        navigate("/");
+    try {
+      const response = await fetch(`${API_URL}/api/v1/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Respuesta del servidor:", data);
+
+        if (data.token) {
+          login({
+            email,
+            password,
+          }, data.token);         
+          navigate("/");
+        } else {
+          setErrors({ password: "No token received. Please try again." });
+        }
       } else {
-        setErrors({
-          password: "Invalid credentials. Please try again.",
-        });
+        setErrors({ password: "Invalid credentials. Please try again." });
       }
-    }, 1500);
+    } catch (error) {
+      console.error("Error en la solicitud de login:", error);
+      setErrors({ password: "Something went wrong. Please try again." });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
