@@ -4,15 +4,15 @@ import { useNavigate } from "react-router-dom";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { LuUserRoundSearch, LuPhone } from "react-icons/lu";
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { GenericTable } from "../../components/common/GenericTable.tsx";
-import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, AddButton } from "../../styles/TabsStyles.ts";
-import { TableData, EmployeeContainer, EmployeeImage, EmployeeInfo, DescriptionText, ContactText, StatusText, DotsContainer, ActionMenu, ActionMenuItem } from "../../styles/UsersStyles.ts";
-import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersSlice.ts";
-import { fetchAllUsers, deleteUser } from "../../redux/thunks/usersThunks.ts";
-import { parse, format, isValid } from "date-fns";
+import { GenericTable } from "../../components/common/GenericTable";
+import { TabsContainer, Tab, SearchContainer, SearchInput, SearchIconWrapper, AddButton } from "../../styles/TabsStyles";
+import { TableData, EmployeeContainer, EmployeeImage, EmployeeInfo, DescriptionText, ContactText, StatusText, DotsContainer, ActionMenu, ActionMenuItem } from "../../styles/UsersStyles";
+import { setActiveTab, setSearchText, setError } from "../../redux/slices/usersSlice";
+import { fetchAllUsers, deleteUser } from "../../redux/thunks/usersThunks";
+import { parseISO, format, isValid } from "date-fns";
 import Swal from "sweetalert2";
-import { User } from "../../interfaces/users/UsersState.ts";
-import { AppDispatch, RootState } from "../../redux/store.ts";
+import { User } from "../../interfaces/users/UsersState";
+import { AppDispatch, RootState } from "../../redux/store";
 
 export const Users = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -80,12 +80,9 @@ export const Users = () => {
   ];
 
   const renderRow = (employee: User) => {
-    const parsedDate = employee.startDate
-    ? format(parse(String(employee.startDate), "dd/MM/yyyy", new Date()), "dd.MM.yyyy")
-    : null;
-  
-    const formattedStartDate = parsedDate && isValid(parsedDate)
-      ? format(parsedDate, "dd.MM.yyyy") 
+    const fecha = employee.startDate ? parseISO(String(employee.startDate)) : null;
+    const formattedStartDate = fecha && isValid(fecha)
+      ? format(fecha, "dd.MM.yyyy") 
       : "N/A";
 
     return (

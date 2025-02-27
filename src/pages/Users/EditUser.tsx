@@ -1,11 +1,11 @@
 import React, { FormEvent, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserById, editUser } from "../../redux/thunks/usersThunks.ts";
-import { selectCurrentUser, selectUsersStatus, selectError } from "../../redux/slices/usersSlice.ts";
-import { FormContainer, FormGroup, Label, Input, TextArea, SubmitButton, BackButton } from "../../styles/EditBooking.ts"; 
-import { AppDispatch } from "../../redux/store.ts";
-import { EditPayload, EditUserPayload } from "../../interfaces/users/UsersState.ts";
+import { fetchUserById, editUser } from "../../redux/thunks/usersThunks";
+import { selectCurrentUser, selectUsersStatus, selectError } from "../../redux/slices/usersSlice";
+import {FormContainer,FormGroup,Label,Input,TextArea,SubmitButton,BackButton} from "../../styles/EditBooking";
+import { AppDispatch } from "../../redux/store";
+import { EditPayload, EditUserPayload } from "../../interfaces/users/UsersState";
 
 export const EditUser = () => {
   const { employeeId } = useParams<{ employeeId: string }>();
@@ -20,6 +20,7 @@ export const EditUser = () => {
   const [description, setDescription] = useState<string>("");
   const [contact, setContact] = useState<string>("");
   const [status, setStatus] = useState<"ACTIVE" | "INACTIVE">("ACTIVE");
+  const [startDate, setStartDate] = useState<string>("");
 
   useEffect(() => {
     if (employeeId) {
@@ -33,6 +34,11 @@ export const EditUser = () => {
       setDescription(currentUser.description || "");
       setContact(currentUser.contact || "");
       setStatus(currentUser.status || "ACTIVE");
+      setStartDate(
+        currentUser.startDate
+          ? new Date(currentUser.startDate).toISOString().slice(0, 19)
+          : ""
+      );
     }
   }, [currentUser]);
 
@@ -45,11 +51,12 @@ export const EditUser = () => {
       description,
       contact,
       status,
+      startDate,
     };
 
     const userToUpdate: EditUserPayload = {
-      ...currentUser!, 
-      ...updatedUser, 
+      ...currentUser!,
+      ...updatedUser,
     };
 
     dispatch(editUser(userToUpdate))
@@ -97,7 +104,9 @@ export const EditUser = () => {
           <select
             id="status"
             value={status}
-            onChange={(e) => setStatus(e.target.value as "ACTIVE" | "INACTIVE")}
+            onChange={(e) =>
+              setStatus(e.target.value as "ACTIVE" | "INACTIVE")
+            }
             style={{
               width: "100%",
               padding: ".6rem 1rem",
@@ -110,6 +119,17 @@ export const EditUser = () => {
             <option value="INACTIVE">INACTIVE</option>
           </select>
         </FormGroup>
+
+        <FormGroup>
+          <Label htmlFor="startDate">Start Date and Time</Label>
+          <Input
+            id="startDate"
+            type="datetime-local"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+          />
+        </FormGroup>
+
         <SubmitButton type="submit">Save</SubmitButton>
         <BackButton type="button" onClick={() => navigate(-1)}>
           Cancel

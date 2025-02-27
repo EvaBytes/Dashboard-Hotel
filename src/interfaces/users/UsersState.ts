@@ -33,7 +33,7 @@ export interface User {
     startDate: string;
     description: string;
     contact: string;
-    status: "ACTIVE" | "INACTIVE"; 
+    status: "ACTIVE" | "INACTIVE";
   }
 
   export interface EditPayload {
@@ -42,6 +42,7 @@ export interface User {
     description: string;
     contact: string;
     status: "ACTIVE" | "INACTIVE";
+    startDate: string;
   }
   
 export interface NewUserPayload {

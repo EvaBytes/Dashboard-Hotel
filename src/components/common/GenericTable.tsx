@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Table, TableHeader, TableRow, PaginationContainer, PageButton, SortIcon } from "../../styles/TableStyles";
-import { GenericTableProps } from "../../interfaces/styles/GenericTableProps.ts";
+import { GenericTableProps } from "../../interfaces/styles/GenericTableProps";
 
 export const GenericTable = <T,>({ headers, data, renderRow, itemsPerPage = 10, onSort, sortBy, sortOrder }: GenericTableProps<T>) => {
   const [currentPage, setCurrentPage] = useState(1);
