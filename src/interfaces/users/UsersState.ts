@@ -10,7 +10,7 @@ export interface UsersState {
 }
 
 export interface User {
-    photo: string;
+  photo: string | null; 
     name: string;
     employeeId: string;
     email: string;
@@ -47,7 +47,7 @@ export interface User {
   
 export interface NewUserPayload {
   name: string;
-  photo: string;
+  photo: string | null;
   fullName: string;
   employeeId: string;
   email: string;

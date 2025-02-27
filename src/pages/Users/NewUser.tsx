@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { createUser } from "../../redux/thunks/usersThunks.js";
-import {FormContainer,FormGroup,Label,Input,SubmitButton,BackButton} from "../../styles/NewUserStyles.js";
-import { AppDispatch} from "../../redux/store.ts";
-import { NewUserPayload } from "../../interfaces/users/UsersState.ts"
+import { AppDispatch } from "../../redux/store";
+import { NewUserPayload } from "../../interfaces/users/UsersState";
 import Swal from "sweetalert2";
+import { parseISO, format, isValid } from "date-fns";
+import {FormContainer,FormGroup,Label,Input,SubmitButton,BackButton, Select} from "../../styles/NewUserStyles.js";
 
 export const NewUser = () => {
   const [userData, setUserData] = useState<NewUserPayload>({
@@ -20,7 +21,6 @@ export const NewUser = () => {
     status: "ACTIVE",
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState({
     photo: false,
     fullName: false,
@@ -34,7 +34,9 @@ export const NewUser = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
@@ -45,7 +47,7 @@ export const NewUser = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (typeof reader.result === "string") {
-          setUserData((prev) => ({ ...prev, photo: reader.result as string}));
+          setUserData((prev) => ({ ...prev, photo: reader.result as string | null}));
         }
       };
       reader.readAsDataURL(file);
@@ -54,18 +56,17 @@ export const NewUser = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-  
-    const newErrors = Object.keys(userData).reduce((acc, key) => {
-      const value = userData[key as keyof NewUserPayload];
-      acc[key as keyof NewUserPayload] = !value || (typeof value === "string" && value.trim() === "");
-      return acc;
-    }, {} as Record<keyof NewUserPayload, boolean>);
-  
-    const hasErrors = Object.values(newErrors).some((val) => val === true);
-  
+
+    const formattedStartDate = parseISO(userData.startDate);
+    const newErrors = {
+      ...errors,
+      startDate: !isValid(formattedStartDate),
+    };
+
+    const hasErrors = Object.values(newErrors).some((val) => val);
+
     if (hasErrors) {
       setErrors(newErrors);
-  
       Swal.fire({
         icon: "error",
         title: "Oops...",
@@ -74,35 +75,28 @@ export const NewUser = () => {
       return;
     }
 
-    setErrors({
-      photo: false,
-      fullName: false,
-      employeeId: false,
-      email: false,
-      startDate: false,
-      description: false,
-      contact: false,
-    });
-    setErrorMessage("");
+    const formattedUserData = {
+      ...userData,
+      photo: userData.photo ?? "",
+      startDate: userData.startDate
+        ? format(parseISO(userData.startDate), "yyyy-MM-dd")
+        : "",
+    };
 
-    dispatch(createUser({...userData, name:userData.fullName}))
+    dispatch(createUser({ ...formattedUserData, name: userData.fullName }))
       .unwrap()
       .then(() => {
-        alert("¡Usuario creado con éxito!");
+        Swal.fire("Success!", "User created successfully!", "success");
         navigate("/users");
       })
-      .catch((error:string) => {
-        alert(`Error: ${error}`);
+      .catch((error: string) => {
+        Swal.fire("Error", `Failed to create user: ${error}`, "error");
       });
   };
 
   return (
     <FormContainer>
       <h2>New User</h2>
-
-      {errorMessage && (
-        <div style={{ color: "red", marginBottom: "1rem" }}>{errorMessage}</div>
-      )}
 
       <form onSubmit={handleSubmit}>
         <FormGroup>
@@ -112,9 +106,7 @@ export const NewUser = () => {
             name="photo"
             accept="image/*"
             onChange={handlePhotoChange}
-            style={{
-              border: errors.photo ? "1px solid red" : undefined,
-            }}
+            style={{ border: errors.photo ? "1px solid red" : undefined }}
           />
         </FormGroup>
 
@@ -126,9 +118,6 @@ export const NewUser = () => {
             placeholder="Enter full name"
             value={userData.fullName}
             onChange={handleInputChange}
-            style={{
-              border: errors.fullName ? "1px solid red" : undefined,
-            }}
           />
         </FormGroup>
 
@@ -140,9 +129,6 @@ export const NewUser = () => {
             placeholder="Enter user ID"
             value={userData.employeeId}
             onChange={handleInputChange}
-            style={{
-              border: errors.employeeId ? "1px solid red" : undefined,
-            }}
           />
         </FormGroup>
 
@@ -154,9 +140,6 @@ export const NewUser = () => {
             placeholder="Enter email"
             value={userData.email}
             onChange={handleInputChange}
-            style={{
-              border: errors.email ? "1px solid red" : undefined,
-            }}
           />
         </FormGroup>
 
@@ -167,23 +150,6 @@ export const NewUser = () => {
             name="startDate"
             value={userData.startDate}
             onChange={handleInputChange}
-            style={{
-              border: errors.startDate ? "1px solid red" : undefined,
-            }}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <Label>Description</Label>
-          <Input
-            type="text"
-            name="description"
-            placeholder="Enter job description"
-            value={userData.description}
-            onChange={handleInputChange}
-            style={{
-              border: errors.description ? "1px solid red" : undefined,
-            }}
           />
         </FormGroup>
 
@@ -195,10 +161,36 @@ export const NewUser = () => {
             placeholder="Enter phone number"
             value={userData.contact}
             onChange={handleInputChange}
-            style={{
-              border: errors.contact ? "1px solid red" : undefined,
-            }}
           />
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Description</Label>
+          <Select
+            name="description"
+            value={userData.description}
+            onChange={handleInputChange}
+          >
+            <option value="">Select Job Role</option>
+            <option value="Front Desk Receptionist">
+              Front Desk Receptionist
+            </option>
+            <option value="Chef de Cuisine">Chef de Cuisine</option>
+            <option value="Housekeeping">Housekeeping</option>
+            <option value="Concierge">Concierge</option>
+          </Select>
+        </FormGroup>
+
+        <FormGroup>
+          <Label>Status</Label>
+          <Select
+            name="status"
+            value={userData.status}
+            onChange={handleInputChange}
+          >
+            <option value="ACTIVE">ACTIVE</option>
+            <option value="INACTIVE">INACTIVE</option>
+          </Select>
         </FormGroup>
 
         <SubmitButton type="submit">Save User</SubmitButton>

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {SidebarProps} from "../../interfaces/styles/sidebarOpenProps.ts"
+import {SidebarProps} from "../../interfaces/styles/sidebarOpenProps"
 
 export const NavbarContainer = styled.nav<SidebarProps>`
   display: flex;

@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaSortUp, FaSortDown, FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles.ts";
-import { Table, TableHeader, TableRow, TableData, StatusBadge, PaginationContainer, PageButton, DiscountSpan, ActionMenu, ActionMenuItem, SortIcon, RoomImage } from "../../styles/TableStyles.ts";
-import { setActiveTab, setSortBy, setSortOrder, setError, setCurrentPage } from "../../redux/slices/roomsSlice.ts";
-import { fetchRooms, deleteRoom } from "../../redux/thunks/roomsThunks.ts";
-import { Room } from "../../interfaces/room/RoomState.ts";
-import { AppDispatch, RootState } from "../../redux/store.ts";
+import { TabsContainer, Tab, AddButton } from "../../styles/TabsStyles";
+import { Table, TableHeader, TableRow, TableData, StatusBadge, PaginationContainer, PageButton, DiscountSpan, ActionMenu, ActionMenuItem, SortIcon, RoomImage } from "../../styles/TableStyles";
+import { setActiveTab, setSortBy, setSortOrder, setError, setCurrentPage } from "../../redux/slices/roomsSlice";
+import { fetchRooms, deleteRoom, isValidStatus } from "../../redux/thunks/roomsThunks";
+import { Room } from "../../interfaces/room/RoomState";
+import { AppDispatch, RootState } from "../../redux/store";
 import Swal from "sweetalert2";
 
 export const Rooms = () => {
@@ -57,8 +57,12 @@ export const Rooms = () => {
   const totalPages = Math.ceil(filteredRooms.length / itemsPerPage);
 
   const handleTabChange = (tab: string) => {
-    dispatch(setActiveTab(tab));
-  };
+    if (tab === "allRooms") {
+      dispatch(setActiveTab(tab));
+    } else if (isValidStatus(tab)) {
+      dispatch(setActiveTab(tab));
+    }
+  };  
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -123,7 +127,13 @@ export const Rooms = () => {
         </TableData>
         <TableData align="center">{room.roomNumber}</TableData>
         <TableData>{room.roomType}</TableData>
-        <TableData>{room.facilities.split(",").join(", ")}</TableData>
+        <TableData>
+          {Array.isArray(room.facilities)
+            ? room.facilities.join(", ")
+            : typeof room.facilities === "string"
+            ? room.facilities.split(",").join(", ")
+            : "N/A"}
+        </TableData>
         <TableData>{room.rate}</TableData>
         <TableData>
           {room.offerPrice} <DiscountSpan>({discountPercentage}% off)</DiscountSpan>

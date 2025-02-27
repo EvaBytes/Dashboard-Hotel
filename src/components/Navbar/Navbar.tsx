@@ -3,10 +3,10 @@ import { AiOutlineMail, AiOutlineBell } from "react-icons/ai";
 import { FiLogOut } from "react-icons/fi";
 import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../../Authentication/AuthContext.tsx";
-import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,NotificationBadge} from "./NavbarStyles.ts";
-import { NavbarProps, Message } from "../../interfaces/dashboard/DashboardState.ts";
-import { Booking } from "../../interfaces/bookings/BookingState.ts";
+import { useAuth } from "../../Authentication/AuthContext";
+import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,NotificationBadge} from "./NavbarStyles";
+import { NavbarProps, Message } from "../../interfaces/dashboard/DashboardState";
+import { Booking } from "../../interfaces/bookings/BookingState";
 import bookingData from "../../../public/data/Bookings.json";
 import messagesData from "../../../public/data/Messages.json";
 

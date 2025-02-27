@@ -42,6 +42,14 @@ export const Select = styled.select`
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
+  background-color: ${({ theme }) => theme.palette.background.paper};
+  color: ${({ theme }) => theme.palette.text.primary};
+  appearance: none;
+  background-position: right 10px center;
+  background-size: 1rem;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+
 `;
 
 export const SubmitButton = styled.button`

@@ -1,22 +1,46 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import messagesData from "../../../public/data/Messages.json";
-import { Message,FetchMessagesError } from "../../interfaces/contact/ContactState.ts";
+import { Message, FetchMessagesError } from "../../interfaces/contact/ContactState";
+import { API_URL } from "../../config"; 
 
-const simulateApiDelay = (ms: number) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
-
-export const fetchMessages = createAsyncThunk<Message[],void,{rejectValue:FetchMessagesError}>(
+export const fetchMessages = createAsyncThunk<
+  Message[],
+  void,
+  { rejectValue: FetchMessagesError }
+>(
   "contact/fetchMessages",
   async (_, { rejectWithValue }) => {
     try {
-      await simulateApiDelay(400);
-      if (!messagesData || messagesData.length === 0) {
-        throw new Error("No messages found");
+      const token = localStorage.getItem("authToken"); 
+
+      if (!token) {
+        throw new Error("No authentication token found");
       }
 
-      return messagesData as Message[];
-    } catch (error) {
-      return rejectWithValue({message: error.message || "Failed to fetch messages"});
+      const response = await fetch(`${API_URL}/api/v1/contacts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        throw new Error(errorResponse.error || "Failed to fetch messages from the server");
+      }
+
+      const { data } = await response.json();
+      return data as Message[];
+      
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue({
+          message: error.message || "An unknown error occurred while fetching messages",
+        });
+      }
+      return rejectWithValue({
+        message: "An unexpected error occurred",
+      });
     }
   }
 );
