@@ -4,11 +4,9 @@ import { FiLogOut } from "react-icons/fi";
 import { LuCircleArrowLeft, LuCircleArrowRight } from "react-icons/lu";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../Authentication/AuthContext";
-import {NavbarContainer,NavbarLeft,NavbarRight,IconButton,TitleContainer,TitleSection,NotificationBadge} from "./NavbarStyles";
+import { NavbarContainer, NavbarLeft, NavbarRight, IconButton, TitleContainer, TitleSection, NotificationBadge } from "./NavbarStyles";
 import { NavbarProps, Message } from "../../interfaces/dashboard/DashboardState";
 import { Booking } from "../../interfaces/bookings/BookingState";
-import bookingData from "../../../public/data/Bookings.json";
-import messagesData from "../../../public/data/Messages.json";
 
 const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
   const navigate = useNavigate();
@@ -16,31 +14,40 @@ const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
   const { logout } = useAuth();
 
   const [unreadMessages, setUnreadMessages] = useState<number>(0);
+  const [currentMonthBookingsCount, setCurrentMonthBookingsCount] = useState<number>(0);
+
+  const fetchBookingsData = async () => {
+    try {
+      const response = await fetch("/api/v1/bookings"); 
+      const bookings: Booking[] = await response.json(); 
+
+      const currentMonth = new Date().getMonth() + 1;
+      const bookingsInProgress = bookings.filter(
+        (booking) => new Date(booking.checkIn).getMonth() + 1 === currentMonth && booking.status === "In Progress"
+      );
+      setCurrentMonthBookingsCount(bookingsInProgress.length);
+    } catch (error) {
+      console.error("Error fetching bookings data:", error);
+    }
+  };
+
+  const fetchMessagesData = async () => {
+    try {
+      const response = await fetch("/api/v1/messages"); 
+      const messages: Message[] = await response.json(); 
+
+      const savedReadMessages = JSON.parse(localStorage.getItem("readMessages") || "[]");
+      const unreadCount = messages.filter((msg) => !savedReadMessages.includes(msg.messageId)).length;
+      setUnreadMessages(unreadCount);
+    } catch (error) {
+      console.error("Error fetching messages data:", error);
+    }
+  };
 
   useEffect(() => {
-    const savedReadMessages = JSON.parse(localStorage.getItem("readMessages") || "[]");
-    const unreadCount = (messagesData as Message[]).filter(
-      (msg) => !savedReadMessages.includes(msg.messageId)
-    ).length;
-    setUnreadMessages(unreadCount);
+    fetchBookingsData();
+    fetchMessagesData();
   }, []);
-
-  const updateUnreadMessages = () => {
-    const savedReadMessages = JSON.parse(localStorage.getItem("readMessages") || "[]");
-    const unreadCount = (messagesData as Message[]).filter(
-      (msg) => !savedReadMessages.includes(msg.messageId)
-    ).length;
-    setUnreadMessages(unreadCount);
-  };
-
-  const getCurrentMonthBookings = (bookings: Booking[]) => {
-    const currentMonth = new Date().getMonth() + 1;
-    return bookings.filter(
-      (booking) => new Date(booking.checkIn).getMonth() + 1 === currentMonth
-    ).length;
-  };
-
-  const currentMonthBookingsCount = getCurrentMonthBookings(bookingData as Booking[]);
 
   const pageTitleMap: Record<string, string> = {
     "/": "Dashboard",
@@ -93,12 +100,14 @@ const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
             <NotificationBadge>{unreadMessages}</NotificationBadge>
           )}
         </IconButton>
+
         <IconButton onClick={() => navigate("/bookings")}>
           <AiOutlineBell size={24} />
           {currentMonthBookingsCount > 0 && (
             <NotificationBadge>{currentMonthBookingsCount}</NotificationBadge>
           )}
         </IconButton>
+
         <IconButton onClick={handleLogout}>
           <FiLogOut size={24} />
         </IconButton>

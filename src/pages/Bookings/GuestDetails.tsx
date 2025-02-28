@@ -55,11 +55,11 @@ const GuestDetails = () => {
     <GuestDetailsContainer>
       <GuestInfoCard>
         <GuestHeader>
-          <GuestImage src={guest.image} alt={guest.fullName} />
-          <GuestNameDetails>
-            <h2>{guest.fullName}</h2>
-            <p>ID: {guest.reservationNumber}</p>
-          </GuestNameDetails>
+        <GuestImage src={guest?.image || "default-image.png"} alt={guest?.fullName || "Guest"} />
+        <GuestNameDetails>
+        <h2>{guest?.fullName || "Guest Name Not Available"}</h2>
+        <p>ID: {guest?.reservationNumber || "No ID Available"}</p>
+        </GuestNameDetails>
         </GuestHeader>
         <GuestActions>
           <ActionButton onClick={() => alert("Calling...")}>
