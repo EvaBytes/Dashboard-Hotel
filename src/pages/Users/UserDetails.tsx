@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUserById } from "../../redux/thunks/usersThunks.ts";
-import { selectCurrentUser, selectUsersStatus, selectError } from "../../redux/slices/usersSlice.ts";
+import { fetchUserById } from "../../redux/thunks/usersThunks";
+import { selectCurrentUser, selectUsersStatus, selectError } from "../../redux/slices/usersSlice";
 import { format, isValid, parse } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline } from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
-import { GuestDetailsContainer, UsersInfoCard, GuestImage, GuestHeader, GuestNameDetails, GuestActions, GuestInfoSection, StatusBadge, Divider, ActionButton, ModifyButton } from "../../styles/GuestDetailsStyles.ts";
-import { AppDispatch } from "../../redux/store.ts";
+import { GuestDetailsContainer, UsersInfoCard, GuestImage, GuestHeader, GuestNameDetails, GuestActions, GuestInfoSection, StatusBadge, Divider, ActionButton, ModifyButton } from "../../styles/GuestDetailsStyles";
+import { AppDispatch } from "../../redux/store";
 
 const UserDetails = () => {
   const { employeeId } = useParams<{ employeeId: string }>();
@@ -38,9 +38,9 @@ const UserDetails = () => {
     ? format(parsedDate, "MMM dd, yyyy") 
     : "N/A";
 
-  console.log("Fecha original:", startDate); // Depuración
-  console.log("Fecha parseada:", parsedDate); // Depuración
-  console.log("Fecha formateada:", displayDate); // Depuración
+  console.log("Fecha original:", startDate); 
+  console.log("Fecha parseada:", parsedDate); 
+  console.log("Fecha formateada:", displayDate); 
 
   return (
     <GuestDetailsContainer>

@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";  
 import {NewRoomContainer,RoomInfoCard,RoomHeader,RoomDetailsSection,SaveButton,BackButton,ImageUploadSection,ImagePreview,AmenitiesContainer,AmenityItem} from "../../styles/NewRoomStyles.ts";
-import { createRoom } from "../../redux/thunks/roomsThunks.ts";
-import { AppDispatch } from "../../redux/store.ts";
-import { NewRoomPayload } from "../../interfaces//room/RoomState.ts";
+import { createRoom } from "../../redux/thunks/roomsThunks";
+import { AppDispatch } from "../../redux/store";
+import { NewRoomPayload } from "../../interfaces//room/RoomState";
 
 const roomTypePhotos = {
   "Single Bed": ["radoslav-bali-hLdeUT_HE2E-unsplash.jpg","caroline-voelker-KVXxBwIu8Vw-unsplash.jpg","kate-branch-G18uHzrihOE-unsplash.jpg"],

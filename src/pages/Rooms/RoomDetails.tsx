@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { RoomDetailsContainer, RoomDetailsCard, RoomDetailsHeader, RoomDetailsSection, SaveButton, BackButton, ImageUploadSection, ImagePreview, AmenitiesContainer, AmenityItem } from "../../styles/RoomDetailsStyles.ts";
-import { Room } from "../../interfaces/room/RoomState.ts";
+import { RoomDetailsContainer, RoomDetailsCard, RoomDetailsHeader, RoomDetailsSection, SaveButton, BackButton, ImageUploadSection, ImagePreview, AmenitiesContainer, AmenityItem } from "../../styles/RoomDetailsStyles";
+import { Room } from "../../interfaces/room/RoomState";
 
 const roomTypePhotos = {
   "Single Bed": ["/radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "/caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "/kate-branch-G18uHzrihOE-unsplash.jpg"],

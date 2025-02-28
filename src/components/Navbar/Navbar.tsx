@@ -18,8 +18,10 @@ const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
 
   const fetchBookingsData = async () => {
     try {
+      console.log("Fetching bookings from:", `/api/v1/bookings`);
       const response = await fetch("/api/v1/bookings"); 
       const bookings: Booking[] = await response.json(); 
+      console.log("Bookings fetched:", bookings);
 
       const currentMonth = new Date().getMonth() + 1;
       const bookingsInProgress = bookings.filter(
@@ -33,7 +35,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }: NavbarProps) => {
 
   const fetchMessagesData = async () => {
     try {
-      const response = await fetch("/api/v1/messages"); 
+      const response = await fetch("/api/v1/contacts"); 
       const messages: Message[] = await response.json(); 
 
       const savedReadMessages = JSON.parse(localStorage.getItem("readMessages") || "[]");

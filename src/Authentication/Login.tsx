@@ -43,9 +43,9 @@ const Login = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log("Respuesta del servidor:", data);
 
         if (data.token) {
+
           login({
             email,
             password,

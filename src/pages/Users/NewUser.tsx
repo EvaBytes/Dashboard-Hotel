@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { createUser } from "../../redux/thunks/usersThunks.js";
+import { createUser } from "../../redux/thunks/usersThunks";
 import { AppDispatch } from "../../redux/store";
 import { NewUserPayload } from "../../interfaces/users/UsersState";
 import Swal from "sweetalert2";
 import { parseISO, format, isValid } from "date-fns";
-import {FormContainer,FormGroup,Label,Input,SubmitButton,BackButton, Select} from "../../styles/NewUserStyles.js";
+import {FormContainer,FormGroup,Label,Input,SubmitButton,BackButton, Select} from "../../styles/NewUserStyles";
 
 export const NewUser = () => {
   const [userData, setUserData] = useState<NewUserPayload>({

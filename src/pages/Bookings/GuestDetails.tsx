@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingById } from "../../redux/thunks/bookingsThunks"; 
-import { format } from "date-fns";
+import { parseISO, format, isValid } from "date-fns";
 import { MdOutlinePhone, MdOutlineMailOutline} from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
 import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper, CarouselItem, CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles";
@@ -75,14 +75,18 @@ const GuestDetails = () => {
         </GuestActions>
         <Divider />
         <GuestInfoSection>
-          <p>
-            <strong>Check-In:</strong>{" "}
-            {format(new Date(checkIn), "MMM dd, yyyy")}
-          </p>
-          <p>
-            <strong>Check-Out:</strong>{" "}
-            {format(new Date(checkOut), "MMM dd, yyyy")}
-          </p>
+        <p>
+          <strong>Check-In:</strong>{" "}
+          {checkIn && isValid(parseISO(checkIn))
+            ? format(parseISO(checkIn), "MMM dd, yyyy")
+            : "N/A"}
+        </p>
+        <p>
+          <strong>Check-Out:</strong>{" "}
+          {checkOut && isValid(parseISO(checkOut))
+            ? format(parseISO(checkOut), "MMM dd, yyyy")
+            : "N/A"}
+        </p>
         </GuestInfoSection>
         <Divider />
         <GuestInfoSection>
@@ -98,8 +102,8 @@ const GuestDetails = () => {
         </GuestInfoSection>
         <Divider />
         <FacilitiesContainer>
-          {facilities?.split(",").map((facility) => (
-            <FacilityItem key={facility.trim()}>{facility.trim()}</FacilityItem>
+          {Array.isArray(facilities) && facilities.map((facility) => (
+            <FacilityItem key={facility}>{facility}</FacilityItem>
           ))}
         </FacilitiesContainer>
       </GuestInfoCard>
@@ -109,10 +113,10 @@ const GuestDetails = () => {
         <CarouselWrapper>
           <CarouselButtonLeft onClick={handlePrevImage}>&#8592;</CarouselButtonLeft>
           <CarouselItem>
-            <CarouselImage
-              src={roomPhoto[currentImageIndex]}
-              alt={`Room ${roomType} - ${currentImageIndex + 1}`}
-            />
+          <CarouselImage
+            src={roomPhoto && roomPhoto.length > 0 ? roomPhoto[currentImageIndex] : "/kate-branch-G18uHzrihOE-unsplash.jpg"}
+            alt={`Room ${roomType} - ${currentImageIndex + 1}`}
+          />
             <CarouselCaption>
               <h3>{roomType} Room</h3>
               <p>

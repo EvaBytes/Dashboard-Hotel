@@ -132,6 +132,9 @@ export const fetchBookingById = createAsyncThunk<
         throw new Error("No authentication token found");
       }
 
+      console.log('Fetching from:', `${API_URL}/api/v1/bookings/${reservationNumber}`);
+
+
       const response = await fetch(
         `${API_URL}/api/v1/bookings/${reservationNumber}`,
         {
@@ -148,7 +151,15 @@ export const fetchBookingById = createAsyncThunk<
       }
 
       const data: Booking = await response.json();
-      return data;
+
+      const transformedData: Booking = {
+        ...data,
+        facilities: Array.isArray(data.facilities)
+          ? data.facilities
+          : [data.facilities]
+      };
+
+      return transformedData;
     } catch (error: unknown) {
       if (error instanceof Error) {
         return thunkAPI.rejectWithValue(error.message);
@@ -157,6 +168,7 @@ export const fetchBookingById = createAsyncThunk<
     }
   }
 );
+
 
 export const fetchAllBookings = createAsyncThunk<
   Booking[],

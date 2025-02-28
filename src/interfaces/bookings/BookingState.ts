@@ -14,7 +14,7 @@ export interface Booking {
   roomType: string;
   status: "Check-In" | "Check-Out" | "In Progress";
   roomPhoto: string[];
-  facilities: string;
+  facilities: string | string[]; 
   offerPrice: string;
   photo: string; 
   roomNumber: string; 
