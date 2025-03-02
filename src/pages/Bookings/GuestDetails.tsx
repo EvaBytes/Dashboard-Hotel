@@ -55,11 +55,11 @@ const GuestDetails = () => {
     <GuestDetailsContainer>
       <GuestInfoCard>
         <GuestHeader>
-        <GuestImage src={guest?.image || "default-image.png"} alt={guest?.fullName || "Guest"} />
-        <GuestNameDetails>
-        <h2>{guest?.fullName || "Guest Name Not Available"}</h2>
-        <p>ID: {guest?.reservationNumber || "No ID Available"}</p>
-        </GuestNameDetails>
+          <GuestImage src={guest?.image || "default-image.png"} alt={guest?.fullName || "Guest"} />
+          <GuestNameDetails>
+            <h2>{guest?.fullName || "Guest Name Not Available"}</h2>
+            <p>ID: {guest?.reservationNumber || "No ID Available"}</p>
+          </GuestNameDetails>
         </GuestHeader>
         <GuestActions>
           <ActionButton onClick={() => alert("Calling...")}>
@@ -69,32 +69,31 @@ const GuestDetails = () => {
             <MdOutlineMailOutline /> Send Message
           </ActionButton>
           <ModifyButton onClick={() => navigate(`/edit/${reservationNumber}`)}>
-            <FaPencilAlt />
-            Edit
+            <FaPencilAlt /> Edit
           </ModifyButton>
         </GuestActions>
         <Divider />
         <GuestInfoSection>
-        <p>
-          <strong>Check-In:</strong>{" "}
-          {checkIn && isValid(parseISO(checkIn))
-            ? format(parseISO(checkIn), "MMM dd, yyyy")
-            : "N/A"}
-        </p>
-        <p>
-          <strong>Check-Out:</strong>{" "}
-          {checkOut && isValid(parseISO(checkOut))
-            ? format(parseISO(checkOut), "MMM dd, yyyy")
-            : "N/A"}
-        </p>
+          <p>
+            <strong>Check-In:</strong>{" "}
+            {checkIn && isValid(parseISO(checkIn))
+              ? format(parseISO(checkIn), "MMM dd, yyyy")
+              : "N/A"}
+          </p>
+          <p>
+            <strong>Check-Out:</strong>{" "}
+            {checkOut && isValid(parseISO(checkOut))
+              ? format(parseISO(checkOut), "MMM dd, yyyy")
+              : "N/A"}
+          </p>
         </GuestInfoSection>
         <Divider />
         <GuestInfoSection>
           <p>
-            <strong>Room Type:</strong> {roomType}
+            <strong>Room Type:</strong> {roomType || "N/A"}
           </p>
           <p>
-            <strong>Room Price:</strong> {offerPrice}
+            <strong>Room Price:</strong> {offerPrice || "N/A"}
           </p>
           <p>
             <strong>Special Request:</strong> {specialRequest || "None"}
@@ -102,9 +101,13 @@ const GuestDetails = () => {
         </GuestInfoSection>
         <Divider />
         <FacilitiesContainer>
-          {Array.isArray(facilities) && facilities.map((facility) => (
-            <FacilityItem key={facility}>{facility}</FacilityItem>
-          ))}
+          {Array.isArray(facilities) && facilities.length > 0 ? (
+            facilities.map((facility) => (
+              <FacilityItem key={facility}>{facility}</FacilityItem>
+            ))
+          ) : (
+            <p>No facilities available</p>
+          )}
         </FacilitiesContainer>
       </GuestInfoCard>
 
@@ -113,10 +116,10 @@ const GuestDetails = () => {
         <CarouselWrapper>
           <CarouselButtonLeft onClick={handlePrevImage}>&#8592;</CarouselButtonLeft>
           <CarouselItem>
-          <CarouselImage
-            src={roomPhoto && roomPhoto.length > 0 ? roomPhoto[currentImageIndex] : "/kate-branch-G18uHzrihOE-unsplash.jpg"}
-            alt={`Room ${roomType} - ${currentImageIndex + 1}`}
-          />
+            <CarouselImage
+              src={roomPhoto && roomPhoto.length > 0 ? roomPhoto[currentImageIndex] : "/kate-branch-G18uHzrihOE-unsplash.jpg"}
+              alt={`Room ${roomType} - ${currentImageIndex + 1}`}
+            />
             <CarouselCaption>
               <h3>{roomType} Room</h3>
               <p>
@@ -131,5 +134,6 @@ const GuestDetails = () => {
     </GuestDetailsContainer>
   );
 };
+
 
 export { GuestDetails };
