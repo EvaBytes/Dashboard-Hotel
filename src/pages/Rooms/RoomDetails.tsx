@@ -10,7 +10,22 @@ const roomTypePhotos = {
   "Suite": ["/radoslav-bali-hLdeUT_HE2E-unsplash.jpg", "/caroline-voelker-KVXxBwIu8Vw-unsplash.jpg", "/kate-branch-G18uHzrihOE-unsplash.jpg"],
 };
 
-const amenitiesList = ["Air conditioner", "WiFi", "Breakfast", "Shower", "Towels"];
+const amenitiesList = [
+  "Air conditioner",
+  "High speed WiFi",
+  "Breakfast",
+  "Kitchen",
+  "Cleaning",
+  "Shower",
+  "Grocery",
+  "Single bed",
+  "Shop near",
+  "Towels",
+  "24/7 Online Support",
+  "Strong locker",
+  "Smart Security",
+  "Expert Team"
+];;
 
 const cancellationPolicyText = `
 Standard Rate:

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBookingById } from "../../redux/thunks/bookingsThunks"; 
-import { parseISO, format, isValid } from "date-fns";
+import { format, parseISO, isValid } from "date-fns" 
 import { MdOutlinePhone, MdOutlineMailOutline} from "react-icons/md";
 import { FaPencilAlt } from "react-icons/fa";
 import {GuestDetailsContainer,GuestInfoCard,GuestImage,GuestHeader,GuestNameDetails,GuestActions,GuestInfoSection,RoomDetailsCard,StatusBadge,FacilitiesContainer,FacilityItem,CarouselWrapper, CarouselItem, CarouselImage,CarouselCaption,CarouselButtonLeft,CarouselButtonRight,Divider,ActionButton,ModifyButton} from "../../styles/GuestDetailsStyles";
@@ -39,6 +39,13 @@ const GuestDetails = () => {
     roomPhoto,
   } = currentBooking;
 
+  const parsedCheckIn = checkIn ? parseISO(checkIn) : null
+  const formattedCheckIn = parsedCheckIn && isValid(parsedCheckIn) ? format(parsedCheckIn, "MMM dd, yyyy") : "N/A"
+
+  const parsedCheckOut = checkOut ? parseISO(checkOut) : null
+  const formattedCheckOut = parsedCheckOut && isValid(parsedCheckOut) ? format(parsedCheckOut, "MMM dd, yyyy") : "N/A"
+
+
   const handleNextImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === roomPhoto.length - 1 ? 0 : prevIndex + 1
@@ -74,18 +81,8 @@ const GuestDetails = () => {
         </GuestActions>
         <Divider />
         <GuestInfoSection>
-          <p>
-            <strong>Check-In:</strong>{" "}
-            {checkIn && isValid(parseISO(checkIn))
-              ? format(parseISO(checkIn), "MMM dd, yyyy")
-              : "N/A"}
-          </p>
-          <p>
-            <strong>Check-Out:</strong>{" "}
-            {checkOut && isValid(parseISO(checkOut))
-              ? format(parseISO(checkOut), "MMM dd, yyyy")
-              : "N/A"}
-          </p>
+          <p><strong>Check-In:</strong> {formattedCheckIn}</p>
+          <p><strong>Check-Out:</strong> {formattedCheckOut}</p>
         </GuestInfoSection>
         <Divider />
         <GuestInfoSection>
