@@ -6,6 +6,7 @@ import { LatestMessages } from "../components/common/LatestMessages";
 import { Table, TableHeader, TableRow, TableData, PaginationContainer, PageButton } from "../styles/TableStyles";
 import { ContactPageContainer, TabsContainer, TabButton, CustomerName, CustomerEmail, CustomerPhone, Subject, Comment, ArchiveButton } from "../styles/ContactStyles";
 import { RootState, AppDispatch } from "../redux/store";
+import { parseISO, format, isValid } from "date-fns";
 import Swal from "sweetalert2";
 
 const Contact = () => {
@@ -41,6 +42,40 @@ const Contact = () => {
     { label: "Subject", key: "subject" },
     { label: "Action", key: null },
   ];
+
+  const renderRow = (item) => {
+    const fecha = item.date ? parseISO(String(item.date)) : null;
+    const formattedDate = fecha && isValid(fecha) 
+      ? format(fecha, "dd.MM.yyyy") 
+      : "N/A";
+
+    return (
+      <TableRow key={item.messageId}>
+        <TableData>
+          <div>{formattedDate}</div>
+        </TableData>
+        <TableData>
+          <CustomerName>{item.fullName}</CustomerName>
+          <CustomerEmail>{item.email}</CustomerEmail>
+          <CustomerPhone>{item.phone}</CustomerPhone>
+        </TableData>
+        <TableData>
+          <Subject>{item.subject}</Subject>
+          <Comment>{item.comment}</Comment>
+        </TableData>
+        <TableData>
+          <ArchiveButton
+            $isArchived={activeTab === "Archived"}
+            onClick={() =>
+              activeTab === "Archived" ? handleUnarchive(item.messageId) : handleArchive(item.messageId)
+            }
+          >
+            {activeTab === "Archived" ? "Unarchive" : "Archive"}
+          </ArchiveButton>
+        </TableData>
+      </TableRow>
+    );
+  };
 
   const handleArchive = (messageId: string) => {
     dispatch(archiveMessage(messageId));
@@ -105,33 +140,7 @@ const Contact = () => {
             </TableRow>
           </thead>
           <tbody>
-            {paginatedData.map((item) => (
-              <TableRow key={item.messageId}>
-                <TableData>
-                  <div>{item.date}</div>
-                  <div>{`#${item.messageId}`}</div>
-                </TableData>
-                <TableData>
-                  <CustomerName>{item.fullName}</CustomerName>
-                  <CustomerEmail>{item.email}</CustomerEmail>
-                  <CustomerPhone>{item.phone}</CustomerPhone>
-                </TableData>
-                <TableData>
-                  <Subject>{item.subject}</Subject>
-                  <Comment>{item.comment}</Comment>
-                </TableData>
-                <TableData>
-                  <ArchiveButton
-                    $isArchived={activeTab === "Archived"}
-                    onClick={() =>
-                      activeTab === "Archived" ? handleUnarchive(item.messageId) : handleArchive(item.messageId)
-                    }
-                  >
-                    {activeTab === "Archived" ? "Unarchive" : "Archive"}
-                  </ArchiveButton>
-                </TableData>
-              </TableRow>
-            ))}
+            {paginatedData.map(renderRow)}
           </tbody>
         </Table>
 

@@ -11,6 +11,11 @@ export const SidebarContainer = styled.aside`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: width 0.3s ease;  
+  
+  &.active-sidebar {
+    width: 300px;
+  }
 `;
 
 export const SidebarTitleIcon = styled.div`
@@ -58,23 +63,29 @@ export const SidebarLink = styled(NavLink)`
   border-left: 4px solid transparent; 
   transition: all 0.3s ease;
 
-  &.active {
-    color: #e23428; 
-    font-weight: bold;
-    border-left: 4px solid #e23428; 
-  }
-
   &:hover {
     color: #e23428;
     text-decoration: none;
   }
-`;
 
+  &.active {
+    color: #e23428;
+    font-weight: bold;
+    border-left: 4px solid #e23428;
+    font-size: 1.2rem;  
+    transition: font-size 0.2s ease; 
+  }
+`;
 
 export const SidebarIcon = styled.span`
   font-size: 20px;
   margin-right: 0.5rem;
   display: inline-block;
+  transition: font-size 0.3s ease; 
+    ${SidebarLink}.active & {
+    font-size: 24px;  
+  }
+
 `;
 
 export const SidebarFooter = styled.footer`
