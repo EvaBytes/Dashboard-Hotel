@@ -18,7 +18,7 @@ export const SidebarTitleIcon = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 0 .5rem .5rem 2rem;
+  margin: 0 .5rem .5rem;
 `;
 
 export const StarsIcon = styled.span`
@@ -33,9 +33,7 @@ export const HotelIcon = styled.span`
 `;
 
 export const SidebarTitle = styled.h4`
-  color: #212121;
   margin-bottom: 1.2rem;
-  font-size: 1.2rem;
   display: flex;
   align-items: center;
 `;

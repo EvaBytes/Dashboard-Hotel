@@ -5,7 +5,7 @@ import {BackgroundContainer,StyledAuthContainer,StyledAuthButton,StyledSubtitle,
 import { API_URL } from "../config/index";
 
 const Login = () => {
-  const [email, setEmail] = useState("user1@example.com");
+  const [email, setEmail] = useState("user3@example.com");
   const [password, setPassword] = useState("123456");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [loading, setLoading] = useState(false);
